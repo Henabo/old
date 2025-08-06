@@ -2163,9 +2163,10 @@
 
         // AI智能体点击事件
         aiAgent.addEventListener('click', function () {
+            // 先弹窗再跳转
+            alert('即将跳转到AI智能体界面');
             // 跳转到AI智能体界面
-            window.location.href = 'aichat.html';
-            alert('跳转到AI智能体界面');
+            window.location.href = 'aichat.html'; // 确保路径正确
         });
 
         // 初始化AI智能体位置并开始移动动画
