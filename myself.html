@@ -1,0 +1,1046 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>老友社区 - 个人中心</title>
+  <script src="https://res.gemcoder.com/js/reload.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+          href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6A5ACD',
+            secondary: '#3498db',
+            dark: '#333333',
+            light: '#f8f9fa',
+            gray: {
+              300: '#d1d5db',
+              400: '#9ca3af',
+              500: '#6b7280',
+              600: '#4b5563'
+            }
+          },
+          fontFamily: {
+            sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .text-shadow {
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+      .transition-transform-opacity {
+        transition-property: transform, opacity;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 300ms;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-dark">
+<!-- 侧边菜单遮罩层 -->
+<div class="fixed inset-0 bg-black/50 z-40 hidden" id="menu-overlay"></div>
+<!-- 侧边菜单 -->
+<div
+        class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out"
+        id="side-menu"
+>
+  <!-- 菜单头部 -->
+  <div class="p-4 border-b">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-bold text-primary">老友社区</h2>
+      <button class="text-gray-500 hover:text-gray-700" id="close-menu">
+        <i class="fas fa-times text-xl"> </i>
+      </button>
+    </div>
+    <!-- 用户信息 -->
+    <div class="flex flex-col items-center">
+      <img
+              alt="用户头像"
+              class="w-20 h-20 rounded-full object-cover mb-3 border-2 border-primary"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/d73b26fc559275bd5ea91a60febfc711.png"
+      />
+      <h3 class="font-bold text-dark">张大爷</h3>
+      <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+        普通会员
+      </p>
+    </div>
+  </div>
+  <!-- 菜单列表 -->
+  <nav class="p-2">
+    <ul class="space-y-1">
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-home w-5 text-center mr-3"> </i>
+          <span> 首页 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-calendar-alt w-5 text-center mr-3"> </i>
+          <span> 活动日历 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-check-square w-5 text-center mr-3"> </i>
+          <span> 我的报名 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-star w-5 text-center mr-3"> </i>
+          <span> 收藏活动 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-comment-alt w-5 text-center mr-3"> </i>
+          <span> 消息通知 </span>
+          <span
+                  class="ml-auto bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+          >
+                3
+              </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-primary bg-primary/10 rounded-lg"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-user w-5 text-center mr-3"> </i>
+          <span> 个人中心 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-cog w-5 text-center mr-3"> </i>
+          <span> 设置 </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<!-- 主容器 -->
+<div class="min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white shadow-sm sticky top-0 z-40">
+    <div
+            class="container mx-auto px-4 py-3 flex items-center justify-between"
+    >
+      <button
+              class="text-gray-600 hover:text-primary transition-colors p-2"
+              id="menu-toggle"
+      >
+        <i class="fas fa-bars text-xl"> </i>
+      </button>
+      <h1 class="text-xl font-bold text-dark flex-1 text-center">
+        个人中心
+      </h1>
+      <div class="flex items-center space-x-2">
+        <button
+                class="text-gray-600 hover:text-primary transition-colors p-2"
+                id="edit-profile"
+        >
+          <i class="fas fa-edit text-xl"> </i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- 主要内容区 -->
+  <main class="flex-1 overflow-y-auto scrollbar-hide">
+    <div class="container mx-auto px-4 py-4" style="padding-bottom: 4rem">
+      <div
+              class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
+      >
+        <div
+                class="relative h-32 bg-gradient-to-r from-primary/80 to-primary"
+        >
+          <div
+                  class="absolute bottom-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2"
+          >
+            <img
+                    alt="用户头像"
+                    class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
+                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/987269ed993227ad6aba121a3ec81e8b.png"
+            />
+          </div>
+        </div>
+        <div class="pt-16 pb-6 px-6 text-center">
+          <h2 class="text-xl font-bold text-dark mb-1">张大爷</h2>
+          <p class="text-gray-500 text-sm mb-4">加入老友社区 1年2个月</p>
+          <div class="flex justify-center space-x-6 mb-6">
+            <div class="text-center">
+              <div class="text-lg font-bold text-primary">12</div>
+              <div class="text-xs text-gray-500">已参加活动</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-primary">8</div>
+              <div class="text-xs text-gray-500">关注好友</div>
+            </div>
+            <div class="text-center">
+              <div class="text-lg font-bold text-primary">5</div>
+              <div class="text-xs text-gray-500">收藏活动</div>
+            </div>
+          </div>
+          <div class="flex justify-center space-x-3">
+            <button
+                    class="flex-1 bg-primary hover:bg-primary/90 text-white font-medium py-2 rounded-full transition-colors"
+            >
+              <i class="fas fa-user-plus mr-1"> </i>
+              编辑资料
+            </button>
+            <button
+                    class="w-10 h-10 rounded-full border border-gray-300 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors"
+            >
+              <i class="fas fa-qrcode"> </i>
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4 mb-6">
+        <a
+                class="yt-a-defalut-link bg-white rounded-xl shadow-sm p-4 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer flex"
+                target="_top"
+                is-page="true"
+                href="javascript:void(0);"
+                custom-href="w=393&h=852&appuuid=1952577510445154304&version=8&pageType=app&uuid=1952655355607515136&appName=老友社区"
+                onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                custom-a="true"
+                is-add="true"
+                style="padding: 0px; border: 0px; box-shadow: none;"
+        >
+          <div
+                  class="bg-white rounded-xl shadow-sm p-4 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer"
+                  id="my-activities"
+                  data-selectorname="#my-activities"
+                  style
+          >
+            <div
+                    class="flex flex-col items-center justify-center text-center p-3"
+                    style
+            >
+              <div
+                      class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3"
+              >
+                <i class="fas fa-calendar-check text-primary text-2xl"> </i>
+              </div>
+              <h4 class="font-bold text-dark mb-1">我的活动</h4>
+              <p class="text-xs text-gray-500">已报名和参与的活动</p>
+            </div>
+          </div>
+        </a>
+        <div
+                class="bg-white rounded-xl shadow-sm p-4 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer"
+                id="my-collections"
+        >
+          <div
+                  class="flex flex-col items-center justify-center text-center p-3"
+          >
+            <div
+                    class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3"
+            >
+              <i class="fas fa-star text-primary text-2xl"> </i>
+            </div>
+            <h4 class="font-bold text-dark mb-1">我的收藏</h4>
+            <p class="text-xs text-gray-500">收藏的活动和内容</p>
+          </div>
+        </div>
+        <a
+                class="yt-a-defalut-link bg-white rounded-xl shadow-sm p-4 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer flex"
+                target="_top"
+                is-page="true"
+                href="javascript:void(0);"
+                custom-href="w=393&h=852&appuuid=1952577510445154304&version=3&pageType=app&uuid=1952668560933257216&appName=老友社区"
+                onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                custom-a="true"
+                is-add="true"
+                style="padding: 0px; border: 0px; box-shadow: none;"
+        >
+          <div
+                  class="bg-white rounded-xl shadow-sm p-4 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer"
+                  id="my-friends"
+                  data-selectorname="#my-friends"
+                  style
+          >
+            <div
+                    class="flex flex-col items-center justify-center text-center p-3"
+                    style
+            >
+              <div
+                      class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3"
+                      style
+              >
+                <i class="fas fa-users text-primary text-2xl"> </i>
+              </div>
+              <h4 class="font-bold text-dark mb-1">我的好友</h4>
+              <p class="text-xs text-gray-500">关注的老友和群组</p>
+            </div>
+          </div>
+        </a>
+        <a
+                class="yt-a-defalut-link bg-white rounded-xl shadow-sm p-4 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer flex"
+                target="_top"
+                is-page="true"
+                href="javascript:void(0);"
+                custom-href="w=393&h=852&appuuid=1952577510445154304&version=3&pageType=app&uuid=1952668560933257216&appName=老友社区"
+                onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                custom-a="true"
+                is-add="true"
+                style="padding: 0px; border: 0px; box-shadow: none;"
+        >
+          <div
+                  class="bg-white rounded-xl shadow-sm p-4 transform transition-all duration-300 hover:shadow-md hover:-translate-y-1 cursor-pointer"
+                  id="my-messages"
+                  data-selectorname="#my-messages"
+                  style
+          >
+            <div
+                    class="flex flex-col items-center justify-center text-center p-3"
+                    data-selectorname="#id-lds6q"
+                    style
+            >
+              <div
+                      class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mb-3 relative"
+                      style
+              >
+                <i class="fas fa-comment-alt text-primary text-2xl"> </i>
+                <span
+                        class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center"
+                >
+                      3
+                    </span>
+              </div>
+              <h4 class="font-bold text-dark mb-1" style>我的消息</h4>
+              <p class="text-xs text-gray-500" style>系统通知和好友消息</p>
+            </div>
+          </div>
+        </a>
+      </div>
+      <div
+              class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
+      >
+        <div class="p-5 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-dark flex items-center">
+            <i class="fas fa-id-card text-primary mr-2"> </i>
+            个人资料
+          </h3>
+        </div>
+        <div class="p-5 space-y-4">
+          <div
+                  class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-user text-gray-400 w-6 mr-3"> </i>
+              <span class="text-gray-600"> 真实姓名 </span>
+            </div>
+            <span class="text-dark font-medium"> 张大爷 </span>
+          </div>
+          <div
+                  class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-birthday-cake text-gray-400 w-6 mr-3"> </i>
+              <span class="text-gray-600"> 出生日期 </span>
+            </div>
+            <span class="text-dark font-medium"> 1955年3月15日 </span>
+          </div>
+          <div
+                  class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-phone text-gray-400 w-6 mr-3"> </i>
+              <span class="text-gray-600"> 手机号码 </span>
+            </div>
+            <span class="text-dark font-medium"> 138****5678 </span>
+          </div>
+          <div
+                  class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-envelope text-gray-400 w-6 mr-3"> </i>
+              <span class="text-gray-600"> 电子邮箱 </span>
+            </div>
+            <span class="text-dark font-medium">
+                  zhang***@example.com
+                </span>
+          </div>
+          <div
+                  class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-map-marker-alt text-gray-400 w-6 mr-3"> </i>
+              <span class="text-gray-600"> 居住地址 </span>
+            </div>
+            <span class="text-dark font-medium"> 南昌市西湖区 </span>
+          </div>
+          <div
+                  class="flex items-center justify-between py-2 border-b border-gray-100"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-heart text-gray-400 w-6 mr-3"> </i>
+              <span class="text-gray-600"> 兴趣爱好 </span>
+            </div>
+            <div class="flex flex-wrap justify-end gap-2">
+                  <span
+                          class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full"
+                  >
+                    书法
+                  </span>
+              <span
+                      class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full"
+              >
+                    下棋
+                  </span>
+              <span
+                      class="bg-primary/10 text-primary text-xs px-2 py-1 rounded-full"
+              >
+                    太极
+                  </span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+              class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
+      >
+        <div class="p-5 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-dark flex items-center">
+            <i class="fas fa-qrcode text-primary mr-2"> </i>
+            我的二维码
+          </h3>
+        </div>
+        <div class="p-6 flex flex-col items-center justify-center">
+          <div
+                  class="bg-white p-4 rounded-xl shadow-md mb-4 border border-gray-100 transform transition-all duration-300 hover:scale-105"
+          >
+            <img
+                    alt="个人二维码"
+                    class="w-48 h-48 object-cover"
+                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/2a2404164755a8bd793a9995c3e047ca.png"
+            />
+          </div>
+          <p class="text-sm text-gray-500 text-center max-w-xs">
+            扫描二维码添加我为好友，或分享到微信、QQ等社交平台
+          </p>
+          <div class="flex space-x-3 mt-4">
+            <button
+                    class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-full text-sm transition-colors flex items-center"
+            >
+              <i class="fab fa-weixin mr-2"> </i>
+              微信
+            </button>
+            <button
+                    class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-full text-sm transition-colors flex items-center"
+            >
+              <i class="fab fa-qq mr-2"> </i>
+              QQ
+            </button>
+          </div>
+        </div>
+      </div>
+      <div
+              class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
+      >
+        <div class="p-5 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-dark flex items-center">
+            <i class="fas fa-cog text-primary mr-2"> </i>
+            账户设置
+          </h3>
+        </div>
+        <div class="divide-y divide-gray-100">
+          <a
+                  class="flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+                  href="javascript:void(0);"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-lock text-gray-400 w-6 mr-3"> </i>
+              <span class="text-dark"> 修改密码 </span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-400"> </i>
+          </a>
+          <a
+                  class="flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+                  href="javascript:void(0);"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-bell text-gray-400 w-6 mr-3"> </i>
+              <span class="text-dark"> 通知设置 </span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-400"> </i>
+          </a>
+          <a
+                  class="flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+                  href="javascript:void(0);"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-shield-alt text-gray-400 w-6 mr-3"> </i>
+              <span class="text-dark"> 隐私设置 </span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-400"> </i>
+          </a>
+          <a
+                  class="flex items-center justify-between p-5 hover:bg-gray-50 transition-colors"
+                  href="javascript:void(0);"
+          >
+            <div class="flex items-center">
+              <i class="fas fa-question-circle text-gray-400 w-6 mr-3"> </i>
+              <span class="text-dark"> 帮助中心 </span>
+            </div>
+            <i class="fas fa-chevron-right text-gray-400"> </i>
+          </a>
+          <button
+                  class="flex items-center justify-between p-5 hover:bg-gray-50 transition-colors w-full text-left"
+                  id="logout-btn"
+          >
+            <div class="flex items-center text-red-500">
+              <i class="fas fa-sign-out-alt w-6 mr-3"> </i>
+              <span> 退出登录 </span>
+            </div>
+            <i class="fas fa-chevron-right"> </i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- 底部导航栏 -->
+  <div
+          class="flex justify-around py-3 bg-white shadow-inner border-t border-gray-200 fixed bottom-0 left-0 right-0 z-30"
+  >
+    <a
+            class="flex flex-col items-center text-gray-500"
+            href="index.html"
+            target="_top"
+            is-page="true"
+            is-add="false"
+            custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952582013240213504&appName=老友社区副本"
+            onclick="ytCustomLinkNavigation()"
+    >
+      <i class="fas fa-home text-xl mb-1"> </i>
+      <span class="text-xs"> 首页 </span>
+    </a>
+    <a
+            class="flex flex-col items-center text-gray-500"
+            href="apply.html;"
+            target="_top"
+            is-page="true"
+            is-add="false"
+            custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952655355607515136&appName=老友社区副本"
+            onclick="ytCustomLinkNavigation()"
+    >
+      <i class="fas fa-check-square text-xl mb-1"> </i>
+      <span
+              class="text-xs"
+              target="_top"
+              href="javascript:void(0);"
+              is-page="true"
+              is-add="false"
+              custom-href="w=393&h=852&appuuid=1952577510445154304&version=8&pageType=app&uuid=1952655355607515136&appName=老友社区"
+              onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+      >
+            报名
+          </span>
+    </a>
+    <a
+            class="flex flex-col items-center text-gray-500"
+            href="explore.html"
+            target="_top"
+            is-page="true"
+            is-add="false"
+            custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952939038428102656&appName=老友社区副本"
+            onclick="ytCustomLinkNavigation()"
+    >
+      <i class="fas fa-compass text-xl mb-1"> </i>
+      <span class="text-xs"> 发现 </span>
+    </a>
+    <a
+            class="flex flex-col items-center text-gray-500"
+            href="message.html"
+            target="_top"
+            is-page="true"
+            is-add="false"
+            custom-href="w=393&h=852&appuuid=1952577510445154304&version=3&pageType=app&uuid=1952668560933257216&appName=老友社区"
+            onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+    >
+      <i class="fas fa-comment-alt text-xl mb-1"> </i>
+      <span class="text-xs"> 消息 </span>
+    </a>
+    <a
+            class="flex flex-col items-center text-primary"
+            href="myself.html"
+    >
+      <i class="fas fa-user text-xl mb-1"> </i>
+      <span class="text-xs"> 我的 </span>
+    </a>
+  </div>
+</div>
+<!-- 退出登录确认弹窗 -->
+<div
+        class="fixed inset-0 bg-black/50 z-50 hidden items-center justify-center"
+        id="logout-modal"
+>
+  <div
+          class="bg-white rounded-xl p-6 w-full max-w-xs mx-4 transform transition-all duration-300 scale-95 opacity-0"
+          id="modal-content"
+  >
+    <div class="text-center mb-4">
+      <i
+              class="fas fa-sign-out-alt text-4xl text-red-500 mb-3 animate-pulse"
+      >
+      </i>
+      <h3 class="text-lg font-bold text-dark">确认退出登录？</h3>
+      <p class="text-gray-500 text-sm mt-1">退出后将无法接收活动通知</p>
+    </div>
+    <div class="flex space-x-3 mt-6">
+      <button
+              class="flex-1 bg-gray-100 hover:bg-gray-200 text-dark font-medium py-2 rounded-full transition-colors"
+              id="cancel-logout"
+      >
+        取消
+      </button>
+      <button
+              class="flex-1 bg-red-500 hover:bg-red-600 text-white font-medium py-2 rounded-full transition-colors"
+              id="confirm-logout"
+      >
+        确认退出
+      </button>
+    </div>
+  </div>
+</div>
+<!-- JavaScript -->
+<script>
+  function _slicedToArray(arr, i) {
+    return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+  }
+  function _nonIterableRest() {
+    throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+  }
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+    return arr2;
+  }
+  function _iterableToArrayLimit(r, l) {
+    var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+    if (null != t) {
+      var e,
+              n,
+              i,
+              u,
+              a = [],
+              f = !0,
+              o = !1;
+      try {
+        if (i = (t = t.call(r)).next, 0 === l) {
+          if (Object(t) !== t) return;
+          f = !1;
+        } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0);
+      } catch (r) {
+        o = !0, n = r;
+      } finally {
+        try {
+          if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+        } finally {
+          if (o) throw n;
+        }
+      }
+      return a;
+    }
+  }
+  function _arrayWithHoles(arr) {
+    if (Array.isArray(arr)) return arr;
+  }
+  // 页面加载时初始化
+  document.addEventListener('DOMContentLoaded', function () {
+    // 侧边菜单功能
+    var menuToggle = document.getElementById('menu-toggle');
+    var closeMenu = document.getElementById('close-menu');
+    var sideMenu = document.getElementById('side-menu');
+    var menuOverlay = document.getElementById('menu-overlay');
+    function openMenu() {
+      sideMenu.classList.remove('-translate-x-full');
+      menuOverlay.classList.remove('hidden');
+      document.body.classList.add('overflow-hidden');
+    }
+    function closeMenuFunc() {
+      sideMenu.classList.add('-translate-x-full');
+      menuOverlay.classList.add('hidden');
+      document.body.classList.remove('overflow-hidden');
+    }
+    menuToggle.addEventListener('click', openMenu);
+    closeMenu.addEventListener('click', closeMenuFunc);
+    menuOverlay.addEventListener('click', closeMenuFunc);
+
+    // 退出登录功能
+    var logoutBtn = document.getElementById('logout-btn');
+    var logoutModal = document.getElementById('logout-modal');
+    var modalContent = document.getElementById('modal-content');
+    var cancelLogout = document.getElementById('cancel-logout');
+    var confirmLogout = document.getElementById('confirm-logout');
+    function openLogoutModal() {
+      logoutModal.classList.remove('hidden');
+      logoutModal.classList.add('flex');
+      setTimeout(function () {
+        modalContent.classList.remove('scale-95', 'opacity-0');
+        modalContent.classList.add('scale-100', 'opacity-100');
+      }, 10);
+      document.body.classList.add('overflow-hidden');
+    }
+    function closeLogoutModal() {
+      modalContent.classList.remove('scale-100', 'opacity-100');
+      modalContent.classList.add('scale-95', 'opacity-0');
+      setTimeout(function () {
+        logoutModal.classList.add('hidden');
+        logoutModal.classList.remove('flex');
+        document.body.classList.remove('overflow-hidden');
+      }, 300);
+    }
+    logoutBtn.addEventListener('click', openLogoutModal);
+    cancelLogout.addEventListener('click', closeLogoutModal);
+    logoutModal.addEventListener('click', function (e) {
+      if (e.target === logoutModal) {
+        closeLogoutModal();
+      }
+    });
+    confirmLogout.addEventListener('click', function () {
+      // 模拟退出登录
+      alert('已成功退出登录');
+      closeLogoutModal();
+      // 实际项目中这里会跳转到登录页
+    });
+
+    // 功能菜单点击事件
+    var featureItems = {
+      'my-activities': '我的活动页面',
+      'my-collections': '我的收藏页面',
+      'my-friends': '我的好友页面',
+      'my-messages': '我的消息页面'
+    };
+    var _loop = function _loop() {
+      var _Object$entries$_i = _slicedToArray(_Object$entries[_i], 2),
+              id = _Object$entries$_i[0],
+              pageName = _Object$entries$_i[1];
+      document.getElementById(id).addEventListener('click', function () {
+        alert("\u8DF3\u8F6C\u5230".concat(pageName));
+      });
+    };
+    for (var _i = 0, _Object$entries = Object.entries(featureItems); _i < _Object$entries.length; _i++) {
+      _loop();
+    }
+
+    // 编辑资料按钮点击事件
+    document.getElementById('edit-profile').addEventListener('click', function () {
+      alert('跳转到编辑资料页面');
+    });
+
+    // 添加卡片悬停动画效果
+    var cards = document.querySelectorAll('.bg-white.rounded-xl, .bg-white.rounded-2xl');
+    cards.forEach(function (card) {
+      card.addEventListener('mouseenter', function () {
+        this.classList.add('shadow-md');
+        this.classList.add('translate-y-[-2px]');
+      });
+      card.addEventListener('mouseleave', function () {
+        this.classList.remove('shadow-md');
+        this.classList.remove('translate-y-[-2px]');
+      });
+    });
+  });
+</script>
+</body>
+</html>

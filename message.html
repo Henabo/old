@@ -1,0 +1,1128 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>老友社区 - 消息</title>
+  <script src="https://res.gemcoder.com/js/reload.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+          href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#6A5ACD',
+            secondary: '#3498db',
+            dark: '#333333',
+            light: '#f8f9fa',
+            gray: {
+              300: '#d1d5db',
+              400: '#9ca3af',
+              500: '#6b7280',
+              600: '#4b5563'
+            }
+          },
+          fontFamily: {
+            sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .text-shadow {
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+      .message-badge {
+        @apply absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center;
+      }
+      .chat-item-active {
+        @apply bg-primary/5 border-l-4 border-primary;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-dark">
+<!-- 侧边菜单遮罩层 -->
+<div class="fixed inset-0 bg-black/50 z-40 hidden" id="menu-overlay"></div>
+<!-- 侧边菜单 -->
+<div
+        class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out"
+        id="side-menu"
+>
+  <!-- 菜单头部 -->
+  <div class="p-4 border-b">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-lg font-bold text-primary">老友社区</h2>
+      <button class="text-gray-500 hover:text-gray-700" id="close-menu">
+        <i class="fas fa-times text-xl"> </i>
+      </button>
+    </div>
+    <!-- 用户信息 -->
+    <div class="flex flex-col items-center">
+      <img
+              alt="用户头像"
+              class="w-20 h-20 rounded-full object-cover mb-3 border-2 border-primary"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/d73b26fc559275bd5ea91a60febfc711.png"
+      />
+      <h3 class="font-bold text-dark">张大爷</h3>
+      <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+        普通会员
+      </p>
+    </div>
+  </div>
+  <!-- 菜单列表 -->
+  <nav class="p-2">
+    <ul class="space-y-1">
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="index.html"
+        >
+          <i class="fas fa-home w-5 text-center mr-3"> </i>
+          <span> 首页 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-calendar-alt w-5 text-center mr-3"> </i>
+          <span> 活动日历 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-check-square w-5 text-center mr-3"> </i>
+          <span> 我的报名 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-star w-5 text-center mr-3"> </i>
+          <span> 收藏活动 </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-primary bg-primary/10 rounded-lg"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-comment-alt w-5 text-center mr-3"> </i>
+          <span> 消息通知 </span>
+          <span
+                  class="ml-auto bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+          >
+                3
+              </span>
+        </a>
+      </li>
+      <li>
+        <a
+                class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                href="javascript:void(0);"
+        >
+          <i class="fas fa-cog w-5 text-center mr-3"> </i>
+          <span> 设置 </span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>
+<!-- 主容器 -->
+<div class="min-h-screen flex flex-col">
+  <!-- 顶部导航栏 -->
+  <header class="bg-white shadow-sm sticky top-0 z-30">
+    <div
+            class="container mx-auto px-4 py-3 flex items-center justify-between"
+    >
+      <button
+              class="text-gray-600 hover:text-primary transition-colors p-2"
+              id="menu-toggle"
+      >
+        <i class="fas fa-bars text-xl"> </i>
+      </button>
+      <h1 class="text-xl font-bold text-dark flex-1 text-center">
+        消息中心
+      </h1>
+      <div class="flex items-center space-x-2">
+        <button
+                class="text-gray-600 hover:text-primary transition-colors p-2 relative"
+        >
+          <i class="fas fa-search text-xl"> </i>
+        </button>
+        <button
+                class="text-gray-600 hover:text-primary transition-colors p-2 relative"
+        >
+          <i class="fas fa-plus-circle text-xl"> </i>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- 聊天分类标签 -->
+  <div class="bg-white shadow-sm py-2 sticky top-16 z-20">
+    <div class="container mx-auto px-4">
+      <div class="flex items-center justify-around">
+        <button
+                class="flex-1 py-2 text-primary font-medium border-b-2 border-primary"
+                id="private-chats-tab"
+        >
+          私聊
+        </button>
+        <button
+                class="flex-1 py-2 text-gray-500 font-medium border-b-2 border-transparent hover:text-gray-700"
+                id="group-chats-tab"
+        >
+          群聊
+        </button>
+        <button
+                class="flex-1 py-2 text-gray-500 font-medium border-b-2 border-transparent hover:text-gray-700"
+                id="notifications-tab"
+        >
+          通知
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- 主要内容区 -->
+  <main class="flex-1 overflow-y-auto scrollbar-hide">
+    <div class="container mx-auto px-4 py-4">
+      <!-- 私聊列表 -->
+      <div class="space-y-3" id="private-chats">
+        <!-- 搜索框 -->
+        <div class="relative mb-4">
+          <input
+                  class="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  placeholder="搜索聊天..."
+                  type="text"
+          />
+          <i
+                  class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+          >
+          </i>
+        </div>
+        <!-- 常用联系人 -->
+        <div class="mb-4">
+          <h3
+                  class="text-xs font-semibold text-gray-500 uppercase mb-2 px-2"
+          >
+            常用联系人
+          </h3>
+          <div class="flex space-x-2 overflow-x-auto pb-2 scrollbar-hide">
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div
+                      class="relative w-14 h-14 rounded-full overflow-hidden border-2 border-primary/30 mb-1"
+              >
+                <img
+                        alt="李阿姨头像"
+                        class="w-full h-full object-cover"
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/4b6605b5d042e2ae756150e0ad4b60ea.png"
+                />
+              </div>
+              <span class="text-xs text-gray-700 whitespace-nowrap">
+                    李阿姨
+                  </span>
+            </div>
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div
+                      class="relative w-14 h-14 rounded-full overflow-hidden border-2 border-transparent mb-1 hover:border-primary/30 transition-colors"
+              >
+                <img
+                        alt="王大爷头像"
+                        class="w-full h-full object-cover"
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/1c4f49fa421f23e28fe30a461842fb5e.png"
+                />
+              </div>
+              <span class="text-xs text-gray-700 whitespace-nowrap">
+                    王大爷
+                  </span>
+            </div>
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div
+                      class="relative w-14 h-14 rounded-full overflow-hidden border-2 border-transparent mb-1 hover:border-primary/30 transition-colors"
+              >
+                <img
+                        alt="张老师头像"
+                        class="w-full h-full object-cover"
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/e5f9b7f8311609cc1a4a3a0b214d0e57.png"
+                />
+              </div>
+              <span class="text-xs text-gray-700 whitespace-nowrap">
+                    张老师
+                  </span>
+            </div>
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div
+                      class="relative w-14 h-14 rounded-full overflow-hidden border-2 border-transparent mb-1 hover:border-primary/30 transition-colors"
+              >
+                <img
+                        alt="赵医生头像"
+                        class="w-full h-full object-cover"
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/afc0d54a9192b3690566df660f6aa5d2.png"
+                />
+              </div>
+              <span class="text-xs text-gray-700 whitespace-nowrap">
+                    赵医生
+                  </span>
+            </div>
+            <div class="flex-shrink-0 flex flex-col items-center">
+              <div
+                      class="relative w-14 h-14 rounded-full overflow-hidden border-2 border-transparent mb-1 hover:border-primary/30 transition-colors"
+              >
+                <img
+                        alt="陈阿姨头像"
+                        class="w-full h-full object-cover"
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/4b04cb15fe03d0cfe7080257f1257ecf.png"
+                />
+              </div>
+              <span class="text-xs text-gray-700 whitespace-nowrap">
+                    陈阿姨
+                  </span>
+            </div>
+          </div>
+        </div>
+        <!-- 私聊列表 -->
+        <div class="space-y-1">
+          <h3
+                  class="text-xs font-semibold text-gray-500 uppercase mb-2 px-2"
+          >
+            最近聊天
+          </h3>
+          <!-- 聊天项1 - 有新消息 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item chat-item-active"
+                  data-chat-id="1"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="李阿姨头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/4b6605b5d042e2ae756150e0ad4b60ea.png"
+              />
+              <span
+                      class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0 border-2 border-white"
+              >
+                  </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">李阿姨</h3>
+                <span class="text-xs text-gray-400"> 09:42 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate flex items-center">
+                <i class="fas fa-check-circle text-primary mr-1 text-xs">
+                </i>
+                明天的书法课记得带毛笔哦
+              </p>
+            </div>
+            <span class="message-badge"> 3 </span>
+          </div>
+          <!-- 聊天项2 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="2"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="王大爷头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/1c4f49fa421f23e28fe30a461842fb5e.png"
+              />
+              <span
+                      class="w-3 h-3 bg-gray-300 rounded-full absolute bottom-0 right-0 border-2 border-white"
+              >
+                  </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">王大爷</h3>
+                <span class="text-xs text-gray-400"> 昨天 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate">
+                象棋比赛下周六上午九点开始
+              </p>
+            </div>
+          </div>
+          <!-- 聊天项3 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="3"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="张老师头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/e5f9b7f8311609cc1a4a3a0b214d0e57.png"
+              />
+              <span
+                      class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0 border-2 border-white"
+              >
+                  </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">张老师</h3>
+                <span class="text-xs text-gray-400"> 昨天 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate flex items-center">
+                <i class="fas fa-check text-gray-400 mr-1 text-xs"> </i>
+                下周一的健康讲座资料已发送
+              </p>
+            </div>
+          </div>
+          <!-- 聊天项4 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="4"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="赵医生头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/afc0d54a9192b3690566df660f6aa5d2.png"
+              />
+              <span
+                      class="w-3 h-3 bg-gray-300 rounded-full absolute bottom-0 right-0 border-2 border-white"
+              >
+                  </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">赵医生</h3>
+                <span class="text-xs text-gray-400"> 07-25 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate">
+                夏季要注意防暑降温，多喝绿豆汤
+              </p>
+            </div>
+          </div>
+          <!-- 聊天项5 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="5"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="陈阿姨头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/4b04cb15fe03d0cfe7080257f1257ecf.png"
+              />
+              <span
+                      class="w-3 h-3 bg-green-500 rounded-full absolute bottom-0 right-0 border-2 border-white"
+              >
+                  </span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">陈阿姨</h3>
+                <span class="text-xs text-gray-400"> 07-24 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate">
+                上次做的点心很好吃，能告诉我 recipe 吗？
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 群聊列表 - 默认隐藏 -->
+      <div class="space-y-3 hidden" id="group-chats">
+        <div class="relative mb-4">
+          <input
+                  class="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  placeholder="搜索群聊..."
+                  type="text"
+          />
+          <i
+                  class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+          >
+          </i>
+        </div>
+        <!-- 群聊列表 -->
+        <div class="space-y-1">
+          <a
+                  class="yt-a-defalut-link bg-white rounded-lg p-3 flex items-center chat-item chat-item-active"
+                  custom-a="true"
+                  custom-href="w=393&h=852&appuuid=1952577510445154304&version=1&pageType=app&uuid=1952667721388785664&appName=老友社区"
+                  href="chat.html"
+                  is-add="true"
+                  is-page="true"
+                  onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                  style="padding: 0px; border: 0px; box-shadow: none;"
+                  target="_top"
+          >
+            <div
+                    class="bg-white rounded-lg p-3 flex items-center chat-item chat-item-active"
+                    data-chat-id="101"
+                    data-selectorname="#id-0bv7e"
+                    style
+            >
+              <div class="relative mr-3 flex-shrink-0">
+                <img
+                        alt="书法爱好者群头像"
+                        class="w-12 h-12 rounded-full object-cover"
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/2fe1202439edf0e40ac7b73b9575f04a.png"
+                />
+              </div>
+              <div class="flex-1 min-w-0" style>
+                <div class="flex justify-between items-center mb-1" style>
+                  <h3 class="font-medium text-dark truncate" style>
+                    书法爱好者群
+                  </h3>
+                  <span class="text-xs text-gray-400"> 10:15 </span>
+                </div>
+                <p
+                        class="text-sm text-gray-500 truncate flex items-center"
+                        style
+                >
+                  <span class="text-primary mr-1" style> 管理员: </span>
+                  明天下午的活动地点改在三楼活动室
+                </p>
+              </div>
+              <span class="message-badge"> 5 </span>
+            </div>
+          </a>
+          <!-- 群聊项2 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="102"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="社区象棋队头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c52a0910ffecc022a27b54226b5f730e.png"
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">社区象棋队</h3>
+                <span class="text-xs text-gray-400"> 昨天 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate flex items-center">
+                <span class="text-primary mr-1"> 王大爷: </span>
+                下周六比赛的奖品已经准备好了
+              </p>
+            </div>
+          </div>
+          <!-- 群聊项3 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="103"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="健康养生交流群头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/48d2a82ba9aacd8d9bbbf46be25abfd5.png"
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">
+                  健康养生交流群
+                </h3>
+                <span class="text-xs text-gray-400"> 07-28 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate flex items-center">
+                <span class="text-primary mr-1"> 赵医生: </span>
+                夏季防暑降温小知识已分享
+              </p>
+            </div>
+          </div>
+          <!-- 群聊项4 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="104"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="老年摄影俱乐部头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/3a83f281c894b4a63d73b0f44b9c4d3f.png"
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">
+                  老年摄影俱乐部
+                </h3>
+                <span class="text-xs text-gray-400"> 07-27 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate flex items-center">
+                <span class="text-primary mr-1"> 李老师: </span>
+                下周日植物园外拍活动报名开始了
+              </p>
+            </div>
+          </div>
+          <!-- 群聊项5 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex items-center chat-item"
+                  data-chat-id="105"
+          >
+            <div class="relative mr-3 flex-shrink-0">
+              <img
+                      alt="社区合唱队头像"
+                      class="w-12 h-12 rounded-full object-cover"
+                      src="https://design.gemcoder.com/staticResource/echoAiSystemImages/79b62aa9896f2d857c9cba2df9554d0f.png"
+              />
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-center mb-1">
+                <h3 class="font-medium text-dark truncate">社区合唱队</h3>
+                <span class="text-xs text-gray-400"> 07-26 </span>
+              </div>
+              <p class="text-sm text-gray-500 truncate flex items-center">
+                <span class="text-primary mr-1"> 张指挥: </span>
+                国庆演出的曲目确定了，大家查看一下
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 通知列表 - 默认隐藏 -->
+      <div class="space-y-3 hidden" id="notifications">
+        <div class="relative mb-4">
+          <input
+                  class="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  placeholder="搜索通知..."
+                  type="text"
+          />
+          <i
+                  class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+          >
+          </i>
+        </div>
+        <!-- 通知列表 -->
+        <div class="space-y-3">
+          <!-- 通知项1 - 活动提醒 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex"
+                  data-notification-id="1"
+          >
+            <div class="mr-3 flex-shrink-0 bg-blue-100 p-2 rounded-full">
+              <i class="fas fa-calendar-check text-blue-500"> </i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start mb-1">
+                <h3 class="font-medium text-dark">活动提醒</h3>
+                <span class="text-xs text-gray-400"> 今天 10:00 </span>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">
+                您报名的"书法入门班"将于明天下午2点开始，请准时参加。
+              </p>
+              <div class="flex space-x-2">
+                <button
+                        class="text-xs bg-primary text-white px-3 py-1 rounded-full"
+                >
+                  查看详情
+                </button>
+                <button
+                        class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full"
+                >
+                  已了解
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- 通知项2 - 系统通知 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex"
+                  data-notification-id="2"
+          >
+            <div class="mr-3 flex-shrink-0 bg-green-100 p-2 rounded-full">
+              <i class="fas fa-bell text-green-500"> </i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start mb-1">
+                <h3 class="font-medium text-dark">系统通知</h3>
+                <span class="text-xs text-gray-400"> 昨天 </span>
+              </div>
+              <p class="text-sm text-gray-600">
+                社区将于8月15日举办夏季文艺汇演，欢迎居民踊跃报名参与。
+              </p>
+            </div>
+          </div>
+          <!-- 通知项3 - 好友请求 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex"
+                  data-notification-id="3"
+          >
+            <div class="mr-3 flex-shrink-0 bg-purple-100 p-2 rounded-full">
+              <i class="fas fa-user-plus text-purple-500"> </i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start mb-1">
+                <h3 class="font-medium text-dark">好友请求</h3>
+                <span class="text-xs text-gray-400"> 07-28 </span>
+              </div>
+              <p class="text-sm text-gray-600 mb-2">
+                刘阿姨想加您为好友，你们有3个共同兴趣爱好。
+              </p>
+              <div class="flex space-x-2">
+                <button
+                        class="text-xs bg-green-500 text-white px-3 py-1 rounded-full"
+                >
+                  同意
+                </button>
+                <button
+                        class="text-xs bg-gray-100 text-gray-600 px-3 py-1 rounded-full"
+                >
+                  忽略
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- 通知项4 - 活动取消 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex"
+                  data-notification-id="4"
+          >
+            <div class="mr-3 flex-shrink-0 bg-red-100 p-2 rounded-full">
+              <i class="fas fa-calendar-times text-red-500"> </i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start mb-1">
+                <h3 class="font-medium text-dark">活动取消</h3>
+                <span class="text-xs text-gray-400"> 07-27 </span>
+              </div>
+              <p class="text-sm text-gray-600">
+                原定于7月29日的"夏季健康讲座"因讲师临时有事取消，具体时间另行通知。
+              </p>
+            </div>
+          </div>
+          <!-- 通知项5 - 系统公告 -->
+          <div
+                  class="bg-white rounded-lg p-3 flex"
+                  data-notification-id="5"
+          >
+            <div class="mr-3 flex-shrink-0 bg-yellow-100 p-2 rounded-full">
+              <i class="fas fa-bullhorn text-yellow-500"> </i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex justify-between items-start mb-1">
+                <h3 class="font-medium text-dark">系统公告</h3>
+                <span class="text-xs text-gray-400"> 07-25 </span>
+              </div>
+              <p class="text-sm text-gray-600">
+                社区APP已更新至最新版本，新增了活动报名提醒功能，建议您及时更新。
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+  <!-- 底部导航栏 -->
+  <footer
+          class="bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] sticky bottom-0 z-20"
+  >
+    <div class="container mx-auto">
+      <div class="flex justify-around py-3" data-selectorname="#id-h31b6">
+        <a
+                class="flex flex-col items-center text-gray-500"
+                href="index.html"
+                target="_top"
+                is-page="true"
+                is-add="false"
+                custom-href="w=393&h=852&appuuid=1952577510445154304&version=13&pageType=app&uuid=1952582013240213504&appName=老友社区"
+                onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+        >
+          <i class="fas fa-home text-xl mb-1"> </i>
+          <span class="text-xs"> 首页 </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-gray-500"
+                custom-href="w=393&h=852&appuuid=1952577510445154304&version=4&pageType=app&uuid=1952655355607515136&appName=老友社区"
+                href="apply.html"
+                is-add="false"
+                is-page="true"
+                onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                target="_top"
+        >
+          <i class="fas fa-check-square text-xl mb-1"> </i>
+          <span class="text-xs"> 报名 </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-gray-500"
+                href="explore.html"
+                target="_top"
+                is-page="true"
+                is-add="false"
+                custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952939038428102656&appName=老友社区副本"
+                onclick="ytCustomLinkNavigation()"
+        >
+          <i class="fas fa-compass text-xl mb-1"> </i>
+          <span class="text-xs"> 发现 </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-primary"
+                custom-href="w=393&h=852&appuuid=1952577510445154304&version=1&pageType=app&uuid=1952668560933257216&appName=老友社区"
+                href="message.html"
+                is-add="false"
+                is-page="true"
+                onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                target="_top"
+        >
+          <i class="fas fa-comment-alt text-xl mb-1"> </i>
+          <span class="text-xs"> 消息 </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-gray-500"
+                href="myself.html"
+                target="_top"
+                is-page="true"
+                is-add="false"
+                custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952669856096583680&appName=老友社区副本"
+                onclick="ytCustomLinkNavigation()"
+        >
+          <i class="fas fa-user text-xl mb-1"> </i>
+          <span class="text-xs"> 我的 </span>
+        </a>
+      </div>
+    </div>
+  </footer>
+</div>
+<!-- JavaScript -->
+<script>
+  // 页面加载时初始化
+  document.addEventListener('DOMContentLoaded', function () {
+    // 侧边菜单功能
+    var menuToggle = document.getElementById('menu-toggle');
+    var closeMenu = document.getElementById('close-menu');
+    var sideMenu = document.getElementById('side-menu');
+    var menuOverlay = document.getElementById('menu-overlay');
+    function openMenu() {
+      sideMenu.classList.remove('-translate-x-full');
+      menuOverlay.classList.remove('hidden');
+    }
+    function closeMenuFunc() {
+      sideMenu.classList.add('-translate-x-full');
+      menuOverlay.classList.add('hidden');
+    }
+    menuToggle.addEventListener('click', openMenu);
+    closeMenu.addEventListener('click', closeMenuFunc);
+    menuOverlay.addEventListener('click', closeMenuFunc);
+
+    // 聊天标签切换功能
+    var privateChatsTab = document.getElementById('private-chats-tab');
+    var groupChatsTab = document.getElementById('group-chats-tab');
+    var notificationsTab = document.getElementById('notifications-tab');
+    var privateChats = document.getElementById('private-chats');
+    var groupChats = document.getElementById('group-chats');
+    var notifications = document.getElementById('notifications');
+    privateChatsTab.addEventListener('click', function () {
+      // 切换标签样式
+      privateChatsTab.classList.add('text-primary', 'border-primary');
+      privateChatsTab.classList.remove('text-gray-500', 'border-transparent');
+      groupChatsTab.classList.add('text-gray-500', 'border-transparent');
+      groupChatsTab.classList.remove('text-primary', 'border-primary');
+      notificationsTab.classList.add('text-gray-500', 'border-transparent');
+      notificationsTab.classList.remove('text-primary', 'border-primary');
+
+      // 切换内容显示
+      privateChats.classList.remove('hidden');
+      groupChats.classList.add('hidden');
+      notifications.classList.add('hidden');
+    });
+    groupChatsTab.addEventListener('click', function () {
+      // 切换标签样式
+      groupChatsTab.classList.add('text-primary', 'border-primary');
+      groupChatsTab.classList.remove('text-gray-500', 'border-transparent');
+      privateChatsTab.classList.add('text-gray-500', 'border-transparent');
+      privateChatsTab.classList.remove('text-primary', 'border-primary');
+      notificationsTab.classList.add('text-gray-500', 'border-transparent');
+      notificationsTab.classList.remove('text-primary', 'border-primary');
+
+      // 切换内容显示
+      groupChats.classList.remove('hidden');
+      privateChats.classList.add('hidden');
+      notifications.classList.add('hidden');
+    });
+    notificationsTab.addEventListener('click', function () {
+      // 切换标签样式
+      notificationsTab.classList.add('text-primary', 'border-primary');
+      notificationsTab.classList.remove('text-gray-500', 'border-transparent');
+      privateChatsTab.classList.add('text-gray-500', 'border-transparent');
+      privateChatsTab.classList.remove('text-primary', 'border-primary');
+      groupChatsTab.classList.add('text-gray-500', 'border-transparent');
+      groupChatsTab.classList.remove('text-primary', 'border-primary');
+
+      // 切换内容显示
+      notifications.classList.remove('hidden');
+      privateChats.classList.add('hidden');
+      groupChats.classList.add('hidden');
+    });
+
+    // 聊天项点击效果
+    var chatItems = document.querySelectorAll('.chat-item');
+    chatItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        // 移除其他项的active状态
+        chatItems.forEach(function (i) {
+          return i.classList.remove('chat-item-active');
+        });
+        // 添加当前项的active状态
+        this.classList.add('chat-item-active');
+
+        // 获取聊天ID，实际应用中可以跳转到对应的聊天界面
+        var chatId = this.getAttribute('data-chat-id');
+        console.log("\u6253\u5F00\u804A\u5929\u7A97\u53E3: ".concat(chatId));
+
+        // 在实际应用中，这里可以添加跳转到聊天详情页的逻辑
+        // window.location.href = `chat.html?id=${chatId}`;
+      });
+    });
+
+    // 通知项点击效果
+    var notificationItems = document.querySelectorAll('[data-notification-id]');
+    notificationItems.forEach(function (item) {
+      item.addEventListener('click', function () {
+        var notificationId = this.getAttribute('data-notification-id');
+        console.log("\u67E5\u770B\u901A\u77E5: ".concat(notificationId));
+      });
+    });
+
+    // 通知标记清除按钮
+    var notificationButtons = document.querySelectorAll('[data-notification-id] .bg-gray-100');
+    notificationButtons.forEach(function (button) {
+      button.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var notificationItem = this.closest('[data-notification-id]');
+        notificationItem.style.opacity = '0.5';
+        setTimeout(function () {
+          notificationItem.style.height = '0';
+          notificationItem.style.padding = '0';
+          notificationItem.style.margin = '0';
+          notificationItem.style.overflow = 'hidden';
+          notificationItem.style.transition = 'all 0.3s ease';
+          setTimeout(function () {
+            return notificationItem.remove();
+          }, 300);
+        }, 300);
+      });
+    });
+  });
+</script>
+</body>
+</html>

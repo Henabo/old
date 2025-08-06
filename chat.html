@@ -1,0 +1,748 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>聊天界面</title>
+  <script src="https://res.gemcoder.com/js/reload.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+          href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#165DFF',
+            secondary: '#7B61FF',
+            success: '#00B42A',
+            warning: '#FF7D00',
+            danger: '#F53F3F',
+            info: '#86909C',
+            light: '#F2F3F5',
+            dark: '#1D2129',
+            'chat-bg': '#F7F9FC',
+            'chat-bubble-me': '#165DFF',
+            'chat-bubble-other': '#FFFFFF'
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif']
+          },
+          boxShadow: {
+            'bubble': '0 1px 2px rgba(0, 0, 0, 0.1)',
+            'card': '0 4px 12px rgba(0, 0, 0, 0.05)'
+          }
+        }
+      }
+    };
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .text-shadow {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+      }
+      .chat-bubble-me {
+        border-radius: 18px 18px 4px 18px;
+      }
+      .chat-bubble-other {
+        border-radius: 18px 18px 18px 4px;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-100 font-sans text-dark min-h-screen">
+<!-- 顶部导航栏 -->
+<header
+        class="fixed top-0 left-0 right-0 bg-white shadow-sm z-50 transition-all duration-300"
+        id="chatHeader"
+>
+  <div
+          class="container mx-auto px-4 py-3 flex items-center justify-between"
+  >
+    <div class="flex items-center space-x-3">
+      <button
+              id="backBtn"
+              class="text-dark hover:text-primary transition-colors"
+      >
+        <a
+                class="yt-a-defalut-link fas fa-arrow-left text-xl flex"
+                target="_top"
+                is-page="true"
+                href="message.html"
+                custom-href="w=393&h=852&appuuid=1952577510445154304&version=1&pageType=app&uuid=1952668560933257216&appName=老友社区"
+                onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                custom-a="true"
+                is-add="true"
+                style="padding: 0px; border: 0px; box-shadow: none;"
+        >
+        </a>
+      </button>
+      <div class="flex items-center space-x-3">
+        <div class="relative">
+          <img
+                  id="chatAvatar"
+                  src="https://design.gemcoder.com/staticResource/echoAiSystemImages/f8ec5c7160c60b996c53d815204a6f1b.png"
+                  alt="聊天头像"
+                  class="w-10 h-10 rounded-full object-cover border-2 border-primary"
+          />
+          <span
+                  id="onlineStatus"
+                  class="absolute bottom-0 right-0 w-3 h-3 bg-success rounded-full border-2 border-white"
+          >
+              </span>
+        </div>
+        <div>
+          <h1 id="chatTitle" class="font-semibold text-base">活动交流群</h1>
+          <p id="chatSubtitle" class="text-xs text-info">
+            32人在线，共58人
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center space-x-4">
+      <button
+              class="text-dark hover:text-primary transition-colors"
+              id="searchBtn"
+      >
+        <i class="fas fa-search text-xl"> </i>
+      </button>
+      <button
+              class="text-dark hover:text-primary transition-colors"
+              id="moreBtn"
+      >
+        <i class="fas fa-ellipsis-v text-xl"> </i>
+      </button>
+    </div>
+  </div>
+</header>
+<!-- 聊天内容区域 -->
+<main
+        class="pt-20 pb-24 bg-chat-bg overflow-y-auto h-screen scrollbar-hide"
+        id="chatContent"
+>
+  <div class="container mx-auto px-4 py-4 space-y-6">
+    <!-- 日期分隔线 -->
+    <div class="flex justify-center">
+          <span class="bg-gray-200 text-info text-xs px-3 py-1 rounded-full">
+            今天 14:30
+          </span>
+    </div>
+    <!-- 系统消息 -->
+    <div class="flex justify-center">
+      <div
+              class="bg-gray-200 text-info text-xs px-3 py-1 rounded-full max-w-xs text-center"
+      >
+        <i class="fas fa-info-circle mr-1"> </i>
+        小明加入了群聊
+      </div>
+    </div>
+    <!-- 他人消息 -->
+    <div class="flex items-start space-x-2" data-author="other">
+      <img
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/82fb230e07a6e2d18fe5e16e83e5d630.png"
+              alt="用户头像"
+              class="w-8 h-8 rounded-full object-cover mt-1"
+      />
+      <div class="flex flex-col space-y-1 max-w-[75%]">
+        <span class="text-xs text-info font-medium"> 李华 </span>
+        <div
+                class="bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other"
+        >
+          <p class="text-sm">
+            大家好！请问活动具体是明天几点开始？需要带什么东西吗？
+          </p>
+        </div>
+        <span class="text-xs text-info self-end"> 14:32 </span>
+      </div>
+    </div>
+    <!-- 他人消息带图片 -->
+    <div class="flex items-start space-x-2" data-author="other">
+      <img
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/eed88b577af31fbd441eaa1febe574a9.png"
+              alt="用户头像"
+              class="w-8 h-8 rounded-full object-cover mt-1"
+      />
+      <div class="flex flex-col space-y-1 max-w-[75%]">
+        <span class="text-xs text-info font-medium"> 张小红 </span>
+        <div
+                class="bg-chat-bubble-other shadow-bubble p-1 rounded-lg chat-bubble-other"
+        >
+          <img
+                  src="https://design.gemcoder.com/staticResource/echoAiSystemImages/778c24080ac19e5e5195416468083b68.png"
+                  alt="活动海报"
+                  class="w-full h-auto rounded-lg"
+          />
+        </div>
+        <div
+                class="bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other"
+        >
+          <p class="text-sm">这是活动海报，上面有详细时间和物品清单</p>
+        </div>
+        <span class="text-xs text-info self-end"> 14:35 </span>
+      </div>
+    </div>
+    <!-- 我的消息 -->
+    <div class="flex items-start justify-end space-x-2" data-author="me">
+      <div class="flex flex-col space-y-1 max-w-[75%] items-end">
+        <div
+                class="bg-chat-bubble-me text-white shadow-bubble p-3 rounded-lg chat-bubble-me"
+        >
+          <p class="text-sm">
+            谢谢分享！我看到海报了，明天上午9点开始对吧？
+          </p>
+        </div>
+        <span class="text-xs text-info">
+              14:38
+              <i class="fas fa-check-circle ml-1"> </i>
+            </span>
+      </div>
+    </div>
+    <!-- 他人消息 -->
+    <div class="flex items-start space-x-2" data-author="other">
+      <img
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/485eefea04a8af65399cfc2796dcbeee.png"
+              alt="用户头像"
+              class="w-8 h-8 rounded-full object-cover mt-1"
+      />
+      <div class="flex flex-col space-y-1 max-w-[75%]">
+        <span class="text-xs text-info font-medium"> 王组织者 </span>
+        <div
+                class="bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other"
+        >
+          <p class="text-sm">
+            是的，明天上午9点准时开始，请大家提前15分钟到场签到。需要带笔记本和笔，我们会提供活动资料。
+          </p>
+        </div>
+        <span class="text-xs text-info self-end"> 14:40 </span>
+      </div>
+    </div>
+    <!-- 他人消息 -->
+    <div class="flex items-start space-x-2" data-author="other">
+      <img
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/31a6ca2f17b7ff2cbef59f3a7e5ae828.png"
+              alt="用户头像"
+              class="w-8 h-8 rounded-full object-cover mt-1"
+      />
+      <div class="flex flex-col space-y-1 max-w-[75%]">
+        <span class="text-xs text-info font-medium"> 赵小丽 </span>
+        <div
+                class="bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other"
+        >
+          <p class="text-sm">请问活动地点还是在科技园区A座5楼会议室吗？</p>
+        </div>
+        <span class="text-xs text-info self-end"> 14:42 </span>
+      </div>
+    </div>
+    <!-- 我的消息 -->
+    <div class="flex items-start justify-end space-x-2" data-author="me">
+      <div class="flex flex-col space-y-1 max-w-[75%] items-end">
+        <div
+                class="bg-chat-bubble-me text-white shadow-bubble p-3 rounded-lg chat-bubble-me"
+        >
+          <p class="text-sm">
+            我开车去，可以带2个人，有谁需要搭车吗？大概8点从市中心出发。
+          </p>
+        </div>
+        <span class="text-xs text-info">
+              14:45
+              <i class="fas fa-check-circle ml-1"> </i>
+            </span>
+      </div>
+    </div>
+    <!-- 他人消息 -->
+    <div class="flex items-start space-x-2" data-author="other">
+      <img
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/82fb230e07a6e2d18fe5e16e83e5d630.png"
+              alt="用户头像"
+              class="w-8 h-8 rounded-full object-cover mt-1"
+      />
+      <div class="flex flex-col space-y-1 max-w-[75%]">
+        <span class="text-xs text-info font-medium"> 李华 </span>
+        <div
+                class="bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other"
+        >
+          <p class="text-sm">我需要！谢谢！我在人民广场附近，可以吗？</p>
+        </div>
+        <span class="text-xs text-info self-end"> 14:47 </span>
+      </div>
+    </div>
+    <!-- 他人消息 -->
+    <div class="flex items-start space-x-2" data-author="other">
+      <img
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/b41947c1fd471f4e47520e929913a63a.png"
+              alt="用户头像"
+              class="w-8 h-8 rounded-full object-cover mt-1"
+      />
+      <div class="flex flex-col space-y-1 max-w-[75%]">
+        <span class="text-xs text-info font-medium"> 陈静 </span>
+        <div
+                class="bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other"
+        >
+          <p class="text-sm">我也想搭车，我在东方大厦附近，方便吗？</p>
+        </div>
+        <span class="text-xs text-info self-end"> 14:48 </span>
+      </div>
+    </div>
+    <!-- 我的消息 -->
+    <div class="flex items-start justify-end space-x-2" data-author="me">
+      <div class="flex flex-col space-y-1 max-w-[75%] items-end">
+        <div
+                class="bg-chat-bubble-me text-white shadow-bubble p-3 rounded-lg chat-bubble-me"
+        >
+          <p class="text-sm">
+            没问题，我先到人民广场接李华，再到东方大厦接陈静，大概8:15能到东方大厦。
+          </p>
+        </div>
+        <span class="text-xs text-info">
+              14:50
+              <i class="fas fa-check-circle ml-1"> </i>
+            </span>
+      </div>
+    </div>
+    <!-- 正在输入提示 -->
+    <div
+            class="flex items-start space-x-2"
+            id="typingIndicator"
+            style="display: none;"
+    >
+      <img
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/733b932bf2723aaabc730c738fc7ced7.png"
+              alt="用户头像"
+              class="w-8 h-8 rounded-full object-cover mt-1"
+      />
+      <div
+              class="bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other"
+      >
+        <div class="flex space-x-1">
+              <span
+                      class="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.3s]"
+              >
+              </span>
+          <span
+                  class="w-2 h-2 bg-gray-400 rounded-full animate-bounce [animation-delay:-0.15s]"
+          >
+              </span>
+          <span class="w-2 h-2 bg-gray-400 rounded-full animate-bounce">
+              </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<!-- 底部输入区域 -->
+<footer
+        class="fixed bottom-0 left-0 right-0 bg-white shadow-lg z-40 p-3"
+        id="chatInputArea"
+>
+  <div class="container mx-auto">
+    <!-- 功能按钮 -->
+    <div class="flex justify-between items-center mb-2">
+      <div class="flex space-x-4">
+        <button
+                class="text-info hover:text-primary transition-colors"
+                id="emojiBtn"
+        >
+          <i class="fas fa-smile text-xl"> </i>
+        </button>
+        <button
+                class="text-info hover:text-primary transition-colors"
+                id="imageBtn"
+        >
+          <i class="fas fa-image text-xl"> </i>
+        </button>
+        <button
+                class="text-info hover:text-primary transition-colors"
+                id="fileBtn"
+        >
+          <i class="fas fa-paperclip text-xl"> </i>
+        </button>
+        <button
+                class="text-info hover:text-primary transition-colors"
+                id="voiceBtn"
+        >
+          <i class="fas fa-microphone text-xl"> </i>
+        </button>
+      </div>
+      <div class="flex space-x-4">
+        <button
+                class="text-info hover:text-primary transition-colors"
+                id="redPacketBtn"
+        >
+          <i class="fas fa-red-envelope text-xl"> </i>
+        </button>
+        <button
+                class="text-info hover:text-primary transition-colors"
+                id="locationBtn"
+        >
+          <i class="fas fa-map-marker-alt text-xl"> </i>
+        </button>
+      </div>
+    </div>
+    <!-- 输入框和发送按钮 -->
+    <div class="flex items-end space-x-2">
+      <div class="relative flex-1">
+            <textarea
+                    id="messageInput"
+                    placeholder="输入消息..."
+                    class="w-full border border-gray-200 rounded-full py-2 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary resize-none transition-all duration-300"
+                    rows="1"
+            >
+            </textarea>
+        <button
+                class="absolute right-3 bottom-2 text-info hover:text-primary transition-colors"
+                id="clearInputBtn"
+        >
+          <i class="fas fa-times-circle"> </i>
+        </button>
+      </div>
+      <button
+              id="sendBtn"
+              class="bg-primary text-white rounded-full w-10 h-10 flex items-center justify-center hover:bg-primary/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed"
+      >
+        <i class="fas fa-paper-plane"> </i>
+      </button>
+    </div>
+  </div>
+</footer>
+<!-- 聊天模式切换弹窗 -->
+<div
+        id="modeSwitchModal"
+        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden"
+>
+  <div
+          class="bg-white rounded-2xl w-5/6 max-w-md p-6 shadow-xl transform transition-all"
+  >
+    <h3 class="text-lg font-bold text-center mb-6">切换聊天模式</h3>
+    <div class="space-y-4">
+      <button
+              id="groupChatModeBtn"
+              class="flex items-center justify-between w-full p-4 border border-primary bg-primary/5 rounded-xl"
+      >
+        <div class="flex items-center space-x-3">
+          <div
+                  class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"
+          >
+            <i class="fas fa-users text-xl"> </i>
+          </div>
+          <div>
+            <h4 class="font-semibold">群聊模式</h4>
+            <p class="text-xs text-info">多人活动交流</p>
+          </div>
+        </div>
+        <i class="fas fa-check text-primary"> </i>
+      </button>
+      <button
+              id="privateChatModeBtn"
+              class="flex items-center justify-between w-full p-4 border border-gray-200 rounded-xl hover:border-primary/50 transition-colors"
+      >
+        <div class="flex items-center space-x-3">
+          <div
+                  class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-info"
+          >
+            <i class="fas fa-user text-xl"> </i>
+          </div>
+          <div>
+            <h4 class="font-semibold">私聊模式</h4>
+            <p class="text-xs text-info">一对一聊天</p>
+          </div>
+        </div>
+        <i class="fas fa-check text-transparent"> </i>
+      </button>
+    </div>
+    <button
+            id="closeModalBtn"
+            class="mt-6 w-full py-3 bg-gray-100 text-dark rounded-xl font-medium hover:bg-gray-200 transition-colors"
+    >
+      取消
+    </button>
+  </div>
+</div>
+<script>
+  // 页面加载时初始化渲染
+  document.addEventListener('DOMContentLoaded', function () {
+    // 获取DOM元素
+    var chatHeader = document.getElementById('chatHeader');
+    var chatContent = document.getElementById('chatContent');
+    var messageInput = document.getElementById('messageInput');
+    var sendBtn = document.getElementById('sendBtn');
+    var clearInputBtn = document.getElementById('clearInputBtn');
+    var typingIndicator = document.getElementById('typingIndicator');
+    var modeSwitchModal = document.getElementById('modeSwitchModal');
+    var groupChatModeBtn = document.getElementById('groupChatModeBtn');
+    var privateChatModeBtn = document.getElementById('privateChatModeBtn');
+    var closeModalBtn = document.getElementById('closeModalBtn');
+    var moreBtn = document.getElementById('moreBtn');
+    var chatTitle = document.getElementById('chatTitle');
+    var chatSubtitle = document.getElementById('chatSubtitle');
+    var chatAvatar = document.getElementById('chatAvatar');
+    var onlineStatus = document.getElementById('onlineStatus');
+    // 聊天模式状态 (group/private)
+    var chatMode = 'group';
+
+    // 监听输入框变化，控制发送按钮状态
+    messageInput.addEventListener('input', function () {
+      sendBtn.disabled = messageInput.value.trim() === '';
+
+      // 显示/隐藏清除按钮
+      if (messageInput.value.trim() !== '') {
+        clearInputBtn.classList.remove('hidden');
+      } else {
+        clearInputBtn.classList.add('hidden');
+      }
+
+      // 自动调整输入框高度
+      messageInput.style.height = 'auto';
+      var newHeight = Math.min(messageInput.scrollHeight, 100); // 限制最大高度
+      messageInput.style.height = newHeight + 'px';
+    });
+
+    // 清除输入框内容
+    clearInputBtn.addEventListener('click', function () {
+      messageInput.value = '';
+      sendBtn.disabled = true;
+      clearInputBtn.classList.add('hidden');
+      messageInput.style.height = 'auto';
+    });
+
+    // 发送消息
+    sendBtn.addEventListener('click', sendMessage);
+
+    // 按Enter键发送消息
+    messageInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        sendMessage();
+      }
+    });
+
+    // 发送消息函数
+    function sendMessage() {
+      var message = messageInput.value.trim();
+      if (!message) return;
+
+      // 创建新消息元素
+      var now = new Date();
+      var timeString = "".concat(now.getHours().toString().padStart(2, '0'), ":").concat(now.getMinutes().toString().padStart(2, '0'));
+      var messageHTML = "\n                    <div class=\"flex items-start justify-end space-x-2\" data-author=\"me\" data-ytId=\"id-zpvpt\" data-ytId=\"id-epvv3\" data-ytId=\"id-6b2x7\" data-ytId=\"id-ghtsg\">\n                        <div class=\"flex flex-col space-y-1 max-w-[75%] items-end\" data-ytId=\"id-2cgsk\" data-ytId=\"id-d317e\" data-ytId=\"id-bidfw\" data-ytId=\"id-fuzo0\">\n                            <div class=\"bg-chat-bubble-me text-white shadow-bubble p-3 rounded-lg chat-bubble-me\" data-ytId=\"id-lnzxm\" data-ytId=\"id-7rup9\" data-ytId=\"id-i9unl\" data-ytId=\"id-gb1ne\">\n                                <p class=\"text-sm\">".concat(message, "</p>\n                            </div>\n                            <span class=\"text-xs text-info\">").concat(timeString, " <i class=\"fas fa-check-circle ml-1\" data-ytId=\"id-ruged\" data-ytId=\"id-uov4r\" data-ytId=\"id-aj9gw\" data-ytId=\"id-lf7xu\"></i></span>\n                        </div>\n                    </div>\n                ");
+
+      // 添加到聊天内容
+      var container = chatContent.querySelector('.container');
+      container.insertAdjacentHTML('beforeend', messageHTML);
+
+      // 清空输入框
+      messageInput.value = '';
+      sendBtn.disabled = true;
+      clearInputBtn.classList.add('hidden');
+      messageInput.style.height = 'auto';
+
+      // 滚动到底部
+      chatContent.scrollTop = chatContent.scrollHeight;
+
+      // 模拟对方正在输入
+      setTimeout(function () {
+        typingIndicator.style.display = 'flex';
+        chatContent.scrollTop = chatContent.scrollHeight;
+
+        // 模拟回复
+        setTimeout(function () {
+          typingIndicator.style.display = 'none';
+          simulateReply();
+        }, 1500);
+      }, 1000);
+    }
+
+    // 模拟回复
+    function simulateReply() {
+      var replies = ["好的，我知道了！", "谢谢你的信息。", "这个建议不错，我会考虑的。", "我们稍后再讨论这个问题吧。", "我明白了，谢谢你的分享！"];
+      var randomReply = replies[Math.floor(Math.random() * replies.length)];
+      var now = new Date();
+      var timeString = "".concat(now.getHours().toString().padStart(2, '0'), ":").concat(now.getMinutes().toString().padStart(2, '0'));
+      var avatarQuery, userName;
+      if (chatMode === 'group') {
+        // 群聊模式 - 随机用户
+        var users = [{
+          name: "李华",
+          avatar: "male, casual style"
+        }, {
+          name: "张小红",
+          avatar: "female, friendly expression"
+        }, {
+          name: "王组织者",
+          avatar: "male, professional style"
+        }, {
+          name: "赵小丽",
+          avatar: "female, smiling face"
+        }, {
+          name: "陈静",
+          avatar: "female, glasses"
+        }];
+        var randomUser = users[Math.floor(Math.random() * users.length)];
+        userName = randomUser.name;
+        avatarQuery = "user avatar, ".concat(randomUser.avatar, ", white background");
+      } else {
+        // 私聊模式 - 固定用户
+        userName = "张小明";
+        avatarQuery = "user avatar, male, casual style, white background";
+      }
+      var replyHTML = "\n                    <div class=\"flex items-start space-x-2\" data-author=\"other\">\n                        <img src=\"./api/searchImage?query=".concat(encodeURIComponent(avatarQuery), "&width=36&height=36\" alt=\"\u7528\u6237\u5934\u50CF\" class=\"w-8 h-8 rounded-full object-cover mt-1\">\n                        <div class=\"flex flex-col space-y-1 max-w-[75%]\" data-ytId=\"id-c2eil\" data-ytId=\"id-eypgj\" data-ytId=\"id-0w8uh\" data-ytId=\"id-cyjyi\">\n                            <span class=\"text-xs text-info font-medium\">").concat(userName, "</span>\n                            <div class=\"bg-chat-bubble-other shadow-bubble p-3 rounded-lg chat-bubble-other\" data-ytId=\"id-ds6ta\" data-ytId=\"id-u7bi8\" data-ytId=\"id-v4ji1\" data-ytId=\"id-fv4nz\">\n                                <p class=\"text-sm\">").concat(randomReply, "</p>\n                            </div>\n                            <span class=\"text-xs text-info self-end\">").concat(timeString, "</span>\n                        </div>\n                    </div>\n                ");
+
+      // 添加到聊天内容
+      var container = chatContent.querySelector('.container');
+      container.insertAdjacentHTML('beforeend', replyHTML);
+
+      // 滚动到底部
+      chatContent.scrollTop = chatContent.scrollHeight;
+    }
+
+    // 切换聊天模式
+    moreBtn.addEventListener('click', function () {
+      modeSwitchModal.classList.remove('hidden');
+    });
+
+    // 关闭模态框
+    closeModalBtn.addEventListener('click', function () {
+      modeSwitchModal.classList.add('hidden');
+    });
+
+    // 点击模态框外部关闭
+    modeSwitchModal.addEventListener('click', function (e) {
+      if (e.target === modeSwitchModal) {
+        modeSwitchModal.classList.add('hidden');
+      }
+    });
+
+    // 切换到群聊模式
+    groupChatModeBtn.addEventListener('click', function () {
+      chatMode = 'group';
+
+      // 更新UI
+      chatTitle.textContent = '活动交流群';
+      chatSubtitle.textContent = '32人在线，共58人';
+      chatAvatar.src = 'https://design.gemcoder.com/staticResource/echoAiSystemImages/f8ec5c7160c60b996c53d815204a6f1b.png';
+      onlineStatus.classList.remove('hidden');
+
+      // 更新按钮样式
+      groupChatModeBtn.classList.add('border-primary', 'bg-primary/5');
+      groupChatModeBtn.classList.remove('border-gray-200');
+      groupChatModeBtn.querySelector('i').classList.remove('text-transparent');
+      groupChatModeBtn.querySelector('i').classList.add('text-primary');
+      privateChatModeBtn.classList.remove('border-primary', 'bg-primary/5');
+      privateChatModeBtn.classList.add('border-gray-200');
+      privateChatModeBtn.querySelector('i').classList.add('text-transparent');
+      privateChatModeBtn.querySelector('i').classList.remove('text-primary');
+      modeSwitchModal.classList.add('hidden');
+    });
+
+    // 切换到私聊模式
+    privateChatModeBtn.addEventListener('click', function () {
+      chatMode = 'private';
+
+      // 更新UI
+      chatTitle.textContent = '张小明';
+      chatSubtitle.textContent = '在线，正在输入...';
+      chatAvatar.src = 'https://design.gemcoder.com/staticResource/echoAiSystemImages/017ad0117e7533131a30be7205f464d5.png';
+      onlineStatus.classList.remove('hidden');
+
+      // 更新按钮样式
+      privateChatModeBtn.classList.add('border-primary', 'bg-primary/5');
+      privateChatModeBtn.classList.remove('border-gray-200');
+      privateChatModeBtn.querySelector('i').classList.remove('text-transparent');
+      privateChatModeBtn.querySelector('i').classList.add('text-primary');
+      groupChatModeBtn.classList.remove('border-primary', 'bg-primary/5');
+      groupChatModeBtn.classList.add('border-gray-200');
+      groupChatModeBtn.querySelector('i').classList.add('text-transparent');
+      groupChatModeBtn.querySelector('i').classList.remove('text-primary');
+      modeSwitchModal.classList.add('hidden');
+
+      // 显示正在输入提示
+      typingIndicator.style.display = 'flex';
+      chatContent.scrollTop = chatContent.scrollHeight;
+
+      // 3秒后隐藏正在输入提示并模拟回复
+      setTimeout(function () {
+        typingIndicator.style.display = 'none';
+        simulateReply();
+        chatSubtitle.textContent = '在线';
+      }, 3000);
+    });
+
+    // 滚动时改变导航栏样式
+    chatContent.addEventListener('scroll', function () {
+      if (chatContent.scrollTop > 10) {
+        chatHeader.classList.add('shadow');
+      } else {
+        chatHeader.classList.remove('shadow');
+      }
+    });
+
+    // 初始化 - 滚动到底部
+    chatContent.scrollTop = chatContent.scrollHeight;
+
+    // 初始化发送按钮状态
+    sendBtn.disabled = true;
+    clearInputBtn.classList.add('hidden');
+  });
+</script>
+</body>
+</html>

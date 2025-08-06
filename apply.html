@@ -1,0 +1,1884 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>已报名活动</title>
+    <script src="https://res.gemcoder.com/js/reload.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+            href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6A5ACD',
+                        secondary: '#3498db',
+                        dark: '#333333',
+                        success: '#22c55e',
+                        warning: '#f59e0b',
+                        danger: '#ef4444',
+                        gray: {
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .text-shadow {
+                text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+            #aiMenu {
+                transition: all 0.3s ease;
+            }
+            #calendarDays button {
+                cursor: pointer;
+            }
+            .activity-detail-modal {
+                animation: fadeIn 0.3s ease;
+            }
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(-20px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-dark">
+<!-- 主容器 -->
+<div class="min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div
+                class="container mx-auto px-4 py-3 flex items-center justify-between"
+        >
+            <h1 class="text-xl font-bold text-dark mx-auto">报名</h1>
+            <button
+                    class="text-gray-600 hover:text-primary transition-colors"
+                    id="searchButton"
+            >
+                <i class="fas fa-search text-xl"> </i>
+            </button>
+        </div>
+    </header>
+    <!-- 活动分类标签栏 -->
+    <div class="bg-white shadow-sm py-3 sticky top-16 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex overflow-x-auto scrollbar-hide justify-around pb-2">
+                <button
+                        class="text-primary font-medium whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full bg-primary/10 transition-all"
+                        id="upcomingTab"
+                >
+                    <span> 即将开始 </span>
+                </button>
+                <button
+                        class="text-gray-500 font-medium whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full hover:bg-primary/5 transition-all"
+                        id="pastTab"
+                >
+                    <span> 历史活动 </span>
+                </button>
+                <button
+                        class="text-gray-500 font-medium whitespace-nowrap flex-shrink-0 px-4 py-2 rounded-full hover:bg-primary/5 transition-all"
+                        id="favoriteTab"
+                >
+                    <span> 收藏活动 </span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- 主要内容区 -->
+    <main class="flex-1 overflow-y-auto scrollbar-hide">
+        <div class="container mx-auto px-4 py-4">
+            <!-- 日历筛选组件 -->
+            <div
+                    class="bg-white rounded-xl shadow-sm p-4 mb-6"
+                    id="calendarFilter"
+            >
+                <div class="flex items-center justify-between mb-3">
+                    <h3 class="text-sm font-medium text-gray-700 flex items-center">
+                        <button
+                                class="mr-2 text-gray-500 hover:text-primary"
+                                id="prevMonth"
+                        >
+                            <i class="fas fa-chevron-left"> </i>
+                        </button>
+                        <span id="currentMonth"> 2025年8月 </span>
+                        <button
+                                class="ml-2 text-gray-500 hover:text-primary"
+                                id="nextMonth"
+                        >
+                            <i class="fas fa-chevron-right"> </i>
+                        </button>
+                    </h3>
+                    <button
+                            class="text-xs text-primary hover:underline"
+                            id="resetCalendar"
+                    >
+                        重置
+                    </button>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center mb-2">
+                    <span class="text-xs text-gray-500 py-2"> 日 </span>
+                    <span class="text-xs text-gray-500 py-2"> 一 </span>
+                    <span class="text-xs text-gray-500 py-2"> 二 </span>
+                    <span class="text-xs text-gray-500 py-2"> 三 </span>
+                    <span class="text-xs text-gray-500 py-2"> 四 </span>
+                    <span class="text-xs text-gray-500 py-2"> 五 </span>
+                    <span class="text-xs text-gray-500 py-2"> 六 </span>
+                </div>
+                <div class="grid grid-cols-7 gap-1 text-center" id="calendarDays">
+                    <!-- 日历日期将通过JS动态生成 -->
+                </div>
+            </div>
+            <!-- 即将开始活动区域 -->
+            <section class="mb-8" id="upcomingSection">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-dark flex items-center">
+                        <i class="fas fa-calendar-alt text-primary mr-2"> </i>
+                        即将开始的活动
+                    </h2>
+                    <span class="text-sm text-gray-500">
+                共
+                <span id="upcomingCount"> 3 </span>
+                个活动
+              </span>
+                </div>
+                <!-- 活动列表 -->
+                <div
+                        class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        id="upcomingActivities"
+                >
+                    <!-- 活动项1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-0 left-0 bg-warning text-white text-xs px-2 py-1 rounded-br-lg"
+                        >
+                            明日开始
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="书法入门班活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c6428384fa0ae356e39608e6a179e4a4.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-primary flex items-center"
+                      >
+                        <i class="fas fa-clock mr-1"> </i>
+                        8月6日 周三 09:30
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        线上
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    书法入门班：笔墨之间的韵味
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="李老师头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c73cf06b11f9361416b08ca9f423f3db.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 李老师 </span>
+                                    </div>
+                                    <span
+                                            class="text-xs text-success font-medium flex items-center"
+                                    >
+                        <i class="fas fa-check-circle mr-1"> </i>
+                        已报名
+                      </span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                            class="flex-1 bg-primary text-white text-xs py-1.5 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-bell mr-1"> </i>
+                                        设置提醒
+                                    </button>
+                                    <button
+                                            class="flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center cancel-btn"
+                                    >
+                                        <i class="fas fa-times mr-1"> </i>
+                                        取消报名
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 活动项2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-0 left-0 bg-primary text-white text-xs px-2 py-1 rounded-br-lg"
+                        >
+                            即将开始
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="茶艺品鉴会活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/452ce9cac9285fa8f25169af27834bcc.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-primary flex items-center"
+                      >
+                        <i class="fas fa-clock mr-1"> </i>
+                        8月8日 周五 14:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    茶艺品鉴会：传统茶文化体验
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="张老师头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/344c088b3d6ad307b760d85ff76f5e6c.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 张老师 </span>
+                                    </div>
+                                    <span
+                                            class="text-xs text-success font-medium flex items-center"
+                                    >
+                        <i class="fas fa-check-circle mr-1"> </i>
+                        已报名
+                      </span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                            class="flex-1 bg-primary text-white text-xs py-1.5 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-bell mr-1"> </i>
+                                        设置提醒
+                                    </button>
+                                    <button
+                                            class="flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center cancel-btn"
+                                    >
+                                        <i class="fas fa-times mr-1"> </i>
+                                        取消报名
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 活动项3 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-0 left-0 bg-primary text-white text-xs px-2 py-1 rounded-br-lg"
+                        >
+                            即将开始
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="健康养生讲座活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/e7ba4821963550aef7b932284d87da77.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-primary flex items-center"
+                      >
+                        <i class="fas fa-clock mr-1"> </i>
+                        8月10日 周日 10:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    中老年健康养生讲座：夏季养心之道
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="王医生头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/49185cc536b47a21476f7084e9546674.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 王医生 </span>
+                                    </div>
+                                    <span
+                                            class="text-xs text-success font-medium flex items-center"
+                                    >
+                        <i class="fas fa-check-circle mr-1"> </i>
+                        已报名
+                      </span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                            class="flex-1 bg-primary text-white text-xs py-1.5 rounded-lg hover:bg-primary/90 transition-colors flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-bell mr-1"> </i>
+                                        设置提醒
+                                    </button>
+                                    <button
+                                            class="flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center cancel-btn"
+                                    >
+                                        <i class="fas fa-times mr-1"> </i>
+                                        取消报名
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 历史活动区域 -->
+            <section class="mb-8 hidden" id="pastSection">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-dark flex items-center">
+                        <i class="fas fa-history text-primary mr-2"> </i>
+                        历史参与活动
+                    </h2>
+                    <div class="flex items-center space-x-2">
+                        <button
+                                class="text-sm text-gray-500 hover:text-primary transition-colors"
+                                id="filterButton"
+                        >
+                            <i class="fas fa-filter mr-1"> </i>
+                            筛选
+                        </button>
+                        <span class="text-sm text-gray-500">
+                  共
+                  <span id="pastCount"> 5 </span>
+                  个活动
+                </span>
+                    </div>
+                </div>
+                <div
+                        class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        id="pastActivities"
+                >
+                    <!-- 活动项1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-0 left-0 bg-gray-500 text-white text-xs px-2 py-1 rounded-br-lg"
+                        >
+                            已结束
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="夏季健康讲座活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/7dd16bbde6cf506a82c4aba191c2ef03.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-gray-500 flex items-center"
+                      >
+                        <i class="fas fa-calendar-check mr-1"> </i>
+                        8月1日 周五 10:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    夏季健康养生讲座：防暑降温小知识
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="刘医生头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/49185cc536b47a21476f7084e9546674.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 刘医生 </span>
+                                    </div>
+                                    <span
+                                            class="text-xs text-success font-medium flex items-center"
+                                    >
+                        <i class="fas fa-check-circle mr-1"> </i>
+                        已参与
+                      </span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                            class="flex-1 bg-success/10 text-success text-xs py-1.5 rounded-lg flex items-center justify-center"
+                                            disabled
+                                    >
+                                        <i class="fas fa-check mr-1"> </i>
+                                        已评价
+                                    </button>
+                                    <button
+                                            class="flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-share-alt mr-1"> </i>
+                                        分享
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 活动项2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-0 left-0 bg-gray-500 text-white text-xs px-2 py-1 rounded-br-lg"
+                        >
+                            已结束
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="手工编织班活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/1f42b5db43d2de192b415e7361e95d4b.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-gray-500 flex items-center"
+                      >
+                        <i class="fas fa-calendar-check mr-1"> </i>
+                        7月25日 周四 14:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        线上
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    手工编织入门：创意毛线小物制作
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="林老师头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c7302578d9164d7e2be2fbab906f5637.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 林老师 </span>
+                                    </div>
+                                    <span
+                                            class="text-xs text-success font-medium flex items-center"
+                                    >
+                        <i class="fas fa-check-circle mr-1"> </i>
+                        已参与
+                      </span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                            class="flex-1 bg-gray-100 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center review-btn"
+                                            data-activity-id="2"
+                                    >
+                                        <i class="fas fa-star mr-1"> </i>
+                                        写评价
+                                    </button>
+                                    <button
+                                            class="flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-share-alt mr-1"> </i>
+                                        分享
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 活动项3 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-0 left-0 bg-gray-500 text-white text-xs px-2 py-1 rounded-br-lg"
+                        >
+                            已结束
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="智能手机使用培训活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/4406c59e820726b150d88ae914d00592.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-gray-500 flex items-center"
+                      >
+                        <i class="fas fa-calendar-check mr-1"> </i>
+                        7月18日 周四 09:30
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    智能手机使用培训：生活便利应用
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="王老师头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/18e725f0fb2b3c1c2b716e29895fe46c.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 王老师 </span>
+                                    </div>
+                                    <span
+                                            class="text-xs text-success font-medium flex items-center"
+                                    >
+                        <i class="fas fa-check-circle mr-1"> </i>
+                        已参与
+                      </span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                            class="flex-1 bg-success/10 text-success text-xs py-1.5 rounded-lg flex items-center justify-center"
+                                            disabled
+                                    >
+                                        <i class="fas fa-check mr-1"> </i>
+                                        已评价
+                                    </button>
+                                    <button
+                                            class="flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-share-alt mr-1"> </i>
+                                        分享
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 活动项4 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-0 left-0 bg-gray-500 text-white text-xs px-2 py-1 rounded-br-lg"
+                        >
+                            已结束
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="书法展览参观活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/d47765cfa5ad8b538fb30fc20dd32475.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-gray-500 flex items-center"
+                      >
+                        <i class="fas fa-calendar-check mr-1"> </i>
+                        7月10日 周四 14:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市博物馆
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    书法艺术展览参观：千年笔墨之美
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="张教授头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/5dbbc18c44a5906cedd1e391e4783430.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 张教授 </span>
+                                    </div>
+                                    <span
+                                            class="text-xs text-success font-medium flex items-center"
+                                    >
+                        <i class="fas fa-check-circle mr-1"> </i>
+                        已参与
+                      </span>
+                                </div>
+                                <div class="flex space-x-2">
+                                    <button
+                                            class="flex-1 bg-gray-100 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center review-btn"
+                                            data-activity-id="3"
+                                    >
+                                        <i class="fas fa-star mr-1"> </i>
+                                        写评价
+                                    </button>
+                                    <button
+                                            class="flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center"
+                                    >
+                                        <i class="fas fa-share-alt mr-1"> </i>
+                                        分享
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 加载更多按钮 -->
+                <div class="text-center mt-6">
+                    <button
+                            class="bg-white border border-gray-300 text-gray-600 py-2 px-6 rounded-lg hover:bg-gray-50 transition-colors"
+                            id="loadMoreButton"
+                    >
+                        加载更多
+                        <i class="fas fa-chevron-down ml-1 text-xs"> </i>
+                    </button>
+                </div>
+            </section>
+            <!-- 收藏活动区域 -->
+            <section class="mb-8 hidden" id="favoriteSection">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-dark flex items-center">
+                        <i class="fas fa-heart text-primary mr-2"> </i>
+                        收藏的活动
+                    </h2>
+                    <span class="text-sm text-gray-500">
+                共
+                <span id="favoriteCount"> 2 </span>
+                个活动
+              </span>
+                </div>
+                <!-- 活动列表 -->
+                <div
+                        class="grid grid-cols-1 md:grid-cols-2 gap-4"
+                        id="favoriteActivities"
+                >
+                    <!-- 活动项1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-3 right-3 text-danger cursor-pointer hover:scale-110 transition-transform duration-300 favorite-btn"
+                                data-activity-id="101"
+                        >
+                            <i class="fas fa-heart"> </i>
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="国画入门班活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/8bd1e830d88cf77ed4d6cdc56b8502b2.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-primary flex items-center"
+                      >
+                        <i class="fas fa-clock mr-1"> </i>
+                        8月15日 周二 14:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        线上
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    国画入门班：山水写意基础技法
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="刘老师头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/3dbfebdb57fa0582865578ad29dd6360.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 刘老师 </span>
+                                    </div>
+                                    <button
+                                            class="text-primary text-sm font-medium hover:underline"
+                                    >
+                                        立即报名
+                                    </button>
+                                </div>
+                                <div class="flex items-center text-xs text-gray-500">
+                      <span class="flex items-center mr-3">
+                        <i class="fas fa-user mr-1"> </i>
+                        28人已报名
+                      </span>
+                                    <span class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-1"> </i>
+                        线上课程
+                      </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 活动项2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden card-hover relative"
+                    >
+                        <div
+                                class="absolute top-3 right-3 text-danger cursor-pointer hover:scale-110 transition-transform duration-300 favorite-btn"
+                                data-activity-id="102"
+                        >
+                            <i class="fas fa-heart"> </i>
+                        </div>
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="古典音乐欣赏会活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/4295ac0f7ed3fe958131f5b07873b34e.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span
+                              class="text-xs font-medium text-primary flex items-center"
+                      >
+                        <i class="fas fa-clock mr-1"> </i>
+                        8月20日 周日 15:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    古典音乐欣赏会：贝多芬作品专场
+                                </h3>
+                                <div class="flex items-center justify-between mb-3">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="赵教授头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/d5a767b9d52a3ebe3dd353a469b52e5d.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 赵教授 </span>
+                                    </div>
+                                    <button
+                                            class="text-primary text-sm font-medium hover:underline"
+                                    >
+                                        立即报名
+                                    </button>
+                                </div>
+                                <div class="flex items-center text-xs text-gray-500">
+                      <span class="flex items-center mr-3">
+                        <i class="fas fa-user mr-1"> </i>
+                        42人已报名
+                      </span>
+                                    <span class="flex items-center">
+                        <i class="fas fa-map-marker-alt mr-1"> </i>
+                        市音乐厅
+                      </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+    <!-- 底部导航栏 -->
+    <footer
+            class="bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] sticky bottom-0 z-50"
+    >
+        <div class="container mx-auto">
+            <div class="flex justify-around py-3" data-selectorname="#id-h31b6">
+                <a
+                        class="flex flex-col items-center text-gray-500"
+                        href="index.html"
+                        target="_top"
+                        is-page="true"
+                        is-add="false"
+                        custom-href="w=393&h=852&appuuid=1952577510445154304&version=13&pageType=app&uuid=1952582013240213504&appName=老友社区"
+                        onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                >
+                    <i class="fas fa-home text-xl mb-1"> </i>
+                    <span class="text-xs"> 首页 </span>
+                </a>
+                <a
+                        class="flex flex-col items-center text-primary"
+                        custom-href="w=393&h=852&appuuid=1952577510445154304&version=4&pageType=app&uuid=1952655355607515136&appName=老友社区"
+                        href="apply.html"
+                        is-add="false"
+                        is-page="true"
+                        onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                        target="_top"
+                >
+                    <i class="fas fa-check-square text-xl mb-1"> </i>
+                    <span class="text-xs"> 报名 </span>
+                </a>
+                <a
+                        class="flex flex-col items-center text-gray-500"
+                        href="explore.html"
+                        target="_top"
+                        is-page="true"
+                        is-add="false"
+                        custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952939038428102656&appName=老友社区副本"
+                        onclick="ytCustomLinkNavigation()"
+                >
+                    <i class="fas fa-compass text-xl mb-1"> </i>
+                    <span class="text-xs"> 发现 </span>
+                </a>
+                <a
+                        class="flex flex-col items-center text-gray-500"
+                        custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952668560933257216&appName=老友社区副本"
+                        href="message.html"
+                        is-add="false"
+                        is-page="true"
+                        onclick="ytCustomLinkNavigation()"
+                        target="_top"
+                >
+                    <i class="fas fa-comment-alt text-xl mb-1"> </i>
+                    <span class="text-xs"> 消息 </span>
+                </a>
+                <a
+                        class="flex flex-col items-center text-gray-500"
+                        href="myself.html"
+                        target="_top"
+                        is-page="true"
+                        is-add="false"
+                        custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952669856096583680&appName=老友社区副本"
+                        onclick="ytCustomLinkNavigation()"
+                >
+                    <i class="fas fa-user text-xl mb-1"> </i>
+                    <span
+                            class="text-xs"
+                            target="_top"
+                            href="javascript:void(0);"
+                            is-page="true"
+                            is-add="false"
+                            custom-href="w=393&h=852&appuuid=1952577510445154304&version=1&pageType=app&uuid=1952669856096583680&appName=老友社区"
+                            onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                    >
+                我的
+              </span>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <!-- 悬浮按钮 -->
+    <div class="fixed bottom-24 right-4 z-50" id="aiAssistant">
+        <div
+                class="bg-primary rounded-full shadow-lg p-3 cursor-pointer hover:scale-110 transition-all duration-300 flex items-center justify-center animate-bounce"
+        >
+            <i class="fas fa-robot text-white text-2xl"> </i>
+        </div>
+        <div
+                class="absolute bottom-full right-0 mb-2 bg-white rounded-lg shadow-lg p-3 w-48 hidden"
+                id="aiMenu"
+        >
+            <div class="text-xs text-gray-500 mb-2">AI智能助手</div>
+            <div class="space-y-2">
+                <button
+                        class="w-full text-left text-xs py-1 px-2 hover:bg-primary/5 rounded transition-colors flex items-center"
+                >
+                    <i class="fas fa-question-circle text-primary mr-2"> </i>
+                    活动咨询
+                </button>
+                <button
+                        class="w-full text-left text-xs py-1 px-2 hover:bg-primary/5 rounded transition-colors flex items-center"
+                >
+                    <i class="fas fa-calendar-check text-primary mr-2"> </i>
+                    报名提醒
+                </button>
+                <button
+                        class="w-full text-left text-xs py-1 px-2 hover:bg-primary/5 rounded transition-colors flex items-center"
+                >
+                    <i class="fas fa-map-marker-alt text-primary mr-2"> </i>
+                    路线导航
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 评价弹窗 -->
+<div
+        class="fixed inset-0 bg-black/50 z-50 flex items-center justify-center hidden"
+        id="reviewModal"
+>
+    <div
+            class="bg-white rounded-xl w-full max-w-md mx-4 max-h-[80vh] overflow-y-auto"
+    >
+        <div
+                class="p-4 border-b border-gray-200 flex justify-between items-center sticky top-0 bg-white z-10"
+        >
+            <h3 class="text-lg font-bold text-dark">活动评价</h3>
+            <button
+                    class="text-gray-500 hover:text-gray-700"
+                    id="closeReviewModal"
+            >
+                <i class="fas fa-times"> </i>
+            </button>
+        </div>
+        <div class="p-4">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    您的评分
+                </label>
+                <div class="flex text-warning text-xl" id="starRating">
+                    <i
+                            class="fas fa-star cursor-pointer hover:scale-¹²⁰ transition-transform"
+                            data-rating="1"
+                    >
+                    </i>
+                    <i
+                            class="fas fa-star cursor-pointer hover:scale-¹²⁰ transition-transform"
+                            data-rating="2"
+                    >
+                    </i>
+                    <i
+                            class="fas fa-star cursor-pointer hover:scale-¹²⁰ transition-transform"
+                            data-rating="3"
+                    >
+                    </i>
+                    <i
+                            class="fas fa-star cursor-pointer hover:scale-¹²⁰ transition-transform"
+                            data-rating="4"
+                    >
+                    </i>
+                    <i
+                            class="fas fa-star cursor-pointer hover:scale-¹²⁰ transition-transform"
+                            data-rating="5"
+                    >
+                    </i>
+                </div>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    评价内容
+                </label>
+                <textarea
+                        class="w-full border border-gray-300 rounded-lg p-3 h-32 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent resize-none"
+                        id="reviewContent"
+                        placeholder="请分享您对本次活动的感受和建议..."
+                >
+            </textarea>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                    上传照片（可选）
+                </label>
+                <div class="flex space-x-3">
+                    <div
+                            class="w-16 h-16 border-2 border-dashed border-gray-300 rounded-lg flex items-center justify-center text-gray-400 hover:border-primary hover:text-primary transition-colors cursor-pointer"
+                    >
+                        <i class="fas fa-plus text-xl"> </i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-4 border-t border-gray-200 sticky bottom-0 bg-white z-10">
+            <button
+                    class="w-full bg-primary text-white py-2 rounded-lg hover:bg-primary/90 transition-colors"
+                    id="submitReviewButton"
+            >
+                提交评价
+            </button>
+        </div>
+    </div>
+</div>
+<!-- JavaScript -->
+<script>
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function () {
+        // 标签切换功能
+        var upcomingTab = document.getElementById('upcomingTab');
+        var pastTab = document.getElementById('pastTab');
+        var favoriteTab = document.getElementById('favoriteTab');
+        var upcomingSection = document.getElementById('upcomingSection');
+        var pastSection = document.getElementById('pastSection');
+        var favoriteSection = document.getElementById('favoriteSection');
+
+        // 切换到即将开始标签
+        upcomingTab.addEventListener('click', function () {
+            upcomingTab.classList.add('text-primary', 'bg-primary/10');
+            upcomingTab.classList.remove('text-gray-500', 'bg-transparent');
+            pastTab.classList.add('text-gray-500', 'bg-transparent');
+            pastTab.classList.remove('text-primary', 'bg-primary/10');
+            favoriteTab.classList.add('text-gray-500', 'bg-transparent');
+            favoriteTab.classList.remove('text-primary', 'bg-primary/10');
+            upcomingSection.classList.remove('hidden');
+            pastSection.classList.add('hidden');
+            favoriteSection.classList.add('hidden');
+
+            // 更新活动计数
+            document.getElementById('upcomingCount').textContent = document.querySelectorAll('#upcomingActivities > div').length;
+        });
+
+        // 切换到历史活动标签
+        pastTab.addEventListener('click', function () {
+            pastTab.classList.add('text-primary', 'bg-primary/10');
+            pastTab.classList.remove('text-gray-500', 'bg-transparent');
+            upcomingTab.classList.add('text-gray-500', 'bg-transparent');
+            upcomingTab.classList.remove('text-primary', 'bg-primary/10');
+            favoriteTab.classList.add('text-gray-500', 'bg-transparent');
+            favoriteTab.classList.remove('text-primary', 'bg-primary/10');
+            pastSection.classList.remove('hidden');
+            upcomingSection.classList.add('hidden');
+            favoriteSection.classList.add('hidden');
+
+            // 更新活动计数
+            document.getElementById('pastCount').textContent = document.querySelectorAll('#pastActivities > div').length;
+        });
+
+        // 切换到收藏活动标签
+        favoriteTab.addEventListener('click', function () {
+            favoriteTab.classList.add('text-primary', 'bg-primary/10');
+            favoriteTab.classList.remove('text-gray-500', 'bg-transparent');
+            upcomingTab.classList.add('text-gray-500', 'bg-transparent');
+            upcomingTab.classList.remove('text-primary', 'bg-primary/10');
+            pastTab.classList.add('text-gray-500', 'bg-transparent');
+            pastTab.classList.remove('text-primary', 'bg-primary/10');
+            favoriteSection.classList.remove('hidden');
+            upcomingSection.classList.add('hidden');
+            pastSection.classList.add('hidden');
+
+            // 更新活动计数
+            document.getElementById('favoriteCount').textContent = document.querySelectorAll('#favoriteActivities > div').length;
+        });
+
+        // 取消报名按钮事件
+        var cancelButtons = document.querySelectorAll('.cancel-btn');
+        cancelButtons.forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation(); // 阻止事件冒泡
+
+                var activityCard = this.closest('.bg-white.rounded-xl');
+                var activityName = activityCard.querySelector('h3').textContent;
+                if (confirm("\u786E\u5B9A\u8981\u53D6\u6D88\u62A5\u540D\"".concat(activityName, "\"\u5417\uFF1F"))) {
+                    // 添加淡出动画
+                    activityCard.style.transition = 'all 0.5s ease';
+                    activityCard.style.opacity = '0';
+                    activityCard.style.transform = 'translateY(20px)';
+
+                    // 动画结束后移除元素
+                    setTimeout(function () {
+                        activityCard.remove();
+
+                        // 更新活动计数
+                        document.getElementById('upcomingCount').textContent = document.querySelectorAll('#upcomingActivities > div').length;
+
+                        // 如果没有活动了，显示空状态
+                        if (document.querySelectorAll('#upcomingActivities > div').length === 0) {
+                            var emptyState = document.createElement('div');
+                            emptyState.className = 'text-center py-12';
+                            emptyState.innerHTML = "\n                                    <div class=\"inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-4\" data-ytId=\"id-healv\" data-ytId=\"id-ngxbl\" data-ytId=\"id-1mttw\" data-ytId=\"id-3mrc1\" data-ytId=\"id-c8b7p\">\n                                        <i class=\"fas fa-calendar-times text-2xl\" data-ytId=\"id-wq0qb\" data-ytId=\"id-zac80\" data-ytId=\"id-nwf9z\" data-ytId=\"id-c9ia1\" data-ytId=\"id-2881y\"></i>\n                                    </div>\n                                    <h3 class=\"text-lg font-medium text-gray-700 mb-1\" data-ytId=\"id-k7bmk\" data-ytId=\"id-peulu\" data-ytId=\"id-6zrmj\" data-ytId=\"id-2zygo\" data-ytId=\"id-6sdwv\">\u6682\u65E0\u5373\u5C06\u5F00\u59CB\u7684\u6D3B\u52A8</h3>\n                                    <p class=\"text-gray-500 text-sm\" data-ytId=\"id-68n0f\" data-ytId=\"id-tj21m\" data-ytId=\"id-7y3xq\" data-ytId=\"id-bx2ks\" data-ytId=\"id-t79r9\">\u60A8\u53EF\u4EE5\u53BB\u53D1\u73B0\u66F4\u591A\u611F\u5174\u8DA3\u7684\u6D3B\u52A8</p>\n                                ";
+                            upcomingActivities.appendChild(emptyState);
+                        }
+                    }, 500);
+                }
+            });
+        });
+
+        // 收藏按钮事件
+        var favoriteButtons = document.querySelectorAll('.favorite-btn');
+        favoriteButtons.forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation(); // 阻止事件冒泡
+
+                var activityId = this.getAttribute('data-activity-id');
+                var icon = this.querySelector('i');
+                if (icon.classList.contains('fa-heart')) {
+                    // 取消收藏
+                    if (confirm('确定要取消收藏这个活动吗？')) {
+                        icon.classList.remove('fa-heart');
+                        icon.classList.add('fa-heart-o');
+                        this.classList.remove('text-danger');
+
+                        // 从收藏列表中移除
+                        var activityCard = this.closest('.bg-white.rounded-xl');
+                        activityCard.style.transition = 'all 0.5s ease';
+                        activityCard.style.opacity = '0';
+                        activityCard.style.transform = 'translateY(20px)';
+                        setTimeout(function () {
+                            activityCard.remove();
+                            document.getElementById('favoriteCount').textContent = document.querySelectorAll('#favoriteActivities > div').length;
+
+                            // 如果没有收藏活动了，显示空状态
+                            if (document.querySelectorAll('#favoriteActivities > div').length === 0) {
+                                var emptyState = document.createElement('div');
+                                emptyState.className = 'text-center py-12';
+                                emptyState.innerHTML = "\n                                        <div class=\"inline-flex items-center justify-center w-16 h-16 rounded-full bg-gray-100 text-gray-400 mb-4\" data-ytId=\"id-vlmvr\" data-ytId=\"id-tkcqq\" data-ytId=\"id-evctf\" data-ytId=\"id-wjm3b\" data-ytId=\"id-wghw8\">\n                                            <i class=\"fas fa-heart-broken text-2xl\" data-ytId=\"id-arzun\" data-ytId=\"id-rlpra\" data-ytId=\"id-dns73\" data-ytId=\"id-ksba9\" data-ytId=\"id-rumxr\"></i>\n                                        </div>\n                                        <h3 class=\"text-lg font-medium text-gray-700 mb-1\" data-ytId=\"id-jp4gk\" data-ytId=\"id-j810h\" data-ytId=\"id-eqbgn\" data-ytId=\"id-qqt34\" data-ytId=\"id-lqze9\">\u6682\u65E0\u6536\u85CF\u7684\u6D3B\u52A8</h3>\n                                        <p class=\"text-gray-500 text-sm\" data-ytId=\"id-i7m0r\" data-ytId=\"id-bt917\" data-ytId=\"id-wsrqx\" data-ytId=\"id-trj1a\" data-ytId=\"id-v4e6e\">\u60A8\u53EF\u4EE5\u6536\u85CF\u611F\u5174\u8DA3\u7684\u6D3B\u52A8\u4EE5\u4FBF\u65E5\u540E\u67E5\u770B</p>\n                                    ";
+                                favoriteActivities.appendChild(emptyState);
+                            }
+                        }, 500);
+                    }
+                } else {
+                    // 添加收藏
+                    icon.classList.remove('fa-heart-o');
+                    icon.classList.add('fa-heart');
+                    this.classList.add('text-danger');
+                    alert('成功收藏该活动！');
+                }
+            });
+        });
+
+        // 评价按钮事件
+        var reviewButtons = document.querySelectorAll('.review-btn');
+        var reviewModal = document.getElementById('reviewModal');
+        var closeReviewModal = document.getElementById('closeReviewModal');
+        var submitReviewButton = document.getElementById('submitReviewButton');
+        reviewButtons.forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation(); // 阻止事件冒泡
+
+                var activityId = this.getAttribute('data-activity-id');
+                // 存储当前评价的活动ID
+                reviewModal.setAttribute('data-activity-id', activityId);
+
+                // 重置评分和内容
+                resetRating();
+                document.getElementById('reviewContent').value = '';
+
+                // 显示评价弹窗
+                reviewModal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden'; // 禁止背景滚动
+            });
+        });
+
+        // 关闭评价弹窗
+        closeReviewModal.addEventListener('click', function () {
+            reviewModal.classList.add('hidden');
+            document.body.style.overflow = ''; // 恢复背景滚动
+        });
+
+        // 点击弹窗外部关闭弹窗
+        reviewModal.addEventListener('click', function (e) {
+            if (e.target === this) {
+                reviewModal.classList.add('hidden');
+                document.body.style.overflow = ''; // 恢复背景滚动
+            }
+        });
+
+        // 星级评分功能
+        var starRating = document.getElementById('starRating');
+        var stars = starRating.querySelectorAll('i');
+        var selectedRating = 0;
+        function resetRating() {
+            selectedRating = 0;
+            stars.forEach(function (star) {
+                star.classList.remove('text-warning');
+                star.classList.add('text-gray-300');
+            });
+        }
+        stars.forEach(function (star) {
+            star.addEventListener('mouseover', function () {
+                var rating = parseInt(this.getAttribute('data-rating'));
+                highlightStars(rating);
+            });
+            star.addEventListener('mouseout', function () {
+                highlightStars(selectedRating);
+            });
+            star.addEventListener('click', function () {
+                selectedRating = parseInt(this.getAttribute('data-rating'));
+                highlightStars(selectedRating);
+            });
+        });
+        function highlightStars(rating) {
+            stars.forEach(function (star) {
+                var starRating = parseInt(star.getAttribute('data-rating'));
+                if (starRating <= rating) {
+                    star.classList.remove('text-gray-300');
+                    star.classList.add('text-warning');
+                } else {
+                    star.classList.remove('text-warning');
+                    star.classList.add('text-gray-300');
+                }
+            });
+        }
+
+        // 提交评价按钮事件
+        submitReviewButton.addEventListener('click', function () {
+            var reviewContent = document.getElementById('reviewContent').value.trim();
+            if (selectedRating === 0) {
+                alert('请给活动评分');
+                return;
+            }
+            if (reviewContent === '') {
+                alert('请输入评价内容');
+                return;
+            }
+
+            // 模拟提交评价
+            alert("\u8BC4\u4EF7\u63D0\u4EA4\u6210\u529F\uFF01\n\u8BC4\u5206\uFF1A".concat(selectedRating, "\u661F\n\u5185\u5BB9\uFF1A").concat(reviewContent));
+
+            // 关闭弹窗
+            reviewModal.classList.add('hidden');
+            document.body.style.overflow = ''; // 恢复背景滚动
+
+            // 更新评价按钮状态
+            var activityId = reviewModal.getAttribute('data-activity-id');
+            var reviewButton = document.querySelector(".review-btn[data-activity-id=\"".concat(activityId, "\"]"));
+            if (reviewButton) {
+                reviewButton.innerHTML = "<i class=\"fas fa-check mr-1\" data-ytId=\"id-rdopk\" data-ytId=\"id-pjrx5\" data-ytId=\"id-jphdv\" data-ytId=\"id-mtl0p\" data-ytId=\"id-21eqy\"></i> \u5DF2\u8BC4\u4EF7";
+                reviewButton.classList.remove('bg-gray-100', 'text-gray-600');
+                reviewButton.classList.add('bg-success/10', 'text-success');
+                reviewButton.disabled = true;
+            }
+        });
+
+        // AI智能助手交互
+        var aiAssistant = document.getElementById('aiAssistant');
+        var aiMenu = document.getElementById('aiMenu');
+        aiAssistant.addEventListener('click', function (e) {
+            // 切换菜单显示/隐藏
+            aiMenu.classList.toggle('hidden');
+
+            // 如果点击的是菜单项，不关闭菜单
+            if (!e.target.closest('#aiMenu')) {
+                // 添加动画效果
+                if (!aiMenu.classList.contains('hidden')) {
+                    aiMenu.style.opacity = '0';
+                    aiMenu.style.transform = 'translateY(10px)';
+                    setTimeout(function () {
+                        aiMenu.style.opacity = '1';
+                        aiMenu.style.transform = 'translateY(0)';
+                    }, 10);
+                }
+            }
+        });
+
+        // 点击页面其他地方关闭AI菜单
+        document.addEventListener('click', function (e) {
+            if (!aiAssistant.contains(e.target)) {
+                aiMenu.classList.add('hidden');
+            }
+        });
+
+        // AI菜单项点击事件
+        document.querySelectorAll('#aiMenu button').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var action = this.textContent.trim();
+                alert("AI\u52A9\u624B\u529F\u80FD\uFF1A".concat(action, " \u5373\u5C06\u4E0A\u7EBF\uFF0C\u656C\u8BF7\u671F\u5F85\uFF01"));
+                aiMenu.classList.add('hidden');
+            });
+        });
+
+        // 加载更多按钮事件
+        var loadMoreButton = document.getElementById('loadMoreButton');
+        if (loadMoreButton) {
+            loadMoreButton.addEventListener('click', function () {
+                var _this = this;
+                this.innerHTML = "<i class=\"fas fa-spinner fa-spin mr-1\" data-ytId=\"id-q5vur\" data-ytId=\"id-isdg5\" data-ytId=\"id-c9xf0\" data-ytId=\"id-xbuxs\" data-ytId=\"id-y3a4k\"></i> \u52A0\u8F7D\u4E2D...";
+
+                // 模拟加载延迟
+                setTimeout(function () {
+                    // 创建新活动项
+                    var activityItems = "\n                            <!-- \u6D3B\u52A8\u98794 -->\n                            <div class='bg-white rounded-xl shadow-sm overflow-hidden card-hover relative' data-ytId=\"id-ysu9m\" data-ytId=\"id-3dfrx\" data-ytId=\"id-svedx\" data-ytId=\"id-h4x8m\" data-ytId=\"id-wrlj9\">\n                                <div class='absolute top-0 left-0 bg-gray-500 text-white text-xs px-2 py-1 rounded-br-lg' data-ytId=\"id-efds8\" data-ytId=\"id-7sg92\" data-ytId=\"id-pfhp1\" data-ytId=\"id-kgvmi\" data-ytId=\"id-vgjlt\">\n                                    \u5DF2\u7ED3\u675F\n                                </div>\n                                <div class='flex' data-ytId=\"id-cgc9w\" data-ytId=\"id-5htv6\" data-ytId=\"id-e72ta\" data-ytId=\"id-ttb6c\" data-ytId=\"id-jrzwh\">\n                                    <div class='w-1/4' data-ytId=\"id-tlgcz\" data-ytId=\"id-sbp2w\" data-ytId=\"id-nn5x2\" data-ytId=\"id-a75hv\" data-ytId=\"id-pg38u\">\n                                        <img alt='\u592A\u6781\u62F3\u6559\u5B66\u6D3B\u52A8' class='w-full h-full object-cover' src='https://design.gemcoder.com/staticResource/echoAiSystemImages/7b3030034c6f57e87562c961ea1847e2.png'/>\n                                    </div>\n                                    <div class='w-3/4 p-4' data-ytId=\"id-d5w59\" data-ytId=\"id-mruk9\" data-ytId=\"id-csrsn\" data-ytId=\"id-rkxgg\" data-ytId=\"id-8sia1\">\n                                        <div class='flex justify-between items-start mb-2' data-ytId=\"id-012ho\" data-ytId=\"id-5dxb4\" data-ytId=\"id-a2z1i\" data-ytId=\"id-9wlgl\" data-ytId=\"id-ehynr\">\n                                            <span class='text-xs font-medium text-gray-500 flex items-center' data-ytId=\"id-m6lav\" data-ytId=\"id-huza9\" data-ytId=\"id-0izjz\" data-ytId=\"id-xz2bv\" data-ytId=\"id-rsaja\">\n                                                <i class='fas fa-calendar-check mr-1' data-ytId=\"id-5klhd\" data-ytId=\"id-kaxc6\" data-ytId=\"id-3raaf\" data-ytId=\"id-i68lk\" data-ytId=\"id-duiu2\"></i>\n                                                6\u670810\u65E5 \u5468\u516D 07:30\n                                            </span>\n                                            <span class='text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full' data-ytId=\"id-lmfvh\" data-ytId=\"id-nn3zq\" data-ytId=\"id-7tesz\" data-ytId=\"id-cucpg\" data-ytId=\"id-kwwj6\">\n                                                \u5357\u660C\u5E02\n                                            </span>\n                                        </div>\n                                        <h3 class='font-medium text-dark mb-2 line-clamp-2' data-ytId=\"id-zr54i\" data-ytId=\"id-9xne3\" data-ytId=\"id-jv4xg\" data-ytId=\"id-k0e8h\" data-ytId=\"id-96l2r\">\n                                            \u592A\u6781\u62F3\u57FA\u7840\u6559\u5B66\uFF1A\u5F3A\u8EAB\u5065\u4F53\u4E4B\u9053\n                                        </h3>\n                                        <div class='flex items-center justify-between mb-3' data-ytId=\"id-c49wr\" data-ytId=\"id-by72r\" data-ytId=\"id-6bzhz\" data-ytId=\"id-bv3al\" data-ytId=\"id-1go4k\">\n                                            <div class='flex items-center' data-ytId=\"id-demxh\" data-ytId=\"id-uk5w3\" data-ytId=\"id-xss7v\" data-ytId=\"id-vxmko\" data-ytId=\"id-f5a6h\">\n                                                <img alt='\u5434\u5E08\u5085\u5934\u50CF' class='w-6 h-6 rounded-full object-cover mr-2' src='https://design.gemcoder.com/staticResource/echoAiSystemImages/89febfeaa1913a5fe83038378d323dcb.png'/>\n                                                <span class='text-xs text-gray-500' data-ytId=\"id-j0w18\" data-ytId=\"id-g6tsx\" data-ytId=\"id-k6csl\" data-ytId=\"id-2mwun\" data-ytId=\"id-3n3rb\">\n                                                    \u5434\u5E08\u5085\n                                                </span>\n                                            </div>\n                                            <span class='text-xs text-success font-medium flex items-center' data-ytId=\"id-loxkd\" data-ytId=\"id-jhaq4\" data-ytId=\"id-otfoi\" data-ytId=\"id-yha7m\" data-ytId=\"id-xq8wt\">\n                                                <i class='fas fa-check-circle mr-1' data-ytId=\"id-0xx0e\" data-ytId=\"id-86uw5\" data-ytId=\"id-xgx51\" data-ytId=\"id-9kvsn\" data-ytId=\"id-stxu1\"></i>\u5DF2\u53C2\u4E0E\n                                            </span>\n                                        </div>\n                                        <div class='flex space-x-2' data-ytId=\"id-s992t\" data-ytId=\"id-pwopx\" data-ytId=\"id-wabp5\" data-ytId=\"id-z3743\" data-ytId=\"id-23aja\">\n                                            <button class='flex-1 bg-gray-100 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-200 transition-colors flex items-center justify-center review-btn' data-activity-id=\"4\" data-ytId=\"id-t448v\" data-ytId=\"id-hx1j2\" data-ytId=\"id-9shbw\" data-ytId=\"id-5elzs\" data-ytId=\"id-4p6mv\">\n                                                <i class='fas fa-star mr-1' data-ytId=\"id-zw2cf\" data-ytId=\"id-giex7\" data-ytId=\"id-logdn\" data-ytId=\"id-w00dr\" data-ytId=\"id-gpx9p\"></i> \u5199\u8BC4\u4EF7\n                                            </button>\n                                            <button class='flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center' data-ytId=\"id-kd4uk\" data-ytId=\"id-8hj68\" data-ytId=\"id-jlzh8\" data-ytId=\"id-8afuf\" data-ytId=\"id-b6w1c\">\n                                                <i class='fas fa-share-alt mr-1' data-ytId=\"id-j3r13\" data-ytId=\"id-c2x25\" data-ytId=\"id-c9xiu\" data-ytId=\"id-ei2w3\" data-ytId=\"id-rq8ax\"></i> \u5206\u4EAB\n                                            </button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n                            \n                            <!-- \u6D3B\u52A8\u98795 -->\n                            <div class='bg-white rounded-xl shadow-sm overflow-hidden card-hover relative' data-ytId=\"id-ywsjh\" data-ytId=\"id-mtgji\" data-ytId=\"id-086cx\" data-ytId=\"id-8liiw\" data-ytId=\"id-6n2dk\">\n                                <div class='absolute top-0 left-0 bg-gray-500 text-white text-xs px-2 py-1 rounded-br-lg' data-ytId=\"id-z96ia\" data-ytId=\"id-c2erb\" data-ytId=\"id-smn71\" data-ytId=\"id-0k3z2\" data-ytId=\"id-9w39u\">\n                                    \u5DF2\u7ED3\u675F\n                                </div>\n                                <div class='flex' data-ytId=\"id-bigxb\" data-ytId=\"id-a1o1z\" data-ytId=\"id-u5s4q\" data-ytId=\"id-14xzw\" data-ytId=\"id-cevs2\">\n                                    <div class='w-1/4' data-ytId=\"id-qvczf\" data-ytId=\"id-nr9mb\" data-ytId=\"id-ppe1s\" data-ytId=\"id-rl1hi\" data-ytId=\"id-hr5tr\">\n                                        <img alt='\u624B\u5DE5\u7F16\u7EC7\u73ED\u6D3B\u52A8' class='w-full h-full object-cover' src='https://design.gemcoder.com/staticResource/echoAiSystemImages/693f85853425baa7420fd324e2a8545f.png'/>\n                                    </div>\n                                    <div class='w-3/4 p-4' data-ytId=\"id-gh379\" data-ytId=\"id-scuqf\" data-ytId=\"id-mfken\" data-ytId=\"id-h8ar1\" data-ytId=\"id-6jb4r\">\n                                        <div class='flex justify-between items-start mb-2' data-ytId=\"id-ymn2a\" data-ytId=\"id-mln0o\" data-ytId=\"id-d67h9\" data-ytId=\"id-5y1ll\" data-ytId=\"id-sy2mj\">\n                                            <span class='text-xs font-medium text-gray-500 flex items-center' data-ytId=\"id-jcmyi\" data-ytId=\"id-me6a0\" data-ytId=\"id-8s12c\" data-ytId=\"id-xn8un\" data-ytId=\"id-gkhdt\">\n                                                <i class='fas fa-calendar-check mr-1' data-ytId=\"id-i49vn\" data-ytId=\"id-gbhoe\" data-ytId=\"id-3ernc\" data-ytId=\"id-m7yy6\" data-ytId=\"id-lcr3q\"></i>\n                                                5\u670828\u65E5 \u5468\u65E5 14:00\n                                            </span>\n                                            <span class='text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full' data-ytId=\"id-w5ikk\" data-ytId=\"id-lnru3\" data-ytId=\"id-s8878\" data-ytId=\"id-cic9x\" data-ytId=\"id-s6f78\">\n                                                \u7EBF\u4E0A\n                                            </span>\n                                        </div>\n                                        <h3 class='font-medium text-dark mb-2 line-clamp-2' data-ytId=\"id-2ea9f\" data-ytId=\"id-2ibwv\" data-ytId=\"id-bys3s\" data-ytId=\"id-3h0r4\" data-ytId=\"id-d1c9n\">\n                                            \u624B\u5DE5\u7F16\u7EC7\u73ED\uFF1A\u521B\u610F\u6BDB\u7EBF\u7F16\u7EC7\u6280\u5DE7\n                                        </h3>\n                                        <div class='flex items-center justify-between mb-3' data-ytId=\"id-haz8j\" data-ytId=\"id-78j1d\" data-ytId=\"id-9hvs1\" data-ytId=\"id-kxt6t\" data-ytId=\"id-rjluj\">\n                                            <div class='flex items-center' data-ytId=\"id-rosvz\" data-ytId=\"id-olbnm\" data-ytId=\"id-bblpd\" data-ytId=\"id-zchwj\" data-ytId=\"id-niq4b\">\n                                                <img alt='\u6797\u8001\u5E08\u5934\u50CF' class='w-6 h-6 rounded-full object-cover mr-2' src='https://design.gemcoder.com/staticResource/echoAiSystemImages/c7302578d9164d7e2be2fbab906f5637.png'/>\n                                                <span class='text-xs text-gray-500' data-ytId=\"id-7o8nw\" data-ytId=\"id-74sqb\" data-ytId=\"id-9c6cv\" data-ytId=\"id-q2prw\" data-ytId=\"id-w8xy3\">\n                                                    \u6797\u8001\u5E08\n                                                </span>\n                                            </div>\n                                            <span class='text-xs text-success font-medium flex items-center' data-ytId=\"id-grc8t\" data-ytId=\"id-zkfy4\" data-ytId=\"id-j2vyr\" data-ytId=\"id-2tm2s\" data-ytId=\"id-9nltb\">\n                                                <i class='fas fa-check-circle mr-1' data-ytId=\"id-evmfk\" data-ytId=\"id-glia4\" data-ytId=\"id-x2vo6\" data-ytId=\"id-06psc\" data-ytId=\"id-o28c7\"></i>\u5DF2\u53C2\u4E0E\n                                            </span>\n                                        </div>\n                                        <div class='flex space-x-2' data-ytId=\"id-2y1jt\" data-ytId=\"id-1p80z\" data-ytId=\"id-r8169\" data-ytId=\"id-4q92a\" data-ytId=\"id-xewk4\">\n                                            <button class='flex-1 bg-success/10 text-success text-xs py-1.5 rounded-lg flex items-center justify-center' disabled data-ytId=\"id-jkg1i\" data-ytId=\"id-qeplf\" data-ytId=\"id-zwuxd\" data-ytId=\"id-3fsw7\" data-ytId=\"id-hsv9t\">\n                                                <i class='fas fa-check mr-1' data-ytId=\"id-azi3h\" data-ytId=\"id-0hzet\" data-ytId=\"id-6ghsg\" data-ytId=\"id-sf60z\" data-ytId=\"id-yc1ku\"></i> \u5DF2\u8BC4\u4EF7\n                                            </button>\n                                            <button class='flex-1 border border-gray-300 text-gray-600 text-xs py-1.5 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center' data-ytId=\"id-76oyx\" data-ytId=\"id-z32lb\" data-ytId=\"id-h0kvy\" data-ytId=\"id-4okvt\" data-ytId=\"id-ns8m7\">\n                                                <i class='fas fa-share-alt mr-1' data-ytId=\"id-8wiwz\" data-ytId=\"id-czkv0\" data-ytId=\"id-nc1yi\" data-ytId=\"id-lzkdj\" data-ytId=\"id-g1qsq\"></i> \u5206\u4EAB\n                                            </button>\n                                        </div>\n                                    </div>\n                                </div>\n                            </div>\n                        ";
+
+                    // 添加到活动列表
+                    var pastActivities = document.getElementById('pastActivities');
+                    var tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = activityItems;
+
+                    // 逐个添加新活动项，添加动画效果
+                    var newItems = tempDiv.children;
+                    Array.from(newItems).forEach(function (item, index) {
+                        item.style.opacity = '0';
+                        item.style.transform = 'translateY(20px)';
+                        item.style.transition = 'all 0.5s ease ' + index * 0.1 + 's';
+                        pastActivities.appendChild(item);
+
+                        // 触发重排后设置透明度和位置
+                        setTimeout(function () {
+                            item.style.opacity = '1';
+                            item.style.transform = 'translateY(0)';
+                        }, 50);
+                    });
+
+                    // 更新活动计数
+                    document.getElementById('pastCount').textContent = document.querySelectorAll('#pastActivities > div').length;
+
+                    // 恢复按钮状态
+                    _this.innerHTML = "\u52A0\u8F7D\u66F4\u591A <i class=\"fas fa-chevron-down ml-1 text-xs\" data-ytId=\"id-ma3vw\" data-ytId=\"id-rllv2\" data-ytId=\"id-z51er\" data-ytId=\"id-nhgjg\" data-ytId=\"id-mi6a5\"></i>";
+
+                    // 绑定新添加的评价按钮事件
+                    var newReviewButtons = document.querySelectorAll('.review-btn[data-activity-id="4"]');
+                    newReviewButtons.forEach(function (button) {
+                        button.addEventListener('click', function (e) {
+                            e.stopPropagation(); // 阻止事件冒泡
+
+                            var activityId = this.getAttribute('data-activity-id');
+                            // 存储当前评价的活动ID
+                            reviewModal.setAttribute('data-activity-id', activityId);
+
+                            // 重置评分和内容
+                            resetRating();
+                            document.getElementById('reviewContent').value = '';
+
+                            // 显示评价弹窗
+                            reviewModal.classList.remove('hidden');
+                            document.body.style.overflow = 'hidden'; // 禁止背景滚动
+                        });
+                    });
+
+                    // 如果加载了5个以上活动，隐藏加载更多按钮
+                    if (document.querySelectorAll('#pastActivities > div').length >= 5) {
+                        _this.style.display = 'none';
+                    }
+                }, 1500);
+            });
+        }
+
+        // 返回按钮事件
+        document.getElementById('backButton').addEventListener('click', function () {
+            window.history.back();
+        });
+
+        // 搜索按钮事件
+        document.getElementById('searchButton').addEventListener('click', function () {
+            alert('搜索功能即将上线，敬请期待！');
+        });
+
+        // 筛选按钮事件
+        document.getElementById('filterButton').addEventListener('click', function () {
+            alert('筛选功能即将上线，敬请期待！');
+        });
+
+        // 日历变量 - 设置为2025年8月
+        var currentCalendarDate = new Date(2025, 7, 5); // 月份是0-based，所以7代表8月
+
+        // 生成日历
+        function generateCalendar() {
+            var calendarDays = document.getElementById('calendarDays');
+            var currentMonthEl = document.getElementById('currentMonth');
+            calendarDays.innerHTML = '';
+            var currentMonth = currentCalendarDate.getMonth();
+            var currentYear = currentCalendarDate.getFullYear();
+
+            // 更新月份标题
+            var monthNames = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"];
+            currentMonthEl.textContent = "".concat(currentYear, "\u5E74").concat(monthNames[currentMonth]);
+
+            // 获取当月第一天
+            var firstDay = new Date(currentYear, currentMonth, 1);
+            // 获取当月最后一天
+            var lastDay = new Date(currentYear, currentMonth + 1, 0);
+
+            // 获取当月第一天是星期几
+            var firstDayIndex = firstDay.getDay();
+
+            // 获取当月有活动的日期
+            var activityDays = getActivityDaysForMonth(currentMonth, currentYear);
+
+            // 添加上个月的日期占位
+            for (var i = 0; i < firstDayIndex; i++) {
+                var emptyDay = document.createElement('div');
+                emptyDay.className = 'text-xs py-2 text-gray-300';
+                calendarDays.appendChild(emptyDay);
+            }
+
+            // 添加当月日期
+            var _loop = function _loop(_i) {
+                var dayElement = document.createElement('button');
+                dayElement.className = 'text-xs py-2 rounded-full hover:bg-primary/10 transition-colors relative w-8 h-8 flex items-center justify-center mx-auto text-gray-600';
+                dayElement.textContent = _i;
+
+                // 为今天添加特殊样式 (2025年8月5日)
+                if (_i === 5 && currentMonth === 7 && currentYear === 2025) {
+                    dayElement.classList.add('bg-primary', 'text-white', 'font-bold', 'ring-2', 'ring-primary/30');
+                }
+
+                // 如果当天有活动，添加蓝色小点标记
+                if (activityDays.includes(_i)) {
+                    // 已报名的活动日期样式
+                    dayElement.classList.add('font-medium', 'text-primary');
+                    var dot = document.createElement('span');
+                    dot.className = 'absolute bottom-1 left-1/2 transform -translate-x-1/2 w-1.5 h-1.5 bg-primary rounded-full';
+                    dayElement.appendChild(dot);
+
+                    // 添加活动预览信息
+                    var activities = getActivitiesForDate(_i, currentMonth, currentYear);
+                    if (activities.length > 0) {
+                        var previewHtml = '<div class="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 w-48 bg-white rounded-lg shadow-lg p-2 z-50 text-left">';
+                        activities.forEach(function (activity) {
+                            previewHtml += "\n                                        <div class=\"mb-1 pb-1 border-b border-gray-100\" data-ytId=\"id-tsc8o\" data-ytId=\"id-1z3uu\" data-ytId=\"id-ntuzc\" data-ytId=\"id-x0h4s\" data-ytId=\"id-roshg\">\n                                            <div class=\"font-medium text-xs text-dark\">".concat(activity.name, "</div>\n                                            <div class=\"text-xs text-gray-500\">").concat(activity.time, "</div>\n                                        </div>\n                                    ");
+                        });
+                        previewHtml += '</div>';
+                        var previewEl = document.createElement('div');
+                        previewEl.className = 'relative group';
+                        dayElement.parentNode.insertBefore(previewEl, dayElement);
+                        previewEl.appendChild(dayElement);
+                        previewEl.insertAdjacentHTML('beforeend', previewHtml);
+
+                        // 隐藏预览，鼠标悬停时显示
+                        var previewContent = previewEl.querySelector('div:last-child');
+                        previewContent.classList.add('hidden', 'group-hover:block');
+                    }
+                }
+
+                // 为日期添加点击事件
+                dayElement.addEventListener('click', function () {
+                    // 移除其他日期的选中状态
+                    document.querySelectorAll('#calendarDays button').forEach(function (btn) {
+                        // 恢复今天的样式
+                        if (parseInt(btn.textContent) === 5 && currentMonth === 7 && currentYear === 2025) {
+                            btn.classList.add('bg-primary', 'text-white', 'font-bold');
+                        } else {
+                            btn.classList.remove('bg-primary', 'text-white');
+                        }
+                    });
+
+                    // 添加当前日期的选中状态 (如果不是今天)
+                    if (!(_i === 5 && currentMonth === 7 && currentYear === 2025)) {
+                        this.classList.add('bg-primary', 'text-white');
+                    }
+
+                    // 筛选活动
+                    var selectedDate = _i;
+                    filterActivitiesByDate(selectedDate);
+                });
+                if (!dayElement.parentNode.classList.contains('group')) {
+                    calendarDays.appendChild(dayElement);
+                }
+            };
+            for (var _i = 1; _i <= lastDay.getDate(); _i++) {
+                _loop(_i);
+            }
+        }
+
+        // 获取当月有活动的日期
+        function getActivityDaysForMonth(month, year) {
+            // 手动设置2025年8月有活动的日期
+            if (year === 2025 && month === 7) {
+                // 8月是索引7
+                return [1, 6, 8, 10, 15, 20];
+            }
+            var days = new Set();
+            var activities = document.querySelectorAll('#upcomingActivities > div, #pastActivities > div, #favoriteActivities > div');
+            activities.forEach(function (activity) {
+                var dateText = activity.querySelector('.flex.items-center span.text-xs');
+                if (dateText) {
+                    var dayMatch = dateText.textContent.match(/\d+/);
+                    if (dayMatch) {
+                        var day = parseInt(dayMatch[0]);
+                        days.add(day);
+                    }
+                }
+            });
+            return Array.from(days);
+        }
+
+        // 获取指定日期的活动
+        function getActivitiesForDate(day, month, year) {
+            var activities = [];
+
+            // 手动添加2025年8月的活动数据
+            if (year === 2025 && month === 7) {
+                // 8月是索引7
+                var augActivities = {
+                    1: [{
+                        name: "夏季健康讲座",
+                        time: "8月1日 周五 10:00"
+                    }],
+                    6: [{
+                        name: "书法入门班",
+                        time: "8月6日 周三 09:30"
+                    }],
+                    8: [{
+                        name: "茶艺品鉴会",
+                        time: "8月8日 周五 14:00"
+                    }],
+                    10: [{
+                        name: "健康养生讲座",
+                        time: "8月10日 周日 10:00"
+                    }],
+                    15: [{
+                        name: "国画入门班",
+                        time: "8月15日 周二 14:00"
+                    }],
+                    20: [{
+                        name: "古典音乐欣赏会",
+                        time: "8月20日 周日 15:00"
+                    }]
+                };
+                if (augActivities[day]) {
+                    return augActivities[day];
+                }
+            }
+            var activityElements = document.querySelectorAll('#upcomingActivities > div, #pastActivities > div, #favoriteActivities > div');
+            activityElements.forEach(function (element) {
+                var dateText = element.querySelector('.flex.items-center span.text-xs');
+                if (dateText) {
+                    var dayMatch = dateText.textContent.match(/\d+/);
+                    if (dayMatch) {
+                        var activityDay = parseInt(dayMatch[0]);
+                        if (activityDay === day) {
+                            var name = element.querySelector('h3')?.textContent || "未命名活动";
+                            var time = dateText.textContent;
+                            activities.push({
+                                name: name,
+                                time: time
+                            });
+                        }
+                    }
+                }
+            });
+            return activities;
+        }
+
+        // 根据日期筛选活动
+        function filterActivitiesByDate(day) {
+            // 获取当前选中的标签
+            var activeSection = document.querySelector('section:not(.hidden)');
+            var activities = activeSection.querySelectorAll('#upcomingActivities > div, #pastActivities > div, #favoriteActivities > div');
+            activities.forEach(function (activity) {
+                var dateText = activity.querySelector('.flex.items-center span.text-xs').textContent;
+                var activityDay = parseInt(dateText.match(/\d+/)[0]);
+                if (activityDay === day) {
+                    activity.style.display = '';
+                    activity.style.opacity = '1';
+                    activity.style.transform = 'translateY(0)';
+                } else {
+                    activity.style.opacity = '0.5';
+                }
+            });
+        }
+
+        // 月份切换事件
+        document.getElementById('prevMonth').addEventListener('click', function () {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            generateCalendar();
+        });
+        document.getElementById('nextMonth').addEventListener('click', function () {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            generateCalendar();
+        });
+
+        // 重置日历筛选
+        document.getElementById('resetCalendar').addEventListener('click', function () {
+            // 移除所有日期的选中状态
+            document.querySelectorAll('#calendarDays button').forEach(function (btn) {
+                btn.classList.remove('bg-primary', 'text-white');
+
+                // 恢复今天的样式
+                var today = new Date();
+                if (parseInt(btn.textContent) === today.getDate()) {
+                    btn.classList.add('bg-primary/20', 'font-medium');
+                }
+            });
+
+            // 恢复所有活动的显示
+            var activeSection = document.querySelector('section:not(.hidden)');
+            var activities = activeSection.querySelectorAll('#upcomingActivities > div, #pastActivities > div, #favoriteActivities > div');
+            activities.forEach(function (activity) {
+                activity.style.display = '';
+                activity.style.opacity = '1';
+            });
+        });
+
+        // 活动卡片点击事件 - 查看活动详情
+        function setupActivityCardClickEvents() {
+            var activityCards = document.querySelectorAll('.bg-white.rounded-xl.shadow-sm');
+            activityCards.forEach(function (card) {
+                // 防止重复绑定事件
+                if (!card.classList.contains('event-bound')) {
+                    card.classList.add('event-bound', 'cursor-pointer');
+                    card.addEventListener('click', function (e) {
+                        // 如果点击的是按钮，不触发卡片点击事件
+                        if (e.target.closest('button')) {
+                            return;
+                        }
+                        var activityName = this.querySelector('h3').textContent;
+                        var dateElement = this.querySelector('.flex.items-center span.text-xs');
+                        var activityDate = dateElement ? dateElement.textContent : '';
+                        var locationElement = this.querySelector('.text-xs.bg-gray-100');
+                        var activityLocation = locationElement ? locationElement.textContent : '';
+                        var hostElement = this.querySelector('.text-xs.text-gray-500');
+                        var activityHost = hostElement ? hostElement.textContent : '';
+                        var imageElement = this.querySelector('img');
+                        var imageSrc = imageElement ? imageElement.src : '';
+
+                        // 确定活动状态
+                        var statusText = "已报名";
+                        var statusClass = "bg-primary";
+                        if (this.querySelector('.bg-gray-500')) {
+                            statusText = "已结束";
+                            statusClass = "bg-gray-500";
+                        } else if (this.querySelector('.bg-warning')) {
+                            statusText = "明日开始";
+                            statusClass = "bg-warning";
+                        }
+
+                        // 创建详情弹窗
+                        var detailModal = document.createElement('div');
+                        detailModal.className = 'fixed inset-0 bg-black/50 z-50 flex items-center justify-center activity-detail-modal';
+                        detailModal.innerHTML = "\n                                    <div class=\"bg-white rounded-xl w-full max-w-md max-h-[80vh] overflow-y-auto mx-4\" data-ytId=\"id-qa5zm\" data-ytId=\"id-ogquw\" data-ytId=\"id-p3260\" data-ytId=\"id-f1nuz\" data-ytId=\"id-k4ucw\">\n                                        <div class=\"relative\">\n                                            <img src=\"".concat(imageSrc, "\" alt=\"").concat(activityName, "\" class=\"w-full h-48 object-cover rounded-t-xl\">\n                                            <div class=\"").concat(statusClass, " text-white text-xs px-2 py-1 absolute top-3 left-3 rounded\">\n                                                ").concat(statusText, "\n                                            </div>\n                                            <button class=\"absolute top-3 right-3 bg-black/30 text-white rounded-full p-2 close-detail hover:bg-black/50 transition-colors\" data-ytId=\"id-lgau2\" data-ytId=\"id-gl3zs\" data-ytId=\"id-g2x8i\" data-ytId=\"id-p5vv7\" data-ytId=\"id-b6p8f\">\n                                                <i class=\"fas fa-times\" data-ytId=\"id-kg3xj\" data-ytId=\"id-jgkni\" data-ytId=\"id-r1w9r\" data-ytId=\"id-y6qi8\" data-ytId=\"id-ocr1n\"></i>\n                                            </button>\n                                        </div>\n                                        <div class=\"p-4\" data-ytId=\"id-4vhjc\" data-ytId=\"id-ac7sf\" data-ytId=\"id-3mg9f\" data-ytId=\"id-k421j\" data-ytId=\"id-bjabd\">\n                                            <h3 class=\"text-lg font-bold text-dark mb-2\">").concat(activityName, "</h3>\n                                            \n                                            <div class=\"grid grid-cols-2 gap-3 mb-4\" data-ytId=\"id-fvozt\" data-ytId=\"id-ubans\" data-ytId=\"id-widn0\" data-ytId=\"id-ptdi1\" data-ytId=\"id-8fi5e\">\n                                                <div class=\"bg-gray-50 p-3 rounded-lg\" data-ytId=\"id-hb1ec\" data-ytId=\"id-sxaxd\" data-ytId=\"id-2iicv\" data-ytId=\"id-xwilt\" data-ytId=\"id-q7mav\">\n                                                    <div class=\"text-xs text-gray-500 mb-1\" data-ytId=\"id-5tgbl\" data-ytId=\"id-ow2or\" data-ytId=\"id-yrx4d\" data-ytId=\"id-jnaj1\" data-ytId=\"id-63a39\">\u6D3B\u52A8\u65F6\u95F4</div>\n                                                    <div class=\"text-sm font-medium\">").concat(activityDate, "</div>\n                                                </div>\n                                                <div class=\"bg-gray-50 p-3 rounded-lg\" data-ytId=\"id-45x6e\" data-ytId=\"id-trqbx\" data-ytId=\"id-8toeb\" data-ytId=\"id-j73ds\" data-ytId=\"id-aa0zu\">\n                                                    <div class=\"text-xs text-gray-500 mb-1\" data-ytId=\"id-kl4l2\" data-ytId=\"id-8538a\" data-ytId=\"id-1y2k6\" data-ytId=\"id-pt8c8\" data-ytId=\"id-gqxnj\">\u6D3B\u52A8\u5730\u70B9</div>\n                                                    <div class=\"text-sm font-medium\">").concat(activityLocation, "</div>\n                                                </div>\n                                                <div class=\"bg-gray-50 p-3 rounded-lg col-span-2\" data-ytId=\"id-z3uvp\" data-ytId=\"id-9fwhr\" data-ytId=\"id-lpv20\" data-ytId=\"id-zw0f4\" data-ytId=\"id-0xy62\">\n                                                    <div class=\"text-xs text-gray-500 mb-1\" data-ytId=\"id-8xyhh\" data-ytId=\"id-3ypgv\" data-ytId=\"id-idr44\" data-ytId=\"id-hcnzq\" data-ytId=\"id-vqokl\">\u4E3B\u8BB2\u4EBA</div>\n                                                    <div class=\"text-sm font-medium\">").concat(activityHost, "</div>\n                                                </div>\n                                            </div>\n                                            \n                                            <div class=\"mb-4\" data-ytId=\"id-55yos\" data-ytId=\"id-d8rup\" data-ytId=\"id-ljuks\" data-ytId=\"id-fdsy3\" data-ytId=\"id-u4c01\">\n                                                <div class=\"text-xs text-gray-500 mb-2\" data-ytId=\"id-hdhky\" data-ytId=\"id-hm5ym\" data-ytId=\"id-9yrow\" data-ytId=\"id-otq9p\" data-ytId=\"id-30hge\">\u6D3B\u52A8\u8BE6\u60C5</div>\n                                                <div class=\"text-sm text-gray-600 leading-relaxed\" data-ytId=\"id-bs23o\" data-ytId=\"id-7107u\" data-ytId=\"id-ggo2u\" data-ytId=\"id-45nn3\" data-ytId=\"id-j9sq6\">\n                                                    \u672C\u6B21\u6D3B\u52A8\u65E8\u5728\u4E3A\u53C2\u4E0E\u8005\u63D0\u4F9B\u4E30\u5BCC\u7684\u6587\u5316\u4F53\u9A8C\u548C\u793E\u4EA4\u673A\u4F1A\u3002\u901A\u8FC7\u4E13\u4E1A\u7684\u6307\u5BFC\u548C\u4E92\u52A8\u4EA4\u6D41\uFF0C\u5E2E\u52A9\u53C2\u4E0E\u8005\u6DF1\u5165\u4E86\u89E3\u6D3B\u52A8\u4E3B\u9898\uFF0C\u63D0\u5347\u76F8\u5173\u6280\u80FD\uFF0C\u5E76\u7ED3\u8BC6\u5FD7\u540C\u9053\u5408\u7684\u670B\u53CB\u3002\u6D3B\u52A8\u5185\u5BB9\u4E30\u5BCC\u591A\u6837\uFF0C\u9002\u5408\u5404\u4E2A\u5E74\u9F84\u6BB5\u7684\u53C2\u4E0E\u8005\u3002\n                                                </div>\n                                            </div>\n                                            \n                                            <div class=\"flex space-x-2\">\n                                                <button class=\"flex-1 ").concat(statusClass, " text-white text-xs py-2 rounded-lg hover:").concat(statusClass, "/90 transition-colors flex items-center justify-center\">\n                                                    <i class=\"fas fa-info-circle mr-1\" data-ytId=\"id-ib169\" data-ytId=\"id-i8lgb\" data-ytId=\"id-bija7\" data-ytId=\"id-obsw6\" data-ytId=\"id-jmr73\"></i> ").concat(statusText, "\n                                                </button>\n                                                <button class=\"flex-1 border border-gray-300 text-gray-600 text-xs py-2 rounded-lg hover:bg-gray-50 transition-colors flex items-center justify-center share-btn\" data-ytId=\"id-jxzgk\" data-ytId=\"id-vctjw\" data-ytId=\"id-mvmd0\" data-ytId=\"id-zxeiv\" data-ytId=\"id-1vaws\">\n                                                    <i class=\"fas fa-share-alt mr-1\" data-ytId=\"id-q7nyi\" data-ytId=\"id-g7mgx\" data-ytId=\"id-bi0zi\" data-ytId=\"id-4b8sl\" data-ytId=\"id-o12zc\"></i> \u5206\u4EAB\n                                                </button>\n                                            </div>\n                                        </div>\n                                    </div>\n                                ");
+
+                        // 添加到页面
+                        document.body.appendChild(detailModal);
+                        document.body.style.overflow = 'hidden';
+
+                        // 关闭按钮事件
+                        var closeBtn = detailModal.querySelector('.close-detail');
+                        closeBtn.addEventListener('click', function () {
+                            detailModal.classList.add('opacity-0');
+                            setTimeout(function () {
+                                document.body.removeChild(detailModal);
+                                document.body.style.overflow = '';
+                            }, 300);
+                        });
+
+                        // 分享按钮事件
+                        var shareBtn = detailModal.querySelector('.share-btn');
+                        if (shareBtn) {
+                            shareBtn.addEventListener('click', function () {
+                                alert("\u5206\u4EAB\u6D3B\u52A8: ".concat(activityName));
+                            });
+                        }
+
+                        // 点击弹窗外部关闭弹窗
+                        detailModal.addEventListener('click', function (e) {
+                            if (e.target === this) {
+                                detailModal.classList.add('opacity-0');
+                                setTimeout(function () {
+                                    document.body.removeChild(detailModal);
+                                    document.body.style.overflow = '';
+                                }, 300);
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        // 初始化日历
+        generateCalendar();
+
+        // 确保日历在页面加载时正确显示
+        window.addEventListener('load', generateCalendar);
+
+        // 设置月份切换事件
+        document.getElementById('prevMonth').addEventListener('click', function () {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() - 1);
+            generateCalendar();
+        });
+        document.getElementById('nextMonth').addEventListener('click', function () {
+            currentCalendarDate.setMonth(currentCalendarDate.getMonth() + 1);
+            generateCalendar();
+        });
+
+        // 初始化活动卡片点击事件
+        setupActivityCardClickEvents();
+
+        // 为加载更多按钮添加活动卡片事件绑定
+        if (loadMoreButton) {
+            loadMoreButton.addEventListener('click', function () {
+                // 添加新活动后重新绑定事件
+                setTimeout(setupActivityCardClickEvents, 1000);
+            });
+        }
+    });
+</script>
+</body>
+</html>

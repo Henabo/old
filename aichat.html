@@ -1,0 +1,796 @@
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>老友AI助手</title>
+  <script src="https://res.gemcoder.com/js/reload.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+          href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          rel="stylesheet"
+  />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#4A6FA5',
+            secondary: '#7B93AF',
+            accent: '#FF9E7D',
+            light: '#F5F7FA',
+            dark: '#333333',
+            gray: {
+              100: '#F5F7FA',
+              200: '#E4E7EB',
+              300: '#CBD2D9',
+              400: '#9AA5B1',
+              500: '#7B8794',
+              600: '#616E7C',
+              700: '#52606D',
+              800: '#3E4C59',
+              900: '#1F2933'
+            }
+          },
+          fontFamily: {
+            sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif']
+          }
+        }
+      }
+    };
+  </script>
+  <style type="text/tailwindcss">
+    @layer utilities {
+      .content-auto {
+        content-visibility: auto;
+      }
+      .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+      }
+      .text-shadow {
+        text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+      }
+      .chat-bubble-left {
+        border-radius: 18px 18px 18px 4px;
+      }
+      .chat-bubble-right {
+        border-radius: 18px 18px 4px 18px;
+      }
+      .animate-fade-in {
+        animation: fadeIn 0.3s ease-in-out;
+      }
+      .animate-slide-up {
+        animation: slideUp 0.4s ease-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      @keyframes slideUp {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+    }
+  </style>
+</head>
+<body class="bg-light font-sans text-dark min-h-screen flex flex-col">
+<!-- 顶部导航栏 -->
+<header class="bg-white shadow-sm sticky top-0 z-50">
+  <div
+          class="container mx-auto px-4 py-3 flex items-center justify-between"
+  >
+    <div class="flex items-center space-x-3">
+      <button
+              class="text-gray-500 hover:text-primary transition-colors"
+              id="backBtn"
+      >
+        <a
+                class="yt-a-defalut-link fas fa-arrow-left text-xl flex"
+                target="_top"
+                is-page="true"
+                href="javascript:void(0);"
+                custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952582013240213504&appName=老友社区副本"
+                onclick="ytCustomLinkNavigation()"
+                custom-a="true"
+                is-add="false"
+                style="padding: 0px; border: 0px; box-shadow: none;"
+        >
+        </a>
+      </button>
+      <img
+              alt="AI助手头像"
+              class="w-10 h-10 rounded-full object-cover"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/8fe67daf5e5bcb30ad6f5288b8bec8f8.png"
+      />
+      <div>
+        <h1 class="text-lg font-bold text-dark">老友AI助手</h1>
+        <p class="text-xs text-gray-500">在线 · 随时为您服务</p>
+      </div>
+    </div>
+    <div class="flex space-x-4">
+      <button class="text-gray-500 hover:text-primary transition-colors">
+        <i class="fas fa-star text-xl"> </i>
+      </button>
+      <button class="text-gray-500 hover:text-primary transition-colors">
+        <i class="fas fa-ellipsis-v text-xl"> </i>
+      </button>
+    </div>
+  </div>
+</header>
+<!-- 主要内容区 -->
+<main class="flex-1 flex flex-col overflow-hidden pt-16">
+  <!-- 功能导航栏 -->
+  <div
+          class="bg-white border-b border-gray-200 p-3 fixed top-14 left-0 right-0 z-30 flex justify-around items-center shadow-sm"
+  >
+    <button class="flex flex-col items-center text-primary" id="newsBtn">
+      <i class="fas fa-newspaper text-xl mb-1"> </i>
+      <span class="text-xs"> 新闻资讯 </span>
+    </button>
+    <button class="flex flex-col items-center text-gray-500" id="videoBtn">
+      <i class="fas fa-video text-xl mb-1"> </i>
+      <span class="text-xs"> 视频推荐 </span>
+    </button>
+    <button class="flex flex-col items-center text-gray-500" id="healthBtn">
+      <i class="fas fa-heartbeat text-xl mb-1"> </i>
+      <span class="text-xs"> 健康监控 </span>
+    </button>
+    <button
+            class="flex flex-col items-center text-gray-500"
+            id="activityBtn"
+    >
+      <i class="fas fa-calendar-alt text-xl mb-1"> </i>
+      <span class="text-xs"> 活动日历 </span>
+    </button>
+  </div>
+  <!-- 聊天消息区域 -->
+  <div
+          class="flex-1 overflow-y-auto p-4 space-y-6 scrollbar-hide animate-fade-in"
+          id="chatMessages"
+  >
+    <!-- 欢迎消息 -->
+    <div class="flex items-start animate-slide-up">
+      <img
+              alt="AI助手"
+              class="w-10 h-10 rounded-full object-cover mr-3 flex-shrink-0"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/8fe67daf5e5bcb30ad6f5288b8bec8f8.png"
+      />
+      <div class="max-w-[80%]">
+        <div class="bg-white p-4 rounded-lg shadow-sm chat-bubble-left">
+          <p class="text-sm text-gray-700">
+            您好！我是您的老友AI助手，今天天气晴朗，温度26°C，很适合出门散步。有什么我可以帮助您的吗？
+          </p>
+        </div>
+        <p class="text-xs text-gray-400 mt-1 ml-2">上午 9:30</p>
+      </div>
+    </div>
+    <!-- 用户消息 -->
+    <div class="flex items-start justify-end animate-slide-up">
+      <div class="max-w-[80%] text-right">
+        <div
+                class="bg-primary text-white p-4 rounded-lg shadow-sm chat-bubble-right"
+        >
+          <p class="text-sm">你好，最近有什么适合老年人参加的活动吗？</p>
+        </div>
+        <p class="text-xs text-gray-400 mt-1 mr-2">上午 9:32</p>
+      </div>
+    </div>
+    <!-- AI回复 -->
+    <div class="flex items-start animate-slide-up">
+      <img
+              alt="AI助手"
+              class="w-10 h-10 rounded-full object-cover mr-3 flex-shrink-0"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/8fe67daf5e5bcb30ad6f5288b8bec8f8.png"
+      />
+      <div class="max-w-[80%]">
+        <div class="bg-white p-4 rounded-lg shadow-sm chat-bubble-left">
+          <p class="text-sm text-gray-700 mb-3">
+            为您推荐以下近期适合参加的活动：
+          </p>
+          <!-- 活动推荐卡片 -->
+          <div class="space-y-3 mb-3">
+            <div
+                    class="bg-light rounded-xl overflow-hidden shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
+                    onclick='window.location.href="javascript:void(0);"'
+            >
+              <div class="p-3">
+                <h4 class="font-medium text-sm mb-1">
+                  健康养生讲座：夏季防暑小知识
+                </h4>
+                <div class="flex items-center text-xs text-gray-500 mb-2">
+                  <i class="fas fa-calendar-alt mr-1"> </i>
+                  <span> 7月30日 14:00-15:30 </span>
+                  <span class="mx-2"> • </span>
+                  <i class="fas fa-map-marker-alt mr-1"> </i>
+                  <span> 社区活动中心 </span>
+                </div>
+                <div class="flex items-center">
+                      <span
+                              class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full"
+                      >
+                        免费
+                      </span>
+                  <button class="ml-auto text-primary text-xs font-medium">
+                    查看详情
+                    <i class="fas fa-angle-right ml-1"> </i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div
+                    class="bg-light rounded-xl overflow-hidden shadow-sm border border-gray-200 cursor-pointer hover:shadow-md transition-shadow"
+                    onclick='window.location.href="javascript:void(0);"'
+            >
+              <div class="p-3">
+                <h4 class="font-medium text-sm mb-1">
+                  书法入门班：毛笔字基础练习
+                </h4>
+                <div class="flex items-center text-xs text-gray-500 mb-2">
+                  <i class="fas fa-calendar-alt mr-1"> </i>
+                  <span> 每周一、三、五 上午9:00-10:30 </span>
+                  <span class="mx-2"> • </span>
+                  <i class="fas fa-map-marker-alt mr-1"> </i>
+                  <span> 老年大学 </span>
+                </div>
+                <div class="flex items-center">
+                      <span
+                              class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full"
+                      >
+                        已报名28人
+                      </span>
+                  <button class="ml-auto text-primary text-xs font-medium">
+                    查看详情
+                    <i class="fas fa-angle-right ml-1"> </i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <p class="text-sm text-gray-700">
+            您对哪个活动感兴趣呢？我可以为您提供更多详细信息。
+          </p>
+        </div>
+        <p class="text-xs text-gray-400 mt-1 ml-2">上午 9:33</p>
+      </div>
+    </div>
+    <!-- 用户消息 -->
+    <div class="flex items-start justify-end animate-slide-up">
+      <div class="max-w-[80%] text-right">
+        <div
+                class="bg-primary text-white p-4 rounded-lg shadow-sm chat-bubble-right"
+        >
+          <p class="text-sm">书法班听起来不错，能告诉我具体怎么报名吗？</p>
+        </div>
+        <p class="text-xs text-gray-400 mt-1 mr-2">上午 9:35</p>
+      </div>
+    </div>
+    <!-- AI回复 -->
+    <div class="flex items-start animate-slide-up">
+      <img
+              alt="AI助手"
+              class="w-10 h-10 rounded-full object-cover mr-3 flex-shrink-0"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/8fe67daf5e5bcb30ad6f5288b8bec8f8.png"
+      />
+      <div class="max-w-[80%]">
+        <div class="bg-white p-4 rounded-lg shadow-sm chat-bubble-left">
+          <p class="text-sm text-gray-700 mb-3">
+            书法入门班的报名方式有以下几种：
+          </p>
+          <ul class="space-y-2 text-sm text-gray-700 mb-3">
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-primary mt-1 mr-2"> </i>
+              <span> 现场报名：携带身份证到老年大学一楼服务台 </span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-primary mt-1 mr-2"> </i>
+              <span> 电话报名：拨打 0791-88887777 </span>
+            </li>
+            <li class="flex items-start">
+              <i class="fas fa-check-circle text-primary mt-1 mr-2"> </i>
+              <span> 线上报名：通过"老友社区"APP进行报名 </span>
+            </li>
+          </ul>
+          <p class="text-sm text-gray-700">
+            需要我帮您提供老年大学的详细地址或电话吗？
+          </p>
+        </div>
+        <p class="text-xs text-gray-400 mt-1 ml-2">上午 9:36</p>
+      </div>
+    </div>
+    <!-- 正在输入提示 -->
+    <div class="flex items-start hidden" id="typingIndicator">
+      <img
+              alt="AI助手"
+              class="w-10 h-10 rounded-full object-cover mr-3 flex-shrink-0"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/8fe67daf5e5bcb30ad6f5288b8bec8f8.png"
+      />
+      <div class="bg-white p-3 rounded-lg shadow-sm">
+        <div class="flex space-x-1">
+          <div
+                  class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style="animation-delay: 0ms"
+          ></div>
+          <div
+                  class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style="animation-delay: 150ms"
+          ></div>
+          <div
+                  class="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                  style="animation-delay: 300ms"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 快捷回复选项 -->
+  <div
+          class="bg-white border-t border-gray-200 p-3 overflow-x-auto scrollbar-hide pb-20"
+          id="quickReplies"
+  >
+    <div class="flex space-x-2 min-w-max pb-2">
+      <button
+              class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded-full transition-colors whitespace-nowrap quick-reply-btn"
+      >
+        告诉我今天的新闻
+      </button>
+      <button
+              class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded-full transition-colors whitespace-nowrap quick-reply-btn"
+      >
+        附近的公园有哪些
+      </button>
+      <button
+              class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded-full transition-colors whitespace-nowrap quick-reply-btn"
+      >
+        帮我设置提醒
+      </button>
+      <button
+              class="bg-gray-100 hover:bg-gray-200 text-gray-700 text-sm px-4 py-2 rounded-full transition-colors whitespace-nowrap quick-reply-btn"
+      >
+        健康养生知识
+      </button>
+    </div>
+  </div>
+  <!-- 输入区域 -->
+  <div
+          class="bg-white border-t border-gray-200 p-4 fixed bottom-0 left-0 right-0 z-40"
+  >
+    <div class="flex items-center space-x-3">
+      <button
+              class="text-gray-500 hover:text-primary transition-colors p-2"
+      >
+        <i class="fas fa-smile text-xl"> </i>
+      </button>
+      <button
+              class="text-gray-500 hover:text-primary transition-colors p-2"
+      >
+        <i class="fas fa-paperclip text-xl"> </i>
+      </button>
+      <div class="relative flex-1">
+        <input
+                class="w-full bg-gray-100 rounded-full py-3 px-4 pr-12 focus:outline-none focus:ring-2 focus:ring-primary/50 text-sm"
+                id="messageInput"
+                placeholder="请输入消息..."
+                type="text"
+        />
+        <button
+                class="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-primary transition-colors"
+                id="voiceInputBtn"
+        >
+          <i class="fas fa-microphone text-xl"> </i>
+        </button>
+      </div>
+      <button
+              class="bg-primary text-white rounded-full p-3 hover:bg-primary/90 transition-colors shadow-sm"
+              id="sendBtn"
+      >
+        <i class="fas fa-paper-plane"> </i>
+      </button>
+    </div>
+  </div>
+</main>
+<!-- 语音输入模态框 -->
+<div
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+        id="voiceModal"
+>
+  <div class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 text-center">
+    <div
+            class="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6"
+    >
+      <i class="fas fa-microphone text-primary text-3xl" id="voiceIcon">
+      </i>
+    </div>
+    <h3 class="text-xl font-bold text-dark mb-2">正在聆听...</h3>
+    <p class="text-gray-500 mb-6" id="voiceStatus">请说出您的需求</p>
+    <div class="flex justify-center space-x-6 mb-6">
+      <button class="text-gray-500 hover:text-primary transition-colors">
+        <i class="fas fa-volume-up text-2xl"> </i>
+      </button>
+      <button class="text-gray-500 hover:text-primary transition-colors">
+        <i class="fas fa-keyboard text-2xl"> </i>
+      </button>
+    </div>
+    <button
+            class="w-full bg-gray-100 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-200 transition-colors"
+            id="cancelVoiceBtn"
+    >
+      取消
+    </button>
+  </div>
+</div>
+<!-- 活动详情模态框 -->
+<div
+        class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 hidden"
+        id="activityModal"
+>
+  <div
+          class="bg-white rounded-2xl p-6 w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto"
+  >
+    <div class="flex justify-between items-center mb-4">
+      <h3 class="text-xl font-bold text-dark">活动详情</h3>
+      <button
+              class="text-gray-500 hover:text-primary transition-colors"
+              id="closeActivityModal"
+      >
+        <i class="fas fa-times text-xl"> </i>
+      </button>
+    </div>
+    <div class="rounded-xl overflow-hidden mb-4">
+      <img
+              alt="书法入门班"
+              class="w-full h-48 object-cover"
+              src="https://design.gemcoder.com/staticResource/echoAiSystemImages/fdd270992b9225ad5872361534fca423.png"
+      />
+    </div>
+    <h4 class="text-lg font-bold text-dark mb-2">
+      书法入门班：毛笔字基础练习
+    </h4>
+    <div class="space-y-3 mb-5">
+      <div class="flex items-start">
+        <i class="fas fa-calendar-alt text-primary mt-1 mr-3"> </i>
+        <div>
+          <p class="text-xs text-gray-500">活动时间</p>
+          <p class="text-sm font-medium">每周一、三、五 上午9:00-10:30</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <i class="fas fa-map-marker-alt text-primary mt-1 mr-3"> </i>
+        <div>
+          <p class="text-xs text-gray-500">活动地点</p>
+          <p class="text-sm font-medium">老年大学 302教室</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <i class="fas fa-user-friends text-primary mt-1 mr-3"> </i>
+        <div>
+          <p class="text-xs text-gray-500">参与人数</p>
+          <p class="text-sm font-medium">28人已报名，限40人</p>
+        </div>
+      </div>
+      <div class="flex items-start">
+        <i class="fas fa-ticket-alt text-primary mt-1 mr-3"> </i>
+        <div>
+          <p class="text-xs text-gray-500">活动费用</p>
+          <p class="text-sm font-medium">120元/月（含材料）</p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-200 pt-4">
+      <h5 class="font-bold text-sm mb-2">活动介绍</h5>
+      <p class="text-sm text-gray-600 mb-4">
+        本课程适合书法零基础的老年人，从握笔姿势、基本笔画开始教学，逐步掌握楷书基础。通过书法练习，不仅能培养兴趣爱好，还能修身养性，促进手部灵活度。
+      </p>
+      <h5 class="font-bold text-sm mb-2">活动亮点</h5>
+      <div class="flex flex-wrap gap-2 mb-6">
+            <span
+                    class="bg-blue-50 text-blue-600 text-xs px-3 py-1 rounded-full"
+            >
+              零基础教学
+            </span>
+        <span
+                class="bg-blue-50 text-blue-600 text-xs px-3 py-1 rounded-full"
+        >
+              专业老师指导
+            </span>
+        <span
+                class="bg-blue-50 text-blue-600 text-xs px-3 py-1 rounded-full"
+        >
+              提供材料
+            </span>
+        <span
+                class="bg-blue-50 text-blue-600 text-xs px-3 py-1 rounded-full"
+        >
+              轻松氛围
+            </span>
+      </div>
+      <button
+              class="w-full bg-primary text-white font-medium py-3 rounded-xl hover:bg-primary/90 transition-colors"
+      >
+        立即报名
+      </button>
+    </div>
+  </div>
+</div>
+<!-- 语音识别中模态框 -->
+<div
+        class="fixed inset-0 bg-black/70 flex flex-col items-center justify-center z-50 hidden"
+        id="voiceListeningModal"
+>
+  <div
+          class="w-24 h-24 border-4 border-white border-t-primary rounded-full animate-spin mb-6"
+  ></div>
+  <p class="text-white text-xl font-medium mb-2">正在识别...</p>
+  <p class="text-gray-300 text-sm">请继续说话</p>
+  <button
+          class="mt-8 bg-white/20 backdrop-blur-sm text-white rounded-full px-6 py-3 hover:bg-white/30 transition-colors"
+          id="stopListeningBtn"
+  >
+    点击停止
+  </button>
+</div>
+</body>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // 获取DOM元素
+    var backBtn = document.getElementById('backBtn');
+    var chatMessages = document.getElementById('chatMessages');
+    var messageInput = document.getElementById('messageInput');
+    var sendBtn = document.getElementById('sendBtn');
+    var voiceInputBtn = document.getElementById('voiceInputBtn');
+    var voiceModal = document.getElementById('voiceModal');
+    var cancelVoiceBtn = document.getElementById('cancelVoiceBtn');
+    var voiceListeningModal = document.getElementById('voiceListeningModal');
+    var stopListeningBtn = document.getElementById('stopListeningBtn');
+    var typingIndicator = document.getElementById('typingIndicator');
+    var quickReplies = document.getElementById('quickReplies');
+    var quickReplyBtns = document.querySelectorAll('.quick-reply-btn');
+    var activityModal = document.getElementById('activityModal');
+    var closeActivityModal = document.getElementById('closeActivityModal');
+    // 功能按钮
+    var newsBtn = document.getElementById('newsBtn');
+    var videoBtn = document.getElementById('videoBtn');
+    var healthBtn = document.getElementById('healthBtn');
+    var activityBtn = document.getElementById('activityBtn');
+    var functionBtns = [newsBtn, videoBtn, healthBtn, activityBtn];
+
+    // 自动滚动到底部
+    function scrollToBottom() {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // 添加用户消息
+    function addUserMessage(message) {
+      var now = new Date();
+      var timeString = "".concat(now.getHours(), ":").concat(now.getMinutes().toString().padStart(2, '0'));
+      var messageHTML = "\n            <div class=\"flex items-start justify-end animate-slide-up\" data-ytId=\"id-wwvjn\" data-ytId=\"id-o8n2d\" data-ytId=\"id-mfrqp\" data-ytId=\"id-egj2a\" data-ytId=\"id-glnsb\">\n                <div class=\"max-w-[80%] text-right\" data-ytId=\"id-oya40\" data-ytId=\"id-qtvs3\" data-ytId=\"id-s6v2g\" data-ytId=\"id-q3mbs\" data-ytId=\"id-axur1\">\n                    <div class=\"bg-primary text-white p-4 rounded-lg shadow-sm chat-bubble-right\" data-ytId=\"id-jfff4\" data-ytId=\"id-kt6j7\" data-ytId=\"id-fypfp\" data-ytId=\"id-u9u4n\" data-ytId=\"id-vyugl\">\n                        <p class=\"text-sm\">".concat(message, "</p>\n                    </div>\n                    <p class=\"text-xs text-gray-400 mt-1 mr-2\">").concat(timeString, "</p>\n                </div>\n            </div>\n        ");
+      chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+      scrollToBottom();
+    }
+
+    // 添加AI消息
+    function addAIMessage(message) {
+      var now = new Date();
+      var timeString = "".concat(now.getHours(), ":").concat(now.getMinutes().toString().padStart(2, '0'));
+      var messageHTML = "\n            <div class=\"flex items-start animate-slide-up\" data-ytId=\"id-6nf1z\" data-ytId=\"id-5tqnz\" data-ytId=\"id-ttb2r\" data-ytId=\"id-7sahz\" data-ytId=\"id-vqnxb\">\n                <img alt=\"AI\u52A9\u624B\" class=\"w-10 h-10 rounded-full object-cover mr-3 flex-shrink-0\" src=\"https://design.gemcoder.com/staticResource/echoAiSystemImages/8fe67daf5e5bcb30ad6f5288b8bec8f8.png\"/>\n                <div class=\"max-w-[80%]\" data-ytId=\"id-g8an1\" data-ytId=\"id-672kl\" data-ytId=\"id-5b7x0\" data-ytId=\"id-t7i6u\" data-ytId=\"id-kjvw8\">\n                    <div class=\"bg-white p-4 rounded-lg shadow-sm chat-bubble-left\" data-ytId=\"id-qh84b\" data-ytId=\"id-q8b9a\" data-ytId=\"id-p780y\" data-ytId=\"id-h25dt\" data-ytId=\"id-l6meb\">\n                        <p class=\"text-sm text-gray-700\">".concat(message, "</p>\n                    </div>\n                    <p class=\"text-xs text-gray-400 mt-1 ml-2\">").concat(timeString, "</p>\n                </div>\n            </div>\n        ");
+      chatMessages.insertAdjacentHTML('beforeend', messageHTML);
+      scrollToBottom();
+    }
+
+    // 显示正在输入提示
+    function showTypingIndicator() {
+      typingIndicator.classList.remove('hidden');
+      scrollToBottom();
+    }
+
+    // 隐藏正在输入提示
+    function hideTypingIndicator() {
+      typingIndicator.classList.add('hidden');
+    }
+
+    // 发送消息
+    function sendMessage() {
+      var message = messageInput.value.trim();
+      if (!message) return;
+
+      // 添加用户消息
+      addUserMessage(message);
+
+      // 清空输入框
+      messageInput.value = '';
+
+      // 显示正在输入提示
+      showTypingIndicator();
+
+      // 模拟AI回复
+      setTimeout(function () {
+        hideTypingIndicator();
+
+        // 根据用户消息内容生成不同回复
+        var aiReply = "感谢您的消息，我会尽快为您提供帮助。";
+        if (message.includes('活动')) {
+          aiReply = "近期有很多适合老年人的活动，包括健康讲座、书法班、园艺活动等。您对哪类活动更感兴趣呢？";
+        } else if (message.includes('天气')) {
+          aiReply = "今天天气晴朗，温度26°C，空气质量良好，非常适合户外活动。记得做好防晒措施哦！";
+        } else if (message.includes('时间')) {
+          var now = new Date();
+          aiReply = "\u73B0\u5728\u662F".concat(now.getHours(), ":").concat(now.getMinutes().toString().padStart(2, '0'), "\u3002");
+        } else if (message.includes('帮助')) {
+          aiReply = "我可以帮您查询活动信息、设置提醒、提供健康养生知识、播放新闻等。您需要什么帮助呢？";
+        }
+        addAIMessage(aiReply);
+      }, 1500);
+    }
+
+    // 返回按钮点击事件
+    backBtn.addEventListener('click', function () {
+      // 模拟返回上一页功能
+      window.history.back();
+      // 如果没有历史记录，也可以跳转到指定页面
+      // window.location.href = 'previous-page.html';
+    });
+
+    // 发送按钮点击事件
+    sendBtn.addEventListener('click', sendMessage);
+
+    // 输入框回车事件
+    messageInput.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        sendMessage();
+      }
+    });
+
+    // 语音输入按钮点击事件
+    voiceInputBtn.addEventListener('click', function () {
+      voiceModal.classList.remove('hidden');
+    });
+
+    // 取消语音输入
+    cancelVoiceBtn.addEventListener('click', function () {
+      voiceModal.classList.add('hidden');
+    });
+
+    // 开始语音识别
+    voiceModal.querySelector('.fa-microphone').parentElement.addEventListener('click', function () {
+      voiceModal.classList.add('hidden');
+      voiceListeningModal.classList.remove('hidden');
+
+      // 模拟语音识别过程
+      setTimeout(function () {
+        voiceListeningModal.classList.add('hidden');
+        addUserMessage("帮我查询明天的天气");
+
+        // 模拟AI回复
+        setTimeout(function () {
+          showTypingIndicator();
+          setTimeout(function () {
+            hideTypingIndicator();
+            addAIMessage("明天天气多云转晴，气温24°C-32°C，微风，适合户外活动，但中午气温较高，建议做好防暑措施。");
+          }, 1500);
+        }, 500);
+      }, 3000);
+    });
+
+    // 停止语音识别
+    stopListeningBtn.addEventListener('click', function () {
+      voiceListeningModal.classList.add('hidden');
+    });
+
+    // 快捷回复按钮点击事件
+    quickReplyBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var message = this.textContent.trim();
+        addUserMessage(message);
+
+        // 显示正在输入提示
+        showTypingIndicator();
+
+        // 模拟AI回复
+        setTimeout(function () {
+          hideTypingIndicator();
+          if (message.includes('新闻')) {
+            addAIMessage("今天的主要新闻：本地老年大学新增10门兴趣课程；社区医院将开展免费体检活动；国家卫健委发布老年人健康管理新指南。需要我详细介绍哪条新闻？");
+          } else if (message.includes('公园')) {
+            addAIMessage("您附近的公园有：西湖公园（距离1.2公里）、人民公园（距离2.5公里）、青山湖公园（距离3.1公里）。需要我提供具体路线吗？");
+          } else if (message.includes('提醒')) {
+            addAIMessage("请问您需要设置什么提醒？例如：吃药提醒、活动提醒、生日提醒等。请告诉我提醒内容和时间。");
+          } else if (message.includes('健康')) {
+            addAIMessage("夏季养生小知识：1. 饮食宜清淡，多吃清热解暑的食物；2. 保证充足睡眠，适当午睡；3. 适量运动，避免高温时段外出；4. 保持心情舒畅，忌烦躁。需要了解更多健康知识吗？");
+          }
+        }, 1500);
+      });
+    });
+
+    // 打开活动详情
+    document.querySelectorAll('[onclick="window.location.href=\'javascript:void(0);\'"]').forEach(function (el) {
+      el.addEventListener('click', function () {
+        activityModal.classList.remove('hidden');
+      });
+    });
+
+    // 关闭活动详情
+    closeActivityModal.addEventListener('click', function () {
+      activityModal.classList.add('hidden');
+    });
+
+    // 点击模态框外部关闭
+    activityModal.addEventListener('click', function (e) {
+      if (e.target === activityModal) {
+        activityModal.classList.add('hidden');
+      }
+    });
+
+    // 功能按钮点击事件
+    functionBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        // 重置所有按钮样式
+        functionBtns.forEach(function (b) {
+          b.classList.remove('text-primary');
+          b.classList.add('text-gray-500');
+        });
+
+        // 设置当前按钮样式
+        this.classList.remove('text-gray-500');
+        this.classList.add('text-primary');
+        var functionName = this.id.replace('Btn', '');
+        showFunctionContent(functionName);
+      });
+    });
+
+    // 显示功能内容
+    function showFunctionContent(functionName) {
+      // 清空聊天消息
+      chatMessages.innerHTML = '';
+
+      // 显示正在加载提示
+      showTypingIndicator();
+
+      // 根据不同功能加载不同内容
+      setTimeout(function () {
+        hideTypingIndicator();
+        var content = '';
+        switch (functionName) {
+          case 'news':
+            content = generateNewsContent();
+            break;
+          case 'video':
+            content = generateVideoContent();
+            break;
+          case 'health':
+            content = generateHealthContent();
+            break;
+          case 'activity':
+            content = generateActivityContent();
+            break;
+        }
+        addAIMessage(content);
+      }, 1000);
+    }
+
+    // 生成新闻内容
+    function generateNewsContent() {
+      return "\n      <p class=\"text-sm text-gray-700 mb-3\" data-ytId=\"id-fycnb\" data-ytId=\"id-41x10\" data-ytId=\"id-zmlb7\">\u4ECA\u65E5\u8001\u5E74\u65B0\u95FB\u8D44\u8BAF\uFF1A</p>\n      <div class=\"space-y-3\" data-ytId=\"id-vbsoc\" data-ytId=\"id-pug0m\" data-ytId=\"id-by9d6\">\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200\" data-ytId=\"id-ikmld\" data-ytId=\"id-btnw7\" data-ytId=\"id-j4ysw\">\n          <h4 class=\"font-medium text-sm mb-1\" data-ytId=\"id-y8u8t\" data-ytId=\"id-bqdm5\" data-ytId=\"id-arwlb\">\u793E\u533A\u8001\u5E74\u5927\u5B66\u65B0\u589E\u667A\u80FD\u8BBE\u5907\u4F7F\u7528\u8BFE\u7A0B</h4>\n          <p class=\"text-xs text-gray-600\" data-ytId=\"id-cazud\" data-ytId=\"id-1nlmq\" data-ytId=\"id-4fahe\">\u4E3A\u5E2E\u52A9\u8001\u5E74\u4EBA\u66F4\u597D\u5730\u9002\u5E94\u667A\u80FD\u751F\u6D3B\uFF0C\u793E\u533A\u8001\u5E74\u5927\u5B66\u5C06\u4E8E\u4E0B\u5468\u5F00\u8BBE\u667A\u80FD\u624B\u673A\u548C\u5E73\u677F\u7535\u8111\u57FA\u7840\u64CD\u4F5C\u8BFE\u7A0B...</p>\n          <p class=\"text-xs text-gray-400 mt-2\" data-ytId=\"id-4dhc5\" data-ytId=\"id-kvvw7\" data-ytId=\"id-sub2n\">\u53D1\u5E03\u65F6\u95F4\uFF1A\u4ECA\u5929 08:30</p>\n        </div>\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200\" data-ytId=\"id-7cqbn\" data-ytId=\"id-egdi8\" data-ytId=\"id-5fpmv\">\n          <h4 class=\"font-medium text-sm mb-1\" data-ytId=\"id-x8arm\" data-ytId=\"id-6pwp6\" data-ytId=\"id-68lo2\">\u5E02\u56FE\u4E66\u9986\u4E3E\u529E\"\u7EA2\u8272\u8BB0\u5FC6\"\u4E3B\u9898\u5C55\u89C8</h4>\n          <p class=\"text-xs text-gray-600\" data-ytId=\"id-x3jny\" data-ytId=\"id-a9c4o\" data-ytId=\"id-c7ip4\">\u5E02\u56FE\u4E66\u9986\u5C06\u4E8E8\u67081\u65E5\u81F38\u670815\u65E5\u4E3E\u529E\"\u7EA2\u8272\u8BB0\u5FC6\"\u4E3B\u9898\u5C55\u89C8\uFF0C\u5C55\u51FA\u9769\u547D\u65F6\u671F\u73CD\u8D35\u6587\u732E\u548C\u8001\u7167\u7247...</p>\n          <p class=\"text-xs text-gray-400 mt-2\" data-ytId=\"id-zd3z4\" data-ytId=\"id-grok1\" data-ytId=\"id-gjvlm\">\u53D1\u5E03\u65F6\u95F4\uFF1A\u6628\u5929 14:20</p>\n        </div>\n      </div>\n      <p class=\"text-sm text-gray-700 mt-3\" data-ytId=\"id-p7imv\" data-ytId=\"id-ujqfh\" data-ytId=\"id-ur4jw\">\u9700\u8981\u6211\u4E3A\u60A8\u6717\u8BFB\u67D0\u6761\u65B0\u95FB\u6216\u63D0\u4F9B\u66F4\u591A\u8BE6\u60C5\u5417\uFF1F</p>\n    ";
+    }
+
+    // 生成视频内容
+    function generateVideoContent() {
+      return "\n      <p class=\"text-sm text-gray-700 mb-3\" data-ytId=\"id-caqh6\" data-ytId=\"id-2s074\" data-ytId=\"id-0h9lk\">\u4E3A\u60A8\u63A8\u8350\u9002\u5408\u8001\u5E74\u4EBA\u89C2\u770B\u7684\u89C6\u9891\uFF1A</p>\n      <div class=\"space-y-3\" data-ytId=\"id-zzdjw\" data-ytId=\"id-3a0s3\" data-ytId=\"id-rhomv\">\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200 flex items-center\" data-ytId=\"id-ggzdj\" data-ytId=\"id-mz2vh\" data-ytId=\"id-5q7z0\">\n          <div class=\"w-20 h-14 bg-gray-200 rounded overflow-hidden flex-shrink-0\" data-ytId=\"id-nezd1\" data-ytId=\"id-f05gx\" data-ytId=\"id-jssdd\">\n            <img src=\"./api/searchImage?query=tea culture video thumbnail, traditional Chinese tea ceremony, elderly people learning&width=160&height=112\" class=\"w-full h-full object-cover\" alt=\"\u8336\u9053\u6559\u5B66\" data-ytId=\"id-i2in5\" data-ytId=\"id-vbb28\" data-ytId=\"id-mt44n\">\n          </div>\n          <div class=\"ml-3\" data-ytId=\"id-zayfy\" data-ytId=\"id-qc4pp\" data-ytId=\"id-djsph\">\n            <h4 class=\"font-medium text-sm mb-1\" data-ytId=\"id-rbpjv\" data-ytId=\"id-qac52\" data-ytId=\"id-wglgl\">\u8001\u5E74\u4EBA\u8336\u9053\u5165\u95E8\u6559\u7A0B</h4>\n            <p class=\"text-xs text-gray-500\" data-ytId=\"id-4jjgg\" data-ytId=\"id-x88z6\" data-ytId=\"id-55iea\">5\u96C6\u7CFB\u5217\u89C6\u9891 \xB7 \u6BCF\u96C610\u5206\u949F</p>\n          </div>\n        </div>\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200 flex items-center\" data-ytId=\"id-p0a3m\" data-ytId=\"id-nk65l\" data-ytId=\"id-q8j35\">\n          <div class=\"w-20 h-14 bg-gray-200 rounded overflow-hidden flex-shrink-0\" data-ytId=\"id-l2vgo\" data-ytId=\"id-1ejwj\" data-ytId=\"id-9b6ab\">\n            <img src=\"./api/searchImage?query=elderly exercise video thumbnail, gentle movements, indoor&width=160&height=112\" class=\"w-full h-full object-cover\" alt=\"\u5065\u5EB7\u8FD0\u52A8\" data-ytId=\"id-l7m52\" data-ytId=\"id-1t6sm\" data-ytId=\"id-xd1p0\">\n          </div>\n          <div class=\"ml-3\" data-ytId=\"id-2qixg\" data-ytId=\"id-b4h2u\" data-ytId=\"id-wynw1\">\n            <h4 class=\"font-medium text-sm mb-1\" data-ytId=\"id-qj9g6\" data-ytId=\"id-qyf3o\" data-ytId=\"id-t27gm\">\u9002\u5408\u8001\u5E74\u4EBA\u7684\u5C45\u5BB6\u5065\u8EAB\u64CD</h4>\n            <p class=\"text-xs text-gray-500\" data-ytId=\"id-qrvyy\" data-ytId=\"id-kigdw\" data-ytId=\"id-6uki1\">12\u96C6\u7CFB\u5217\u89C6\u9891 \xB7 \u6BCF\u96C615\u5206\u949F</p>\n          </div>\n        </div>\n      </div>\n    ";
+    }
+
+    // 生成健康内容
+    function generateHealthContent() {
+      return "\n      <p class=\"text-sm text-gray-700 mb-3\" data-ytId=\"id-644xm\" data-ytId=\"id-3xuue\" data-ytId=\"id-dipsy\">\u4ECA\u65E5\u5065\u5EB7\u76D1\u63A7\u6570\u636E\uFF1A</p>\n      <div class=\"space-y-3 mb-3\" data-ytId=\"id-w0547\" data-ytId=\"id-l6d1l\" data-ytId=\"id-wvu1e\">\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200\" data-ytId=\"id-nvmq0\" data-ytId=\"id-toz9f\" data-ytId=\"id-38oih\">\n          <div class=\"flex justify-between items-center mb-2\" data-ytId=\"id-1pjcl\" data-ytId=\"id-kz3xq\" data-ytId=\"id-a8gg4\">\n            <span class=\"text-sm font-medium\" data-ytId=\"id-278xd\" data-ytId=\"id-4wexc\" data-ytId=\"id-8r358\">\u5FC3\u7387</span>\n            <span class=\"text-sm font-medium\" data-ytId=\"id-57li1\" data-ytId=\"id-rqyuw\" data-ytId=\"id-8ry6h\">72 \u6B21/\u5206\u949F</span>\n          </div>\n          <div class=\"w-full bg-gray-200 rounded-full h-2\" data-ytId=\"id-80cfa\" data-ytId=\"id-vtt4v\" data-ytId=\"id-7oh5d\">\n            <div class=\"bg-green-500 h-2 rounded-full\" style=\"width: 60%\" data-ytId=\"id-66x5w\" data-ytId=\"id-8yxw9\" data-ytId=\"id-9a0qi\"></div>\n          </div>\n          <p class=\"text-xs text-gray-500 mt-1\" data-ytId=\"id-l6p85\" data-ytId=\"id-2fxia\" data-ytId=\"id-5x41l\">\u6B63\u5E38\u8303\u56F4\uFF1A60-100\u6B21/\u5206\u949F</p>\n        </div>\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200\" data-ytId=\"id-tyiys\" data-ytId=\"id-c093j\" data-ytId=\"id-chdvi\">\n          <div class=\"flex justify-between items-center mb-2\" data-ytId=\"id-7n2xs\" data-ytId=\"id-3a1q8\" data-ytId=\"id-ox9ew\">\n            <span class=\"text-sm font-medium\" data-ytId=\"id-05fbw\" data-ytId=\"id-m8tuk\" data-ytId=\"id-kdc7m\">\u8840\u538B</span>\n            <span class=\"text-sm font-medium\" data-ytId=\"id-erft3\" data-ytId=\"id-srp7k\" data-ytId=\"id-impcx\">135/85 mmHg</span>\n          </div>\n          <div class=\"w-full bg-gray-200 rounded-full h-2\" data-ytId=\"id-828yx\" data-ytId=\"id-78zdy\" data-ytId=\"id-sjlxg\">\n            <div class=\"bg-yellow-500 h-2 rounded-full\" style=\"width: 70%\" data-ytId=\"id-uu5au\" data-ytId=\"id-1mne4\" data-ytId=\"id-zgl65\"></div>\n          </div>\n          <p class=\"text-xs text-gray-500 mt-1\" data-ytId=\"id-9kp3z\" data-ytId=\"id-xwv5j\" data-ytId=\"id-3cb9w\">\u6B63\u5E38\u8303\u56F4\uFF1A\u2264130/80 mmHg</p>\n        </div>\n      </div>\n      <p class=\"text-sm text-gray-700\" data-ytId=\"id-lkfzr\" data-ytId=\"id-kb6za\" data-ytId=\"id-3zhgx\">\u4ECA\u65E5\u5065\u5EB7\u5EFA\u8BAE\uFF1A\u60A8\u7684\u8840\u538B\u7565\u9AD8\u4E8E\u6B63\u5E38\u6C34\u5E73\uFF0C\u5EFA\u8BAE\u51CF\u5C11\u76D0\u5206\u6444\u5165\uFF0C\u9002\u5F53\u8FDB\u884C30\u5206\u949F\u6563\u6B65\uFF0C\u5E76\u4FDD\u6301\u5145\u8DB3\u7761\u7720\u3002</p>\n    ";
+    }
+
+    // 生成活动内容
+    function generateActivityContent() {
+      return "\n      <p class=\"text-sm text-gray-700 mb-3\" data-ytId=\"id-zwwpp\" data-ytId=\"id-6plz1\" data-ytId=\"id-p14my\">\u8FD1\u671F\u8001\u5E74\u6D3B\u52A8\u65E5\u5386\uFF1A</p>\n      <div class=\"space-y-3\" data-ytId=\"id-88rj2\" data-ytId=\"id-ju05p\" data-ytId=\"id-0yg83\">\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200\" data-ytId=\"id-0suzc\" data-ytId=\"id-18w95\" data-ytId=\"id-hl2xc\">\n          <div class=\"flex justify-between items-start\" data-ytId=\"id-76p05\" data-ytId=\"id-94jje\" data-ytId=\"id-lc00l\">\n            <div data-ytId=\"id-moibt\" data-ytId=\"id-glg05\" data-ytId=\"id-3wihz\">\n              <h4 class=\"font-medium text-sm mb-1\" data-ytId=\"id-n3hi8\" data-ytId=\"id-br8bj\" data-ytId=\"id-j1ztc\">\u4E66\u6CD5\u5C55\u89C8</h4>\n              <p class=\"text-xs text-gray-600\" data-ytId=\"id-aal2j\" data-ytId=\"id-1j2ox\" data-ytId=\"id-b66cl\">\u5E02\u7F8E\u672F\u9986</p>\n            </div>\n            <span class=\"bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded-full\" data-ytId=\"id-sgv9i\" data-ytId=\"id-dt5x5\" data-ytId=\"id-9lcjf\">\u4ECA\u5929</span>\n          </div>\n          <p class=\"text-xs text-gray-500 mt-2\" data-ytId=\"id-0j75d\" data-ytId=\"id-72a6r\" data-ytId=\"id-c3htn\"><i class=\"fas fa-clock mr-1\" data-ytId=\"id-8a1c1\" data-ytId=\"id-m0l3p\" data-ytId=\"id-zk3ny\"></i> 14:00-17:00</p>\n        </div>\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200\" data-ytId=\"id-v7vt6\" data-ytId=\"id-rmcsr\" data-ytId=\"id-r1uvl\">\n          <div class=\"flex justify-between items-start\" data-ytId=\"id-tcs46\" data-ytId=\"id-dfgz3\" data-ytId=\"id-xf3pr\">\n            <div data-ytId=\"id-82w9u\" data-ytId=\"id-pppfr\" data-ytId=\"id-om9xs\">\n              <h4 class=\"font-medium text-sm mb-1\" data-ytId=\"id-2g8sl\" data-ytId=\"id-i9bcp\" data-ytId=\"id-kawrk\">\u5065\u5EB7\u8BB2\u5EA7\uFF1A\u590F\u5B63\u517B\u751F</h4>\n              <p class=\"text-xs text-gray-600\" data-ytId=\"id-ubt1q\" data-ytId=\"id-dge54\" data-ytId=\"id-6dy7j\">\u793E\u533A\u6D3B\u52A8\u4E2D\u5FC3</p>\n            </div>\n            <span class=\"bg-green-100 text-green-600 text-xs px-2 py-1 rounded-full\" data-ytId=\"id-y2yv4\" data-ytId=\"id-fxkic\" data-ytId=\"id-pz767\">\u660E\u5929</span>\n          </div>\n          <p class=\"text-xs text-gray-500 mt-2\" data-ytId=\"id-jnvzo\" data-ytId=\"id-nq7fi\" data-ytId=\"id-pfrwu\"><i class=\"fas fa-clock mr-1\" data-ytId=\"id-hh59n\" data-ytId=\"id-wr2d4\" data-ytId=\"id-vik70\"></i> 10:00-11:30</p>\n        </div>\n        <div class=\"bg-light p-3 rounded-lg border border-gray-200\" data-ytId=\"id-od416\" data-ytId=\"id-77qhy\" data-ytId=\"id-6ci8b\">\n          <div class=\"flex justify-between items-start\" data-ytId=\"id-m9wzg\" data-ytId=\"id-paaxw\" data-ytId=\"id-vda8i\">\n            <div data-ytId=\"id-v5oc6\" data-ytId=\"id-ja77c\" data-ytId=\"id-uy7pp\">\n              <h4 class=\"font-medium text-sm mb-1\" data-ytId=\"id-cgmvl\" data-ytId=\"id-sfdmh\" data-ytId=\"id-tn659\">\u8001\u5E74\u5408\u5531\u56E2\u6392\u7EC3</h4>\n              <p class=\"text-xs text-gray-600\" data-ytId=\"id-yjbi3\" data-ytId=\"id-j9e3w\" data-ytId=\"id-702pb\">\u8001\u5E74\u5927\u5B66301\u6559\u5BA4</p>\n            </div>\n            <span class=\"bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full\" data-ytId=\"id-uh89j\" data-ytId=\"id-f5gkj\" data-ytId=\"id-b110h\">\u5468\u4E94</span>\n          </div>\n          <p class=\"text-xs text-gray-500 mt-2\" data-ytId=\"id-qulzf\" data-ytId=\"id-duvip\" data-ytId=\"id-hst1a\"><i class=\"fas fa-clock mr-1\" data-ytId=\"id-9egqr\" data-ytId=\"id-z2mvm\" data-ytId=\"id-tw0sf\"></i> 09:30-11:00</p>\n        </div>\n      </div>\n    ";
+    }
+
+    // 初始滚动到底部
+    scrollToBottom();
+  });
+</script>
+</html>

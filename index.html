@@ -1,0 +1,2224 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>老友社区</title>
+    <script src="https://res.gemcoder.com/js/reload.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+            href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6A5ACD',
+                        // 紫色作为主色调，用于日期和时间高亮
+                        secondary: '#3498db',
+                        // 蓝色作为辅助色
+                        dark: '#333333',
+                        // 主要文字颜色
+                        light: '#f8f9fa',
+                        // 背景色
+                        gray: {
+                            300: '#d1d5db',
+                            400: '#9ca3af',
+                            500: '#6b7280',
+                            600: '#4b5563'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .text-shadow {
+                text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-dark">
+<!-- 侧边菜单遮罩层 -->
+<div class="fixed inset-0 bg-black/50 z-40 hidden" id="menu-overlay"></div>
+<!-- 侧边菜单 -->
+<div
+        class="fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform -translate-x-full transition-transform duration-300 ease-in-out"
+        id="side-menu"
+>
+    <!-- 菜单头部 -->
+    <div class="p-4 border-b">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-lg font-bold text-primary">老友社区</h2>
+            <button class="text-gray-500 hover:text-gray-700" id="close-menu">
+                <i class="fas fa-times text-xl"> </i>
+            </button>
+        </div>
+        <!-- 用户信息 -->
+        <div class="flex flex-col items-center">
+            <img
+                    alt="用户头像"
+                    class="w-20 h-20 rounded-full object-cover mb-3 border-2 border-primary"
+                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/d73b26fc559275bd5ea91a60febfc711.png"
+            />
+            <h3 class="font-bold text-dark">张大爷</h3>
+            <p class="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                普通会员
+            </p>
+        </div>
+    </div>
+    <!-- 菜单列表 -->
+    <nav class="p-2">
+        <ul class="space-y-1">
+            <li>
+                <a
+                        class="flex items-center px-4 py-3 text-primary bg-primary/10 rounded-lg"
+                        href="javascript:void(0);"
+                >
+                    <i class="fas fa-home w-5 text-center mr-3"> </i>
+                    <span> 首页 </span>
+                </a>
+            </li>
+            <li>
+                <a
+                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        href="apply.html"
+                        target="_top"
+                        is-page="true"
+                        is-add="false"
+                        custom-href="w=393&h=852&appuuid=1952577510445154304&version=4&pageType=app&uuid=1952655355607515136&appName=老友社区"
+                        onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                >
+                    <i class="fas fa-check-square w-5 text-center mr-3"> </i>
+                    <span> 报名 </span>
+                </a>
+            </li>
+            <li>
+                <a
+                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        href="explore.html"
+                >
+                    <i class="fas fa-compass w-5 text-center mr-3"> </i>
+                    <span> 发现 </span>
+                </a>
+            </li>
+            <li>
+                <a
+                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        href="message.html"
+                        target="_top"
+                        is-page="true"
+                        is-add="false"
+                        custom-href="w=393&h=852&appuuid=1952577510445154304&version=1&pageType=app&uuid=1952668560933257216&appName=老友社区"
+                        onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                >
+                    <i class="fas fa-comment-alt w-5 text-center mr-3"> </i>
+                    <span> 消息 </span>
+                    <span
+                            class="ml-auto bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+                    >
+                3
+              </span>
+                </a>
+            </li>
+            <li>
+                <a
+                        class="flex items-center px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                        href="myself.html"
+                        target="_top"
+                        is-page="true"
+                        is-add="false"
+                        custom-href="w=393&h=852&appuuid=1952577510445154304&version=1&pageType=app&uuid=1952669856096583680&appName=老友社区"
+                        onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                >
+                    <i class="fas fa-user w-5 text-center mr-3"> </i>
+                    <span> 我的 </span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+<!-- 主容器 -->
+<div class="min-h-screen flex flex-col">
+    <!-- 顶部导航栏 -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div
+                class="container mx-auto px-4 py-3 flex items-center justify-between"
+        >
+            <button
+                    class="text-gray-600 hover:text-primary transition-colors p-2"
+                    id="menu-toggle"
+            >
+                <i class="fas fa-bars text-xl"> </i>
+            </button>
+            <h1 class="text-xl font-bold text-dark flex-1 text-center">
+                老友社区
+            </h1>
+            <div class="flex items-center space-x-2">
+                <button
+                        class="text-gray-600 hover:text-primary transition-colors relative p-2"
+                        data-ytextravalue="extra-tenx5opco"
+                >
+              <span
+                      class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center"
+                      data-ytindex="0"
+                      data-ytoriginindex="1"
+                      data-ytparentvalue="extra-tenx5opco"
+                      style='opacity: 1; color: rgb(255, 255, 255); font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif; font-size: 12px; font-weight: 400; font-style: normal; line-height: 16px; text-align: center; text-indent: 0px;'
+              >
+                3
+              </span>
+                    <i
+                            class="fas fa-bell text-xl"
+                            data-ytindex="1"
+                            data-ytoriginindex="0"
+                            data-ytparentvalue="extra-tenx5opco"
+                            style='opacity: 1; color: rgb(75, 85, 99); font-family: "Font Awesome 6 Free"; font-size: 20px; font-weight: 900; font-style: normal; line-height: 28px; text-align: center; text-indent: 0px;left:-4px;position:relative'
+                    >
+                    </i>
+                </button>
+                <button
+                        class="text-gray-600 hover:text-primary transition-colors p-2"
+                >
+                    <i class="fas fa-user-circle text-xl"> </i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <!-- 搜索栏 -->
+    <div class="bg-white shadow-sm py-3">
+        <div class="container mx-auto px-4">
+            <div class="relative">
+                <input
+                        class="w-full py-2 pl-10 pr-4 rounded-full bg-gray-100 focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        placeholder="搜索活动、兴趣、好友..."
+                        type="text"
+                />
+                <i
+                        class="fas fa-search absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400"
+                >
+                </i>
+            </div>
+        </div>
+    </div>
+    <!-- 筛选选项 -->
+    <div class="bg-white shadow-sm py-3">
+        <div class="container mx-auto px-4">
+            <div
+                    class="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide"
+            >
+                <div class="flex-shrink-0 min-w-[100px]">
+                    <button
+                            class="w-full bg-gray-100 hover:bg-gray-200 text-dark font-medium flex items-center justify-between px-4 py-2 rounded-full transition-colors"
+                    >
+                        <span> 南昌 </span>
+                        <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"> </i>
+                    </button>
+                </div>
+                <div class="flex-shrink-0 min-w-[100px]">
+                    <button
+                            class="w-full bg-gray-100 hover:bg-gray-200 text-dark font-medium flex items-center justify-between px-4 py-2 rounded-full transition-colors"
+                    >
+                        <span> 任意日期 </span>
+                        <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"> </i>
+                    </button>
+                </div>
+                <div class="flex-shrink-0 min-w-[100px]">
+                    <button
+                            class="w-full bg-gray-100 hover:bg-gray-200 text-dark font-medium flex items-center justify-between px-4 py-2 rounded-full transition-colors"
+                    >
+                        <span> 任意距离 </span>
+                        <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"> </i>
+                    </button>
+                </div>
+                <div class="flex-shrink-0 min-w-[100px]">
+                    <button
+                            class="w-full bg-gray-100 hover:bg-gray-200 text-dark font-medium flex items-center justify-between px-4 py-2 rounded-full transition-colors"
+                    >
+                        <span> 活动类型 </span>
+                        <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"> </i>
+                    </button>
+                </div>
+                <div class="flex-shrink-0 min-w-[100px]">
+                    <button
+                            class="w-full bg-gray-100 hover:bg-gray-200 text-dark font-medium flex items-center justify-between px-4 py-2 rounded-full transition-colors"
+                    >
+                        <span> 参与人数 </span>
+                        <i class="fas fa-chevron-down ml-1 text-xs text-gray-500"> </i>
+                    </button>
+                </div>
+                <button
+                        class="flex-shrink-0 bg-primary hover:bg-primary/90 text-white p-2 rounded-full transition-colors"
+                >
+                    <i class="fas fa-sliders-h"> </i>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- 主要内容区 -->
+    <main class="flex-1 overflow-y-auto scrollbar-hide">
+        <div
+                class="container mx-auto px-4 py-4"
+                data-ytextravalue="extra-vtv38q1zu"
+        >
+            <div
+                    class="relative rounded-xl overflow-hidden mb-6"
+                    data-ytindex="0"
+                    data-ytoriginindex="0"
+            >
+                <div class="relative" id="carousel">
+                    <!-- 轮播图片容器 -->
+                    <div
+                            class="flex transition-transform duration-500"
+                            id="carousel-images"
+                    >
+                        <div class="min-w-full">
+                            <img
+                                    alt="老友社区活动宣传"
+                                    class="w-full h-48 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c9cac3e3e1b50d4197813be31249daaa.png"
+                            />
+                            <div
+                                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end"
+                            >
+                                <div class="p-4 text-white">
+                                    <h2 class="text-lg font-bold mb-1">欢迎来到老友社区</h2>
+                                    <p class="text-sm opacity-90">
+                                        发现身边的精彩活动，结交志同道合的朋友
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="min-w-full">
+                            <img
+                                    alt="社区健康讲座"
+                                    class="w-full h-48 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/666c4a0fe7790d51a082eef2bedfa245.png"
+                            />
+                            <div
+                                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end"
+                            >
+                                <div class="p-4 text-white">
+                                    <h2 class="text-lg font-bold mb-1">夏季健康讲座</h2>
+                                    <p class="text-sm opacity-90">
+                                        7月30日 专家分享夏季养生知识
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="min-w-full">
+                            <img
+                                    alt="社区文艺表演"
+                                    class="w-full h-48 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/ba2b145ce500262634f8dd5f302a5bb9.png"
+                            />
+                            <div
+                                    class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex items-end"
+                            >
+                                <div class="p-4 text-white">
+                                    <h2 class="text-lg font-bold mb-1">社区文艺汇演</h2>
+                                    <p class="text-sm opacity-90">
+                                        8月15日 展现老友风采的舞台
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 轮播指示器 -->
+                    <div class="absolute bottom-4 right-4 flex space-x-2">
+                        <button
+                                class="carousel-dot w-2.5 h-2.5 rounded-full bg-white opacity-100"
+                        ></button>
+                        <button
+                                class="carousel-dot w-2.5 h-2.5 rounded-full bg-white opacity-50"
+                        ></button>
+                        <button
+                                class="carousel-dot w-2.5 h-2.5 rounded-full bg-white opacity-50"
+                        ></button>
+                    </div>
+                </div>
+            </div>
+            <section class="mb-8" data-ytindex="1" data-ytoriginindex="1">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-primary">今日活动</h2>
+                    <a
+                            class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium"
+                            href="javascript:void(0);"
+                    >
+                        查看全部
+                    </a>
+                </div>
+                <!-- 活动列表 -->
+                <div class="space-y-4">
+                    <!-- 活动项1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="在家档案活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/6939f04942d2c0a6843b43ee688373f6.png"
+                                />
+                            </div>
+                            <a
+                                    class="yt-a-defalut-link w-3/4 p-4 flex"
+                                    custom-a="true"
+                                    custom-href="w=393&h=852&appuuid=1952577510445154304&version=2&pageType=app&uuid=1952577510474514432&appName=老友社区"
+                                    href="activity.html"
+                                    is-add="true"
+                                    is-page="true"
+                                    onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                                    style="padding: 0px; border: 0px; box-shadow: none;"
+                                    target="_top"
+                            >
+                                <div class="w-3/4 p-4" data-selectorname="#id-157ks" style>
+                                    <div class="flex justify-between items-start mb-2" style>
+                        <span class="text-xs font-medium text-primary" style>
+                          7月29日 周二 10:30
+                        </span>
+                                        <span
+                                                class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                        >
+                          南昌市
+                        </span>
+                                    </div>
+                                    <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                        在家档案：用档案方法保护时尚与珠宝
+                                    </h3>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center">
+                                            <img
+                                                    alt="王阿姨头像"
+                                                    class="w-6 h-6 rounded-full object-cover mr-2"
+                                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/bb13f2be2a1dab039d0d214459f8f566.png"
+                                            />
+                                            <span class="text-xs text-gray-500"> 王阿姨 </span>
+                                        </div>
+                                        <button class="text-primary text-sm font-medium">
+                                            报名
+                                        </button>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- 活动项2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="咖啡与畅聊活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/332d28928abbae49baf4eb8cca1be541.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span class="text-xs font-medium text-primary">
+                        7月29日 周二 11:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    咖啡与畅聊
+                                </h3>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="王阿姨头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/bb13f2be2a1dab039d0d214459f8f566.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 王阿姨 </span>
+                                    </div>
+                                    <button class="text-primary text-sm font-medium">
+                                        报名
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="mb-8" data-ytindex="3" data-ytoriginindex="3">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-primary">明日活动</h2>
+                    <a
+                            class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium"
+                            href="javascript:void(0);"
+                    >
+                        查看全部
+                    </a>
+                </div>
+                <div
+                        class="fixed bottom-24 right-4 bg-primary rounded-full shadow-lg p-3 cursor-pointer z-50 animate-bounce hover:scale-110 transition-transform duration-300"
+                        data-selectorname="#ai-agent"
+                        data-ytindex="2"
+                        data-ytoriginindex="0"
+                        data-ytparentvalue="extra-0317zb3fy"
+                        id="ai-agent"
+                        style='opacity: 1; color: rgb(51, 51, 51); font-family: "PingFang SC", "Helvetica Neue", Arial, sans-serif; font-size: 16px; font-weight: 400; font-style: normal; line-height: 24px; text-align: start; text-indent: 0px;'
+                >
+                    <a
+                            class="yt-a-defalut-link fas fa-robot text-white text-2xl flex"
+                            custom-a="true"
+                            custom-href="w=393&h=852&appuuid=1952577510445154304&version=2&pageType=app&uuid=1952581209838059520&appName=老友社区"
+                            data-selectorname="#id-rs2px"
+                            data-ytextravalue="extra-8cklrhfbt"
+                            href="javascript:void(0);"
+                            is-add="false"
+                            is-page="true"
+                            onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+                            style="padding: 0px; border: 0px; box-shadow: none;"
+                            target="_top"
+                    >
+                    </a>
+                </div>
+                <!-- 活动列表 -->
+                <div class="space-y-4">
+                    <!-- 活动项1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="清凉一夏活动"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/851b09093b0ee0266916258881a0830e.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span class="text-xs font-medium text-primary">
+                        7月30日 周三 01:00
+                      </span>
+                                    <span
+                                            class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full"
+                                    >
+                        线上
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    清凉一夏：夏日生存指南
+                                </h3>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <img
+                                                alt="李老师头像"
+                                                class="w-6 h-6 rounded-full object-cover mr-2"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/bde1152059516abecbf5701f3bf6e024.png"
+                                        />
+                                        <span class="text-xs text-gray-500"> 李老师 </span>
+                                    </div>
+                                    <button class="text-primary text-sm font-medium">
+                                        报名
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 活动项2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex">
+                            <div class="w-1/4">
+                                <img
+                                        alt="写生模特绘画工作坊"
+                                        class="w-full h-full object-cover"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/f5c733a446f988b2606ee42f4e4c5876.png"
+                                />
+                            </div>
+                            <div class="w-3/4 p-4">
+                                <div class="flex justify-between items-start mb-2">
+                      <span class="text-xs font-medium text-primary">
+                        7月30日 周三 14:30
+                      </span>
+                                    <span
+                                            class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                    >
+                        南昌市
+                      </span>
+                                </div>
+                                <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                    免费写生模特绘画工作坊
+                                </h3>
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center">
+                                        <div
+                                                class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2"
+                                        >
+                                            <i class="fas fa-user text-xs text-gray-400"> </i>
+                                        </div>
+                                        <span class="text-xs text-gray-500"> 匿名发布 </span>
+                                    </div>
+                                    <button class="text-primary text-sm font-medium">
+                                        报名
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 本周活动 -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-primary">本周活动</h2>
+                    <a
+                            class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium"
+                            href="javascript:void(0);"
+                    >
+                        查看全部
+                    </a>
+                </div>
+                <!-- 本周活动列表 -->
+                <div class="space-y-4">
+                    <!-- 日期分隔线 - 今日 -->
+                    <div class="py-2">
+                        <div class="flex items-center mb-3">
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                            <span class="px-3 text-primary font-medium text-sm">
+                    2025年8月5日 周二
+                  </span>
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                        </div>
+                        <!-- 今日活动列表 -->
+                        <div class="space-y-3">
+                            <div
+                                    class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                            >
+                                <div class="flex">
+                                    <div class="w-1/4">
+                                        <img
+                                                alt="在家档案活动"
+                                                class="w-full h-full object-cover"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/6939f04942d2c0a6843b43ee688373f6.png"
+                                        />
+                                    </div>
+                                    <div class="w-3/4 p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                          <span class="text-xs font-medium text-primary">
+                            10:30
+                          </span>
+                                            <span
+                                                    class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                            >
+                            南昌市
+                          </span>
+                                        </div>
+                                        <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                            在家档案：用档案方法保护时尚与珠宝
+                                        </h3>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <img
+                                                        alt="王阿姨头像"
+                                                        class="w-6 h-6 rounded-full object-cover mr-2"
+                                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/bb13f2be2a1dab039d0d214459f8f566.png"
+                                                />
+                                                <span class="text-xs text-gray-500"> 王阿姨 </span>
+                                            </div>
+                                            <button class="text-primary text-sm font-medium">
+                                                报名
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                    class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                            >
+                                <div class="flex">
+                                    <div class="w-1/4">
+                                        <img
+                                                alt="咖啡与畅聊活动"
+                                                class="w-full h-full object-cover"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/332d28928abbae49baf4eb8cca1be541.png"
+                                        />
+                                    </div>
+                                    <div class="w-3/4 p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                          <span class="text-xs font-medium text-primary">
+                            11:00
+                          </span>
+                                            <span
+                                                    class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                            >
+                            南昌市
+                          </span>
+                                        </div>
+                                        <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                            咖啡与畅聊
+                                        </h3>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <img
+                                                        alt="王阿姨头像"
+                                                        class="w-6 h-6 rounded-full object-cover mr-2"
+                                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/bb13f2be2a1dab039d0d214459f8f566.png"
+                                                />
+                                                <span class="text-xs text-gray-500"> 王阿姨 </span>
+                                            </div>
+                                            <button class="text-primary text-sm font-medium">
+                                                报名
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 日期分隔线 - 明日 -->
+                    <div class="py-2">
+                        <div class="flex items-center mb-3">
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                            <span class="px-3 text-primary font-medium text-sm">
+                    2025年8月6日 周三
+                  </span>
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                        </div>
+                        <!-- 明日活动列表 -->
+                        <div class="space-y-3">
+                            <div
+                                    class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                            >
+                                <div class="flex">
+                                    <div class="w-1/4">
+                                        <img
+                                                alt="清凉一夏活动"
+                                                class="w-full h-full object-cover"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/851b09093b0ee0266916258881a0830e.png"
+                                        />
+                                    </div>
+                                    <div class="w-3/4 p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                          <span class="text-xs font-medium text-primary">
+                            13:00
+                          </span>
+                                            <span
+                                                    class="text-xs bg-blue-100 text-blue-600 px-2 py-1 rounded-full"
+                                            >
+                            线上
+                          </span>
+                                        </div>
+                                        <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                            清凉一夏：夏日生存指南
+                                        </h3>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <img
+                                                        alt="李老师头像"
+                                                        class="w-6 h-6 rounded-full object-cover mr-2"
+                                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/bde1152059516abecbf5701f3bf6e024.png"
+                                                />
+                                                <span class="text-xs text-gray-500"> 李老师 </span>
+                                            </div>
+                                            <button class="text-primary text-sm font-medium">
+                                                报名
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                    class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                            >
+                                <div class="flex">
+                                    <div class="w-1/4">
+                                        <img
+                                                alt="写生模特绘画工作坊"
+                                                class="w-full h-full object-cover"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/f5c733a446f988b2606ee42f4e4c5876.png"
+                                        />
+                                    </div>
+                                    <div class="w-3/4 p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                          <span class="text-xs font-medium text-primary">
+                            14:30
+                          </span>
+                                            <span
+                                                    class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                            >
+                            南昌市
+                          </span>
+                                        </div>
+                                        <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                            免费写生模特绘画工作坊
+                                        </h3>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <div
+                                                        class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center mr-2"
+                                                >
+                                                    <i class="fas fa-user text-xs text-gray-400"> </i>
+                                                </div>
+                                                <span class="text-xs text-gray-500">
+                              匿名发布
+                            </span>
+                                            </div>
+                                            <button class="text-primary text-sm font-medium">
+                                                报名
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 日期分隔线 - 8月7日 -->
+                    <div class="py-2">
+                        <div class="flex items-center mb-3">
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                            <span class="px-3 text-primary font-medium text-sm">
+                    2025年8月7日 周四
+                  </span>
+                            <div class="h-px bg-gray-200 flex-1"></div>
+                        </div>
+                        <!-- 8月7日活动列表 -->
+                        <div class="space-y-3">
+                            <div
+                                    class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                            >
+                                <div class="flex">
+                                    <div class="w-1/4">
+                                        <img
+                                                alt="太极拳入门"
+                                                class="w-full h-full object-cover"
+                                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/be6bf98f793bcdba7424de060a608100.png"
+                                        />
+                                    </div>
+                                    <div class="w-3/4 p-4">
+                                        <div class="flex justify-between items-start mb-2">
+                          <span class="text-xs font-medium text-primary">
+                            08:00
+                          </span>
+                                            <span
+                                                    class="text-xs bg-gray-100 text-gray-600 px-2 py-1 rounded-full"
+                                            >
+                            南昌市
+                          </span>
+                                        </div>
+                                        <h3 class="font-medium text-dark mb-2 line-clamp-2">
+                                            太极拳入门：强身健体
+                                        </h3>
+                                        <div class="flex items-center justify-between">
+                                            <div class="flex items-center">
+                                                <img
+                                                        alt="张师傅头像"
+                                                        class="w-6 h-6 rounded-full object-cover mr-2"
+                                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c92f06592b4f7c693c790d9c62ed104b.png"
+                                                />
+                                                <span class="text-xs text-gray-500"> 张师傅 </span>
+                                            </div>
+                                            <button class="text-primary text-sm font-medium">
+                                                报名
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 本月精选 -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-primary">本月精选</h2>
+                    <a
+                            class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium"
+                            href="javascript:void(0);"
+                    >
+                        查看全部
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- 精选活动1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="书法入门班"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/fc2789c0d6c3ccb7aa69a38695428576.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                热门
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                书法入门班：笔墨之间的韵味
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月10日 周二 </span>
+                                <span> 09:30-11:30 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余12个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 精选活动2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="夏季健康讲座"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/b354dec1e1742bd5eeeda9633d374454.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                新上线
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                夏季健康讲座：心脑血管保健
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月13日 周四 </span>
+                                <span> 14:00-16:00 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余8个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 精选活动3 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="茶艺品鉴会"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/358fdcf03d105d437ab7bf9ba27790ee.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                热门
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                茶艺品鉴会：传统茶文化体验
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月20日 周四 </span>
+                                <span> 10:00-12:00 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余5个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 精选活动4 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="合唱团排练"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/2e0b44e2d78b75465541c88ff98e883e.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                推荐
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                合唱团排练：红歌经典回顾
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月26日 周三 </span>
+                                <span> 09:30-11:30 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余3个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 为您推荐 -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-primary">为您推荐</h2>
+                    <button
+                            class="text-sm text-gray-600 flex items-center"
+                            id="refreshRecommendations"
+                    >
+                        <i class="fas fa-sync-alt mr-1"> </i>
+                        换一批
+                    </button>
+                </div>
+                <div class="grid grid-cols-2 gap-4" id="recommendationsContainer">
+                    <!-- 推荐活动1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="中医养生讲座"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/07ee00eecc35e4baaae765e4f7f5c9b3.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                推荐
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                中医养生讲座：四季养生之道
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月18日 周一 </span>
+                                <span> 15:00-17:00 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余7个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 推荐活动2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="手工编织班"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/df680523a12e5b7f1ada7d4c4140cee9.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-green-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                新上线
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                手工编织班：编织温暖
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月22日 周五 </span>
+                                <span> 09:30-11:30 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余10个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 推荐活动3 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="智能手机使用教程"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/42fc2ef7f6382938f34682299ccbb0bf.png"
+                            />
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                智能手机使用教程：玩转移动生活
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月24日 周日 </span>
+                                <span> 14:00-16:00 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余15个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 推荐活动4 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="摄影入门班"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/d5b1a45055c9f17c8a7ceb5bf306619e.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-purple-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                热门
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                摄影入门班：捕捉生活美好瞬间
+                            </h3>
+                            <div
+                                    class="flex justify-between items-center text-xs text-gray-500 mb-2"
+                            >
+                                <span> 8月28日 周四 </span>
+                                <span> 10:00-12:00 </span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-red-500"> 剩余6个名额 </span>
+                                <button class="text-primary text-xs font-medium">
+                                    报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 热门活动 -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-primary">热门活动</h2>
+                    <a class="text-sm text-gray-500" href="javascript:void(0);">
+                        更多
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- 热门活动1 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="茶艺品鉴会"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/358fdcf03d105d437ab7bf9ba27790ee.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                热门
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                茶艺品鉴会：传统茶文化体验
+                            </h3>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-500"> 8月5日 周四 </span>
+                                <span class="text-xs text-primary"> 32人已报名 </span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 热门活动2 -->
+                    <div
+                            class="bg-white rounded-xl shadow-sm overflow-hidden transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="书法入门班"
+                                    class="w-full h-32 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/fc2789c0d6c3ccb7aa69a38695428576.png"
+                            />
+                            <div
+                                    class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                热门
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h3 class="font-medium text-sm mb-1 line-clamp-2">
+                                书法入门班：笔墨之间的韵味
+                            </h3>
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs text-gray-500"> 8月10日 周二 </span>
+                                <span class="text-xs text-primary"> 28人已报名 </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- 热门兴趣小组 -->
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-dark flex items-center">
+                        <i class="fas fa-users text-primary mr-2"> </i>
+                        热门兴趣小组
+                    </h2>
+                    <a class="text-sm text-gray-500" href="javascript:void(0);">
+                        更多小组
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-paint-brush text-red-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">书画爱好者</h3>
+                                <p class="text-xs text-gray-500">128人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            一起学习书法绘画技巧，分享创作心得
+                        </p>
+                    </div>
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-chess text-green-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">棋艺交流</h3>
+                                <p class="text-xs text-gray-500">96人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            围棋、象棋爱好者聚集地，以棋会友
+                        </p>
+                    </div>
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-hiking text-blue-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">健步走团队</h3>
+                                <p class="text-xs text-gray-500">156人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            每日晨间健步走，健康生活每一天
+                        </p>
+                    </div>
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-music text-purple-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">合唱团</h3>
+                                <p class="text-xs text-gray-500">87人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            用歌声传递快乐，每周定期排练
+                        </p>
+                    </div>
+                </div>
+            </section>
+            <!-- 活动日历 -->
+            <section class="mb-8" data-selectorname="#id-iin34">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-dark flex items-center">
+                        <i class="fas fa-calendar-alt text-primary mr-2"> </i>
+                        活动日历
+                    </h2>
+                    <div class="flex space-x-2">
+                        <!-- 移除月份切换按钮 -->
+                    </div>
+                </div>
+                <!-- 日历组件 -->
+                <div class="bg-white rounded-xl shadow-sm p-5">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3
+                                class="text-lg font-medium text-dark"
+                                data-yteditvalue="2025年8月"
+                                id="currentMonth"
+                        >
+                            2025年8月
+                        </h3>
+                        <div class="flex space-x-2">
+                            <!-- 移除月份切换按钮 -->
+                        </div>
+                    </div>
+                    <!-- 星期标题 -->
+                    <div class="grid grid-cols-7 text-center mb-4">
+                        <div class="text-xs font-medium text-gray-500 py-2">日</div>
+                        <div class="text-xs font-medium text-gray-500 py-2">一</div>
+                        <div class="text-xs font-medium text-gray-500 py-2">二</div>
+                        <div class="text-xs font-medium text-gray-500 py-2">三</div>
+                        <div class="text-xs font-medium text-gray-500 py-2">四</div>
+                        <div class="text-xs font-medium text-gray-500 py-2">五</div>
+                        <div class="text-xs font-medium text-gray-500 py-2">六</div>
+                    </div>
+                    <!-- 日历格子 -->
+                    <div class="grid grid-cols-7 gap-2" id="calendar-grid">
+                        <!-- 上个月日期 -->
+                        <div class="text-center py-2 text-gray-300 text-sm">28</div>
+                        <div class="text-center py-2 text-gray-300 text-sm">29</div>
+                        <div class="text-center py-2 text-gray-300 text-sm">30</div>
+                        <div class="text-center py-2 text-gray-300 text-sm">31</div>
+                        <!-- 当月日期 -->
+                        <div class="text-center py-2 text-sm">1</div>
+                        <div class="text-center py-2 text-sm">2</div>
+                        <div class="text-center py-2 text-sm">3</div>
+                        <div class="text-center py-2 text-sm">4</div>
+                        <!-- 当前日期 - 8月5日 -->
+                        <div class="text-center py-2 text-sm relative cursor-pointer">
+                            <div
+                                    class="w-8 h-8 mx-auto rounded-full flex items-center justify-center bg-primary text-white font-medium border-2 border-primary"
+                            >
+                                5
+                            </div>
+                        </div>
+                        <div class="text-center py-2 text-sm">6</div>
+                        <div class="text-center py-2 text-sm">7</div>
+                        <div class="text-center py-2 text-sm">8</div>
+                        <div class="text-center py-2 text-sm">9</div>
+                        <!-- 已报名活动 - 8月10日 -->
+                        <div
+                                class="text-center py-2 text-sm relative group cursor-pointer event-date"
+                                data-event-id="1"
+                        >
+                            <div
+                                    class="w-8 h-8 mx-auto rounded-full flex items-center justify-center bg-primary/10 border-2 border-primary font-medium text-primary"
+                            >
+                                10
+                            </div>
+                            <div
+                                    class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
+                            ></div>
+                            <div
+                                    class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-40 bg-white shadow-lg rounded-lg p-2 text-left z-10 hidden group-hover:block text-xs"
+                            >
+                                <div class="font-medium mb-1">
+                                    书法入门班：笔墨之间的韵味
+                                </div>
+                                <div class="text-gray-500 text-xs">09:30-11:30</div>
+                                <div
+                                        class="mt-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full inline-block"
+                                >
+                                    已报名
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center py-2 text-sm">11</div>
+                        <div class="text-center py-2 text-sm">12</div>
+                        <!-- 已报名活动 - 8月13日 -->
+                        <div
+                                class="text-center py-2 text-sm relative group cursor-pointer event-date"
+                                data-event-id="2"
+                        >
+                            <div
+                                    class="w-8 h-8 mx-auto rounded-full flex items-center justify-center bg-primary/10 border-2 border-primary font-medium text-primary"
+                            >
+                                13
+                            </div>
+                            <div
+                                    class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
+                            ></div>
+                            <div
+                                    class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-40 bg-white shadow-lg rounded-lg p-2 text-left z-10 hidden group-hover:block text-xs"
+                            >
+                                <div class="font-medium mb-1">
+                                    夏季健康讲座：心脑血管保健
+                                </div>
+                                <div class="text-gray-500 text-xs">14:00-16:00</div>
+                                <div
+                                        class="mt-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full inline-block"
+                                >
+                                    已报名
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center py-2 text-sm">14</div>
+                        <div class="text-center py-2 text-sm">15</div>
+                        <div class="text-center py-2 text-sm">16</div>
+                        <div class="text-center py-2 text-sm">17</div>
+                        <div class="text-center py-2 text-sm">18</div>
+                        <div class="text-center py-2 text-sm">19</div>
+                        <!-- 已报名活动 - 8月20日 -->
+                        <div
+                                class="text-center py-2 text-sm relative group cursor-pointer event-date"
+                                data-event-id="3"
+                        >
+                            <div
+                                    class="w-8 h-8 mx-auto rounded-full flex items-center justify-center bg-primary/10 border-2 border-primary font-medium text-primary"
+                            >
+                                20
+                            </div>
+                            <div
+                                    class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
+                            ></div>
+                            <div
+                                    class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-40 bg-white shadow-lg rounded-lg p-2 text-left z-10 hidden group-hover:block text-xs"
+                            >
+                                <div class="font-medium mb-1">
+                                    茶艺品鉴会：传统茶文化体验
+                                </div>
+                                <div class="text-gray-500 text-xs">10:00-12:00</div>
+                                <div
+                                        class="mt-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full inline-block"
+                                >
+                                    已报名
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center py-2 text-sm">21</div>
+                        <div class="text-center py-2 text-sm">22</div>
+                        <div class="text-center py-2 text-sm">23</div>
+                        <div class="text-center py-2 text-sm">24</div>
+                        <div class="text-center py-2 text-sm">25</div>
+                        <!-- 已报名活动 - 8月26日 -->
+                        <div
+                                class="text-center py-2 text-sm relative group cursor-pointer event-date"
+                                data-event-id="4"
+                        >
+                            <div
+                                    class="w-8 h-8 mx-auto rounded-full flex items-center justify-center bg-primary/10 border-2 border-primary font-medium text-primary"
+                            >
+                                26
+                            </div>
+                            <div
+                                    class="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-1 h-1 bg-primary rounded-full"
+                            ></div>
+                            <div
+                                    class="absolute top-full left-1/2 transform -translate-x-1/2 mt-1 w-40 bg-white shadow-lg rounded-lg p-2 text-left z-10 hidden group-hover:block text-xs"
+                            >
+                                <div class="font-medium mb-1">合唱团排练：红歌经典回顾</div>
+                                <div class="text-gray-500 text-xs">09:30-11:30</div>
+                                <div
+                                        class="mt-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full inline-block"
+                                >
+                                    已报名
+                                </div>
+                            </div>
+                        </div>
+                        <div class="text-center py-2 text-sm">27</div>
+                        <div class="text-center py-2 text-sm">28</div>
+                        <div class="text-center py-2 text-sm">29</div>
+                        <div class="text-center py-2 text-sm">30</div>
+                        <div class="text-center py-2 text-sm">31</div>
+                        <!-- 下个月日期 -->
+                        <div class="text-center py-2 text-gray-300 text-sm">1</div>
+                        <div class="text-center py-2 text-gray-300 text-sm">2</div>
+                        <div class="text-center py-2 text-gray-300 text-sm">3</div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container mx-auto px-4 py-4">
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-dark flex items-center">
+                        <i class="fas fa-users text-primary mr-2"> </i>
+                        热门兴趣小组
+                    </h2>
+                    <a class="text-sm text-gray-500" href="javascript:void(0);">
+                        更多小组
+                    </a>
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-paint-brush text-red-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">书画爱好者</h3>
+                                <p class="text-xs text-gray-500">128人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            一起学习书法绘画技巧，分享创作心得
+                        </p>
+                    </div>
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-chess text-green-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">棋艺交流</h3>
+                                <p class="text-xs text-gray-500">96人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            围棋、象棋爱好者聚集地，以棋会友
+                        </p>
+                    </div>
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-hiking text-blue-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">健步走团队</h3>
+                                <p class="text-xs text-gray-500">156人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            每日晨间健步走，健康生活每一天
+                        </p>
+                    </div>
+                    <div
+                            class="bg-white rounded-xl shadow-sm p-4 transition-transform hover:shadow-md hover:-translate-y-1 duration-300"
+                    >
+                        <div class="flex items-center mb-3">
+                            <div
+                                    class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center mr-3"
+                            >
+                                <i class="fas fa-music text-purple-500"> </i>
+                            </div>
+                            <div>
+                                <h3 class="font-medium text-dark">合唱团</h3>
+                                <p class="text-xs text-gray-500">87人参与</p>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-600 line-clamp-2">
+                            用歌声传递快乐，每周定期排练
+                        </p>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container mx-auto px-4 py-4">
+            <section class="mb-8">
+                <div class="flex items-center justify-between mb-4">
+                    <h2 class="text-lg font-bold text-dark flex items-center">
+                        <i class="fas fa-bullhorn text-primary mr-2"> </i>
+                        社区公告
+                    </h2>
+                    <a class="text-sm text-gray-500" href="javascript:void(0);">
+                        全部公告
+                    </a>
+                </div>
+                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
+                    <div class="p-4 border-b border-gray-100 bg-primary/5">
+                        <div class="flex items-start">
+                            <div
+                                    class="bg-primary text-white rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5"
+                            >
+                                <i class="fas fa-star text-xs"> </i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="font-medium text-dark">
+                                    关于社区活动室开放时间调整的通知
+                                </h3>
+                                <p class="text-xs text-gray-600 mt-1">
+                                    各位居民：因设备维护，社区活动室将于8月10日-8月12日暂停开放，8月13日起恢复正常。给您带来不便，敬请谅解。
+                                </p>
+                                <p
+                                        class="text-xs text-gray-400 mt-2"
+                                        data-yteditvalue="2025-08-05"
+                                >
+                                    2025-08-05
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 border-b border-gray-100">
+                        <div class="flex items-start">
+                            <div
+                                    class="bg-gray-100 text-gray-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5"
+                            >
+                                <i class="fas fa-bullhorn text-xs"> </i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="font-medium text-dark">
+                                    重阳节文艺汇演节目征集
+                                </h3>
+                                <p class="text-xs text-gray-600 mt-1">
+                                    为迎接重阳节，社区将举办文艺汇演，现面向全体居民征集节目，欢迎有才艺的居民积极报名参与。
+                                </p>
+                                <p
+                                        class="text-xs text-gray-400 mt-2"
+                                        data-yteditvalue="2025-08-01"
+                                >
+                                    2025-08-01
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <div class="flex items-start">
+                            <div
+                                    class="bg-gray-100 text-gray-500 rounded-full w-6 h-6 flex items-center justify-center flex-shrink-0 mt-0.5"
+                            >
+                                <i class="fas fa-bullhorn text-xs"> </i>
+                            </div>
+                            <div class="ml-3">
+                                <h3 class="font-medium text-dark">
+                                    社区健康讲座：夏季心脑血管保健
+                                </h3>
+                                <p class="text-xs text-gray-600 mt-1">
+                                    8月15日上午9:00，社区邀请市医院专家开展夏季心脑血管保健讲座，欢迎居民参加。
+                                </p>
+                                <p
+                                        class="text-xs text-gray-400 mt-2"
+                                        data-yteditvalue="2025-07-28"
+                                >
+                                    2025-07-28
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+</div>
+<!-- 底部导航栏 -->
+<footer
+        class="bg-white shadow-[0_-2px_10px_rgba(0,0,0,0.05)] sticky bottom-0 z-50"
+>
+    <div class="container mx-auto">
+        <div class="flex justify-around py-3">
+            <a
+                    class="flex flex-col items-center text-primary"
+                    href="javascript:void(0);"
+            >
+                <i class="fas fa-home text-xl mb-1"> </i>
+                <span class="text-xs"> 首页 </span>
+            </a>
+            <a
+                    class="flex flex-col items-center text-gray-500"
+                    href="apply.html"
+                    target="_top"
+                    is-page="true"
+                    is-add="false"
+                    custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952655355607515136&appName=老友社区副本"
+                    onclick="ytCustomLinkNavigation()"
+            >
+                <i class="fas fa-check-square text-xl mb-1"> </i>
+                <span
+                        class="text-xs"
+                        target="_top"
+                        href="apply.html"
+                        is-page="true"
+                        is-add="false"
+                        custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952581209838059520&appName=老友社区副本"
+                        onclick="ytCustomLinkNavigation()"
+                >
+              报名
+            </span>
+            </a>
+            <a
+                    class="flex flex-col items-center text-gray-500"
+                    href="explore.html"
+                    target="_top"
+                    is-page="true"
+                    is-add="false"
+                    custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952939038428102656&appName=老友社区副本"
+                    onclick="ytCustomLinkNavigation()"
+            >
+                <i class="fas fa-compass text-xl mb-1"> </i>
+                <span class="text-xs"> 发现 </span>
+            </a>
+            <a
+                    class="flex flex-col items-center text-gray-500"
+                    href="message.html"
+                    target="_top"
+                    is-page="true"
+                    is-add="false"
+                    custom-href="w=393&h=852&appuuid=1952577510445154304&version=1&pageType=app&uuid=1952668560933257216&appName=老友社区"
+                    onclick='
+          const parseWithURLSearchParams = (queryString) => {
+            const params = queryString.split("&")
+            const result = {}
+            params.forEach(param => {
+              const key = param.split("=")[0]
+              const value = param.split("=")[1]
+              result[key] = value
+            })
+            return result
+          }
+          const topWin = window.top
+          const originParams = parseWithURLSearchParams(topWin.document.location.href.split("?")[1])
+          const href = this.getAttribute("custom-href")
+          if (href) {
+            if (topWin.location.hash.startsWith("#/edit?")) {
+              const { uuid } = parseWithURLSearchParams(href)
+              const event = new CustomEvent("changePage", {
+                detail: { uuid },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            } else {
+              const newParams = parseWithURLSearchParams(href)
+              const event = new CustomEvent("previewPageVersion", {
+                detail: {
+                  appuuid: newParams?.appuuid,
+                  pageUuid: newParams?.uuid,
+                  callback: (version) => {
+                    const params = Object.keys(originParams).reduce((acc, key) => {
+                      if (acc !== "?") {
+                        acc+="&"
+                      }
+                      if (key === "version") {
+                        acc+=key+"="+version
+                      } else {
+                        acc+=key+"="+newParams[key]
+                      }
+                      return acc
+                    }, "?")
+                    topWin.location.href = topWin.document.location.href.split("?")[0] + params
+                  }
+                },
+                bubbles: true,
+                cancelable: true
+              });
+              topWin.dispatchEvent(event)
+            }
+          }
+        '
+            >
+                <i class="fas fa-comment-alt text-xl mb-1"> </i>
+                <span class="text-xs"> 消息 </span>
+            </a>
+            <a
+                    class="flex flex-col items-center text-gray-500"
+                    href="myself.html"
+            >
+                <i class="fas fa-user text-xl mb-1"> </i>
+                <span class="text-xs"> 我的 </span>
+            </a>
+        </div>
+    </div>
+</footer>
+<!-- JavaScript -->
+<script>
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function () {
+        // 侧边菜单功能
+        var menuToggle = document.getElementById('menu-toggle');
+        var closeMenu = document.getElementById('close-menu');
+        var sideMenu = document.getElementById('side-menu');
+        var menuOverlay = document.getElementById('menu-overlay');
+        function openMenu() {
+            sideMenu.classList.remove('-translate-x-full');
+            menuOverlay.classList.remove('hidden');
+            // document.body.classList.add('overflow-hidden');
+        }
+        function closeMenuFunc() {
+            sideMenu.classList.add('-translate-x-full');
+            menuOverlay.classList.add('hidden');
+            // document.body.classList.remove('overflow-hidden');
+        }
+        menuToggle.addEventListener('click', openMenu);
+        closeMenu.addEventListener('click', closeMenuFunc);
+        menuOverlay.addEventListener('click', closeMenuFunc);
+
+        // 轮播图自动切换
+        var carouselImages = document.getElementById('carousel-images');
+        var dots = document.querySelectorAll('.carousel-dot');
+        var currentIndex = 0;
+        var totalSlides = dots.length;
+        function goToSlide(index) {
+            currentIndex = index;
+            carouselImages.style.transform = "translateX(-".concat(currentIndex * 100, "%)");
+
+            // 更新指示器
+            dots.forEach(function (dot, i) {
+                dot.style.opacity = i === currentIndex ? '1' : '0.5';
+                // 为您推荐模块 - 换一批按钮功能
+                document.getElementById('refreshRecommendations').addEventListener('click', function () {
+                    var container = document.getElementById('recommendationsContainer');
+                    var originalContent = container.innerHTML;
+
+                    // 显示加载中状态
+                    container.innerHTML = "\n      <div class=\"col-span-2 flex justify-center items-center py-12\" data-ytId=\"id-mjedv\" data-ytId=\"id-m1w8t\" data-ytId=\"id-xcv0i\" data-ytId=\"id-q8mna\" data-ytId=\"id-xmtyc\" data-ytId=\"id-f9jw5\" data-ytId=\"id-rf3mj\" data-ytId=\"id-8jbab\" data-ytId=\"id-2zbn1\" data-ytId=\"id-7as5h\" data-ytId=\"id-ji8xm\" data-ytId=\"id-0w62f\" data-ytId=\"id-54x7b\" data-ytId=\"id-qvqbl\">\n        <div class=\"text-center\" data-ytId=\"id-203jb\" data-ytId=\"id-vf3xi\" data-ytId=\"id-vwb1v\" data-ytId=\"id-nm8y0\" data-ytId=\"id-h2qes\" data-ytId=\"id-gd3zf\" data-ytId=\"id-yyjel\" data-ytId=\"id-ly7d6\" data-ytId=\"id-4xme9\" data-ytId=\"id-16958\" data-ytId=\"id-10pur\" data-ytId=\"id-7job7\" data-ytId=\"id-r7tg4\" data-ytId=\"id-bezof\">\n          <i class=\"fas fa-circle-notch fa-spin text-primary text-2xl mb-2\" data-ytId=\"id-iuvrd\" data-ytId=\"id-p7c5v\" data-ytId=\"id-eua8n\" data-ytId=\"id-8x2kc\" data-ytId=\"id-xs34o\" data-ytId=\"id-aba6k\" data-ytId=\"id-mewcl\" data-ytId=\"id-zb5nr\" data-ytId=\"id-kqn7p\" data-ytId=\"id-8ogrq\" data-ytId=\"id-7ldsk\" data-ytId=\"id-yatq4\" data-ytId=\"id-y3zy7\" data-ytId=\"id-g6f52\"></i>\n          <p class=\"text-gray-500\" data-ytId=\"id-1l3o6\" data-ytId=\"id-on7n0\" data-ytId=\"id-mjnaf\" data-ytId=\"id-xjyl0\" data-ytId=\"id-y0mqr\" data-ytId=\"id-xh708\" data-ytId=\"id-kpmgo\" data-ytId=\"id-1hs7p\" data-ytId=\"id-8j4e8\" data-ytId=\"id-qgizn\" data-ytId=\"id-wq56a\" data-ytId=\"id-appaa\" data-ytId=\"id-niudr\" data-ytId=\"id-ug5pv\">\u6B63\u5728\u4E3A\u60A8\u63A8\u8350\u65B0\u6D3B\u52A8...</p>\n        </div>\n      </div>\n    ";
+
+                    // 模拟加载延迟
+                    setTimeout(function () {
+                        container.innerHTML = originalContent;
+                        // 这里可以添加实际的内容刷新逻辑
+                    }, 1000);
+                });
+            });
+        }
+
+        // 自动轮播
+        function startCarousel() {
+            setInterval(function () {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                goToSlide(currentIndex);
+            }, 5000);
+        }
+
+        // 点击指示器切换轮播
+        dots.forEach(function (dot, i) {
+            dot.addEventListener('click', function () {
+                return goToSlide(i);
+            });
+        });
+
+        // 启动轮播
+        startCarousel();
+
+        // 活动卡片点击效果
+        var activityCards = document.querySelectorAll('.bg-white.rounded-xl.shadow-sm');
+        activityCards.forEach(function (card) {
+            card.addEventListener('click', function () {
+                // 这里可以添加活动详情页跳转逻辑
+                console.log('点击了活动卡片');
+            });
+        });
+        // 报名按钮点击事件
+        var applyButtons = document.querySelectorAll('button.text-primary.text-sm.font-medium');
+        applyButtons.forEach(function (button) {
+            button.addEventListener('click', function (e) {
+                e.stopPropagation(); // 阻止事件冒泡到卡片
+                var activityName = button.closest('.bg-white.rounded-xl').querySelector('h3').textContent;
+                alert("\u60A8\u5DF2\u6210\u529F\u62A5\u540D\uFF1A".concat(activityName));
+            });
+        });
+        // 筛选按钮点击事件
+        var filterButtons = document.querySelectorAll('.flex.items-center button');
+        filterButtons.forEach(function (button) {
+            button.addEventListener('click', function () {
+                // 这里可以添加筛选弹窗逻辑
+                console.log('点击了筛选按钮:', button.textContent.trim());
+            });
+        });
+        // AI智能体移动效果
+        var aiAgent = document.getElementById('ai-agent');
+        var positionX = 0;
+        var positionY = 0;
+        var directionX = 1;
+        var directionY = 1;
+        function moveAiAgent() {
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+            var agentWidth = aiAgent.offsetWidth;
+            var agentHeight = aiAgent.offsetHeight;
+
+            // 边界检测
+            if (positionX + agentWidth > windowWidth) {
+                directionX = -1;
+            } else if (positionX < 0) {
+                directionX = 1;
+            }
+            if (positionY + agentHeight > windowHeight) {
+                directionY = -1;
+            } else if (positionY < 0) {
+                directionY = 1;
+            }
+
+            // 移动
+            positionX += directionX * 0.5;
+            positionY += directionY * 0.5;
+            aiAgent.style.transform = "translate(".concat(positionX, "px, ").concat(positionY, "px)");
+            requestAnimationFrame(moveAiAgent);
+        }
+
+        // 初始化位置在右下角
+        function initAiAgentPosition() {
+            var windowWidth = window.innerWidth;
+            var windowHeight = window.innerHeight;
+            var agentWidth = aiAgent.offsetWidth;
+            var agentHeight = aiAgent.offsetHeight;
+            positionX = windowWidth - agentWidth - 20; // 右间距20px
+            positionY = windowHeight - agentHeight - 120; // 下间距120px
+        }
+
+        // AI智能体点击事件
+        aiAgent.addEventListener('click', function () {
+            // 跳转到AI智能体界面
+            window.location.href = 'javascript:void(0);';
+            alert('跳转到AI智能体界面');
+        });
+
+        // 初始化AI智能体位置并开始移动动画
+        initAiAgentPosition();
+        moveAiAgent();
+        // 活动日历点击事件 - 处理所有已报名活动详情查看功能
+        document.addEventListener('DOMContentLoaded', function () {
+            // 定义活动数据
+            var events = {
+                1: {
+                    date: "2025年8月10日",
+                    title: "书法入门班：笔墨之间的韵味",
+                    time: "09:30-11:30",
+                    status: "已报名"
+                },
+                2: {
+                    date: "2025年8月13日",
+                    title: "夏季健康讲座：心脑血管保健",
+                    time: "14:00-16:00",
+                    status: "已报名"
+                },
+                3: {
+                    date: "2025年8月20日",
+                    title: "茶艺品鉴会：传统茶文化体验",
+                    time: "10:00-12:00",
+                    status: "已报名"
+                },
+                4: {
+                    date: "2025年8月26日",
+                    title: "合唱团排练：红歌经典回顾",
+                    time: "09:30-11:30",
+                    status: "已报名"
+                }
+            };
+
+            // 为所有活动日期添加点击事件
+            var eventDates = document.querySelectorAll('.event-date');
+            eventDates.forEach(function (dateElement) {
+                dateElement.addEventListener('click', function () {
+                    var eventId = this.getAttribute('data-event-id');
+                    var event = events[eventId];
+                    if (event) {
+                        var detailHTML = "\n            <div class=\"p-4 bg-white rounded-xl shadow-lg max-w-sm mx-auto\" data-ytId=\"id-phz0g\" data-ytId=\"id-a70gk\" data-ytId=\"id-ejh2c\" data-ytId=\"id-oma1f\" data-ytId=\"id-fyojz\" data-ytId=\"id-1t6gu\" data-ytId=\"id-4relk\" data-ytId=\"id-5vztl\" data-ytId=\"id-zb3h6\" data-ytId=\"id-be7qj\" data-ytId=\"id-59otz\" data-ytId=\"id-apfwd\" data-ytId=\"id-79z4i\" data-ytId=\"id-siv13\" data-ytId=\"id-z6c1k\" data-ytId=\"id-6exsv\">\n              <h3 class=\"text-lg font-bold text-primary mb-2\">".concat(event.date, "\u6D3B\u52A8</h3>\n              <div class=\"space-y-3\" data-ytId=\"id-8pqee\" data-ytId=\"id-nq3ie\" data-ytId=\"id-shz68\" data-ytId=\"id-as6jv\" data-ytId=\"id-nm1mt\" data-ytId=\"id-23765\" data-ytId=\"id-lu6tg\" data-ytId=\"id-mcjvw\" data-ytId=\"id-ur1kj\" data-ytId=\"id-y07ez\" data-ytId=\"id-uzncj\" data-ytId=\"id-nof7o\" data-ytId=\"id-fj3zt\" data-ytId=\"id-q3ahf\" data-ytId=\"id-5d42z\" data-ytId=\"id-6qb0c\">\n                <div class=\"p-3 border border-primary/20 rounded-lg bg-primary/5\" data-ytId=\"id-vwpul\" data-ytId=\"id-f9d4q\" data-ytId=\"id-s4nri\" data-ytId=\"id-t2q9g\" data-ytId=\"id-ryxx3\" data-ytId=\"id-m52kr\" data-ytId=\"id-0t3fv\" data-ytId=\"id-6vdfh\" data-ytId=\"id-r4hcq\" data-ytId=\"id-tps3t\" data-ytId=\"id-oxnzl\" data-ytId=\"id-ucl63\" data-ytId=\"id-krusq\" data-ytId=\"id-72wg8\" data-ytId=\"id-chebe\" data-ytId=\"id-16fs8\">\n                  <h4 class=\"font-medium\">").concat(event.title, "</h4>\n                  <p class=\"text-sm text-gray-500\">\u65F6\u95F4: ").concat(event.time, "</p>\n                  <div class=\"mt-1 text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full inline-block\">\n                    ").concat(event.status, "\n                  </div>\n                </div>\n              </div>\n              <button class=\"mt-4 w-full bg-primary text-white py-2 rounded-lg\" onclick=\"document.getElementById('eventDetailModal').remove()\" data-ytId=\"id-o85d4\" data-ytId=\"id-kj2ue\" data-ytId=\"id-zshk0\" data-ytId=\"id-5wm2i\" data-ytId=\"id-psfa2\" data-ytId=\"id-3bkdv\" data-ytId=\"id-28cjc\" data-ytId=\"id-m7b90\" data-ytId=\"id-zhopt\" data-ytId=\"id-fpmnu\" data-ytId=\"id-3yd9z\" data-ytId=\"id-8tobe\" data-ytId=\"id-6fy9e\" data-ytId=\"id-x0fyn\" data-ytId=\"id-td5tm\" data-ytId=\"id-snotu\">\n                \u5173\u95ED\n              </button>\n            </div>\n          ");
+                        var modal = document.createElement('div');
+                        modal.id = 'eventDetailModal';
+                        modal.className = 'fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4';
+                        modal.innerHTML = detailHTML;
+                        document.body.appendChild(modal);
+                    }
+                });
+            });
+        });
+    });
+</script>
+</body>
+</html>

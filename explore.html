@@ -1,0 +1,1808 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>银发乐活 - 发现精彩生活</title>
+    <script src="https://res.gemcoder.com/js/reload.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+            href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+            rel="stylesheet"
+    />
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#E63946',
+                        secondary: '#457B9D',
+                        tertiary: '#1D3557',
+                        light: '#F1FAEE',
+                        accent: '#A8DADC'
+                    },
+                    fontFamily: {
+                        sans: ['PingFang SC', 'Helvetica Neue', 'Arial', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+    <style type="text/tailwindcss">
+        .content-section {
+            /* 确保每个内容区块都有足够的底部空间 */
+            padding-bottom: 20px;
+        }
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .scrollbar-hide {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+            .scrollbar-hide::-webkit-scrollbar {
+                display: none;
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            }
+            .video-container {
+                aspect-ratio: 9/16;
+            }
+            .btn-large {
+                @apply w-14 h-14 rounded-full flex items-center justify-center;
+            }
+            .btn-medium {
+                @apply w-12 h-12 rounded-full flex items-center justify-center;
+            }
+            .btn-small {
+                @apply w-10 h-10 rounded-full flex items-center justify-center;
+            }
+        }
+    </style>
+</head>
+<body class="bg-black text-white overflow-hidden h-screen">
+<!-- 顶部导航栏 -->
+<header
+        class="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/80 to-transparent py-4 px-4 flex items-center justify-between"
+>
+    <a
+            class="yt-a-defalut-link flex items-center justify-center flex-1"
+            target="_top"
+            is-page="true"
+            href="javascript:void(0);"
+            custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952582013240213504&appName=老友社区副本"
+            onclick="ytCustomLinkNavigation()"
+            custom-a="true"
+            is-add="true"
+            style="padding: 0px; border: 0px; box-shadow: none;"
+    >
+        <div
+                class="flex items-center justify-center flex-1"
+                data-selectorname="#id-wubdv"
+                style
+        >
+            <h1 class="text-[clamp(1.2rem,5vw,1.5rem)] font-bold" style>发现</h1>
+        </div>
+    </a>
+    <div class="flex items-center space-x-3">
+        <button
+                class="btn-small bg-black/50 hover:bg-black/70 transition-all duration-300"
+        >
+            <i class="fas fa-search text-xl"> </i>
+        </button>
+        <button
+                class="btn-small bg-black/50 hover:bg-black/70 transition-all duration-300"
+        >
+            <i class="fas fa-bell text-xl"> </i>
+        </button>
+        <button
+                class="btn-small bg-primary hover:bg-primary/90 transition-all duration-300"
+        >
+            <a
+                    class="yt-a-defalut-link fas fa-plus text-xl flex"
+                    target="_top"
+                    is-page="true"
+                    href="javascript:void(0);"
+                    custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952582013240213504&appName=老友社区副本"
+                    onclick="ytCustomLinkNavigation()"
+                    custom-a="true"
+                    is-add="false"
+                    style="padding: 0px; border: 0px; box-shadow: none;"
+                    data-selectorname="#id-5q7k1"
+            >
+            </a>
+        </button>
+    </div>
+</header>
+<!-- 分类导航 -->
+<div
+        class="fixed top-[70px] left-0 right-0 z-40 bg-black/70 backdrop-blur-md py-2 px-4 overflow-x-auto scrollbar-hide"
+>
+    <div class="flex space-x-6 min-w-max">
+        <button
+                class="category-btn active whitespace-nowrap py-2 px-1 text-lg font-bold text-primary border-b-2 border-primary"
+        >
+            推荐
+        </button>
+        <button
+                class="category-btn whitespace-nowrap py-2 px-1 text-lg font-medium text-white/80 hover:text-white transition-colors"
+        >
+            附近
+        </button>
+        <button
+                class="category-btn whitespace-nowrap py-2 px-1 text-lg font-medium text-white/80 hover:text-white transition-colors"
+        >
+            关注的人
+        </button>
+        <button
+                class="category-btn whitespace-nowrap py-2 px-1 text-lg font-medium text-white/80 hover:text-white transition-colors"
+        >
+            相亲
+        </button>
+        <button
+                class="category-btn whitespace-nowrap py-2 px-1 text-lg font-medium text-white/80 hover:text-white transition-colors"
+        >
+            兴趣课堂
+        </button>
+        <button
+                class="category-btn whitespace-nowrap py-2 px-1 text-lg font-medium text-white/80 hover:text-white transition-colors"
+        >
+            健康养生
+        </button>
+        <button
+                class="category-btn whitespace-nowrap py-2 px-1 text-lg font-medium text-white/80 hover:text-white transition-colors"
+        >
+            广场舞
+        </button>
+    </div>
+</div>
+<!-- 主内容区 - 视频流 -->
+<main class="h-full pt-[120px] pb-[70px] relative" id="contentContainer">
+    <!-- 推荐内容区域 -->
+    <section class="content-section active" id="recommendSection">
+        <div class="video-feed h-full">
+            <!-- 视频卡片 1 -->
+            <div class="video-card h-full relative">
+                <div class="video-container w-full bg-black">
+                    <img
+                            alt="太极养生视频"
+                            class="w-full h-full object-cover"
+                            src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c9d66b2eb5e4257cd6376837a161e7f3.png"
+                    />
+                    <!-- 视频播放覆盖层 -->
+                    <div
+                            class="absolute inset-0 flex items-center justify-center bg-black/30"
+                    >
+                        <button
+                                class="play-btn btn-large bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                        >
+                            <i class="fas fa-play text-2xl"> </i>
+                        </button>
+                    </div>
+                </div>
+                <!-- 视频信息覆盖层 -->
+                <div class="absolute bottom-0 left-0 right-0 p-4 pb-20">
+                    <div class="flex justify-between items-end">
+                        <!-- 视频描述 -->
+                        <div class="w-[75%]">
+                            <h3 class="text-lg font-bold mb-1 text-shadow">
+                                早晨太极养生教程 - 适合中老年朋友的基础动作
+                            </h3>
+                            <p class="text-sm text-white/80 mb-2 text-shadow">
+                                每天10分钟，活络筋骨，增强体质。跟随张老师一起练习正宗杨氏太极...
+                            </p>
+                            <div class="flex items-center space-x-2">
+                                <img
+                                        alt="张老师头像"
+                                        class="w-8 h-8 rounded-full object-cover border-2 border-primary"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c3685a23b72c58af4c414c1a2fe4575e.png"
+                                />
+                                <span class="text-sm font-medium"> 太极张老师 </span>
+                                <button
+                                        class="ml-2 px-3 py-1 bg-primary/90 rounded-full text-xs font-medium"
+                                >
+                                    关注
+                                </button>
+                            </div>
+                        </div>
+                        <!-- 右侧操作按钮 -->
+                        <div class="flex flex-col items-center space-y-5">
+                            <button class="action-btn flex flex-col items-center">
+                                <div
+                                        class="btn-medium bg-black/50 hover:bg-black/70 transition-all duration-300 mb-1"
+                                >
+                                    <i class="fas fa-heart text-xl"> </i>
+                                </div>
+                                <span class="text-sm"> 2.3万 </span>
+                            </button>
+                            <button class="action-btn flex flex-col items-center">
+                                <div
+                                        class="btn-medium bg-black/50 hover:bg-black/70 transition-all duration-300 mb-1"
+                                >
+                                    <i class="fas fa-comment text-xl"> </i>
+                                </div>
+                                <span class="text-sm"> 863 </span>
+                            </button>
+                            <button class="action-btn flex flex-col items-center">
+                                <div
+                                        class="btn-medium bg-black/50 hover:bg-black/70 transition-all duration-300 mb-1"
+                                >
+                                    <i class="fas fa-share text-xl"> </i>
+                                </div>
+                                <span class="text-sm"> 分享 </span>
+                            </button>
+                            <button class="action-btn flex flex-col items-center">
+                                <div
+                                        class="w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-red-500 p-1"
+                                >
+                                    <img
+                                            alt="用户头像"
+                                            class="w-full h-full rounded-full object-cover"
+                                            src="https://design.gemcoder.com/staticResource/echoAiSystemImages/db00ae170aedaa4d9b99796de41e5b07.png"
+                                    />
+                                </div>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 进度条 -->
+                <div
+                        class="absolute bottom-[70px] left-4 right-4 h-1 bg-white/30 rounded-full overflow-hidden"
+                >
+                    <div class="bg-white h-full w-[35%] rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 相亲内容区域 -->
+    <section class="content-section hidden" id="datingSection">
+        <div class="dating-container pt-4 px-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2">银发情缘</h2>
+                <p class="text-white/70">为您推荐合适的中老年朋友</p>
+            </div>
+            <div class="dating-cards overflow-y-auto h-[calc(100vh-160px)] pb-20">
+                <!-- 相亲卡片 1 -->
+                <div
+                        class="dating-card bg-gradient-to-b from-tertiary to-secondary rounded-2xl p-5 mb-6 shadow-xl"
+                >
+                    <div class="flex items-start">
+                        <img
+                                alt="李阿姨照片"
+                                class="w-24 h-24 rounded-xl object-cover mr-4 border-2 border-white"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/a092243f2f49909a996c839a297a7c99.png"
+                        />
+                        <div>
+                            <h3 class="text-xl font-bold">李阿姨</h3>
+                            <div class="flex items-center space-x-3 mt-1">
+                    <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      65岁
+                    </span>
+                                <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      北京
+                    </span>
+                                <span
+                                        class="px-2 py-1 bg-green-500/80 rounded-full text-sm"
+                                >
+                      退休教师
+                    </span>
+                            </div>
+                            <p class="mt-2 text-white/90 text-sm">
+                                性格开朗，喜欢文学和旅游，擅长烹饪，希望找到一位兴趣相投的伴侣共度晚年。
+                            </p>
+                            <div class="flex mt-3 space-x-2">
+                    <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      阅读
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      旅游
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      烹饪
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <button
+                                class="view-profile-btn px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 text-sm font-medium"
+                                data-id="1"
+                        >
+                            <i class="fas fa-user mr-1"> </i>
+                            查看详情
+                        </button>
+                        <div class="flex space-x-3">
+                            <button
+                                    class="btn-medium bg-black/30 hover:bg-black/50 transition-all duration-300"
+                            >
+                                <i class="fas fa-times text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-primary hover:bg-primary/90 transition-all duration-300"
+                            >
+                                <i class="fas fa-heart text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-secondary hover:bg-secondary/90 transition-all duration-300 video-call-btn"
+                                    data-id="1"
+                            >
+                                <i class="fas fa-video text-xl"> </i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 相亲卡片 2 -->
+                <div
+                        class="dating-card bg-gradient-to-b from-secondary to-accent rounded-2xl p-5 mb-6 shadow-xl"
+                >
+                    <div class="flex items-start">
+                        <img
+                                alt="王大爷照片"
+                                class="w-24 h-24 rounded-xl object-cover mr-4 border-2 border-white"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/53e2653d73e777e15a534a45ed78811e.png"
+                        />
+                        <div>
+                            <h3 class="text-xl font-bold">王大爷</h3>
+                            <div class="flex items-center space-x-3 mt-1">
+                    <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      68岁
+                    </span>
+                                <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      上海
+                    </span>
+                                <span class="px-2 py-1 bg-blue-500/80 rounded-full text-sm">
+                      退休医生
+                    </span>
+                            </div>
+                            <p class="mt-2 text-white/90 text-sm">
+                                身体健康，喜欢书法和下棋，每天坚持散步，希望找到一位性格温和的伴侣。
+                            </p>
+                            <div class="flex mt-3 space-x-2">
+                    <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      书法
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      下棋
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      散步
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <button
+                                class="view-profile-btn px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 text-sm font-medium"
+                                data-id="2"
+                        >
+                            <i class="fas fa-user mr-1"> </i>
+                            查看详情
+                        </button>
+                        <div class="flex space-x-3">
+                            <button
+                                    class="btn-medium bg-black/30 hover:bg-black/50 transition-all duration-300"
+                            >
+                                <i class="fas fa-times text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-primary hover:bg-primary/90 transition-all duration-300"
+                            >
+                                <i class="fas fa-heart text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-secondary hover:bg-secondary/90 transition-all duration-300 video-call-btn"
+                                    data-id="2"
+                            >
+                                <i class="fas fa-video text-xl"> </i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 相亲卡片 3 -->
+                <div
+                        class="dating-card bg-gradient-to-b from-tertiary to-secondary rounded-2xl p-5 mb-6 shadow-xl"
+                >
+                    <div class="flex items-start">
+                        <img
+                                alt="张阿姨照片"
+                                class="w-24 h-24 rounded-xl object-cover mr-4 border-2 border-white"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/8268cada8796f0262e05a3631041596f.png"
+                        />
+                        <div>
+                            <h3 class="text-xl font-bold">张阿姨</h3>
+                            <div class="flex items-center space-x-3 mt-1">
+                    <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      62岁
+                    </span>
+                                <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      广州
+                    </span>
+                                <span
+                                        class="px-2 py-1 bg-purple-500/80 rounded-full text-sm"
+                                >
+                      退休会计
+                    </span>
+                            </div>
+                            <p class="mt-2 text-white/90 text-sm">
+                                热爱生活，喜欢跳广场舞和烹饪，性格温和，希望找到一位身体健康、有共同爱好的伴侣。
+                            </p>
+                            <div class="flex mt-3 space-x-2">
+                    <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      广场舞
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      烹饪
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      旅游
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <button
+                                class="view-profile-btn px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 text-sm font-medium"
+                                data-id="3"
+                        >
+                            <i class="fas fa-user mr-1"> </i>
+                            查看详情
+                        </button>
+                        <div class="flex space-x-3">
+                            <button
+                                    class="btn-medium bg-black/30 hover:bg-black/50 transition-all duration-300"
+                            >
+                                <i class="fas fa-times text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-primary hover:bg-primary/90 transition-all duration-300"
+                            >
+                                <i class="fas fa-heart text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-secondary hover:bg-secondary/90 transition-all duration-300 video-call-btn"
+                                    data-id="3"
+                            >
+                                <i class="fas fa-video text-xl"> </i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 相亲卡片 4 -->
+                <div
+                        class="dating-card bg-gradient-to-b from-secondary to-tertiary rounded-2xl p-5 mb-6 shadow-xl"
+                >
+                    <div class="flex items-start">
+                        <img
+                                alt="赵大爷照片"
+                                class="w-24 h-24 rounded-xl object-cover mr-4 border-2 border-white"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/1741f049b88b13e9338632d8ea92b0b6.png"
+                        />
+                        <div>
+                            <h3 class="text-xl font-bold">赵大爷</h3>
+                            <div class="flex items-center space-x-3 mt-1">
+                    <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      70岁
+                    </span>
+                                <span class="px-2 py-1 bg-white/20 rounded-full text-sm">
+                      成都
+                    </span>
+                                <span
+                                        class="px-2 py-1 bg-green-600/80 rounded-full text-sm"
+                                >
+                      退休工程师
+                    </span>
+                            </div>
+                            <p class="mt-2 text-white/90 text-sm">
+                                身体健康，每天坚持晨练，喜欢钓鱼和下棋，性格开朗，希望找到一位能一起散步聊天的伴侣。
+                            </p>
+                            <div class="flex mt-3 space-x-2">
+                    <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      钓鱼
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      下棋
+                    </span>
+                                <span class="text-xs px-2 py-1 bg-white/10 rounded-full">
+                      晨练
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-4 flex justify-between items-center">
+                        <button
+                                class="view-profile-btn px-4 py-2 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 text-sm font-medium"
+                                data-id="4"
+                        >
+                            <i class="fas fa-user mr-1"> </i>
+                            查看详情
+                        </button>
+                        <div class="flex space-x-3">
+                            <button
+                                    class="btn-medium bg-black/30 hover:bg-black/50 transition-all duration-300"
+                            >
+                                <i class="fas fa-times text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-primary hover:bg-primary/90 transition-all duration-300"
+                            >
+                                <i class="fas fa-heart text-xl"> </i>
+                            </button>
+                            <button
+                                    class="btn-medium bg-secondary hover:bg-secondary/90 transition-all duration-300 video-call-btn"
+                                    data-id="4"
+                            >
+                                <i class="fas fa-video text-xl"> </i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 成功案例 -->
+            <div class="mt-8">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-heart text-primary mr-2"> </i>
+                    成功案例
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div
+                            class="bg-gradient-to-b from-tertiary to-secondary rounded-xl p-4 text-center shadow-lg"
+                    >
+                        <div
+                                class="relative w-16 h-16 mx-auto -mt-10 border-4 border-white rounded-full overflow-hidden"
+                        >
+                            <img
+                                    alt="成功案例1"
+                                    class="w-full h-full object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/2a9767ecadc0e29d66bf2c015212450f.png"
+                            />
+                        </div>
+                        <h4 class="font-bold mt-2">张叔叔 & 李阿姨</h4>
+                        <p class="text-xs text-white/70 mt-1">相识3个月</p>
+                        <div class="mt-3 text-xs text-white/80">
+                            "通过这个平台找到了相伴余生的人，感谢银发乐活！"
+                        </div>
+                    </div>
+                    <div
+                            class="bg-gradient-to-b from-secondary to-primary rounded-xl p-4 text-center shadow-lg"
+                    >
+                        <div
+                                class="relative w-16 h-16 mx-auto -mt-10 border-4 border-white rounded-full overflow-hidden"
+                        >
+                            <img
+                                    alt="成功案例2"
+                                    class="w-full h-full object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/abbdc19b3c0a2b3008acdd5a133f956d.png"
+                            />
+                        </div>
+                        <h4 class="font-bold mt-2">王大爷 & 赵阿姨</h4>
+                        <p class="text-xs text-white/70 mt-1">相识6个月</p>
+                        <div class="mt-3 text-xs text-white/80">
+                            "我们一起旅游、下棋，晚年生活变得丰富多彩。"
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 兴趣课堂区域 -->
+    <section class="content-section hidden" id="interestSection">
+        <div class="interest-container pt-4 px-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2">老年兴趣课堂</h2>
+                <p class="text-white/70">发现新爱好，丰富退休生活</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- 课程卡片 1 -->
+                <div class="bg-tertiary rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img
+                                alt="书法课程"
+                                class="w-full h-36 object-cover"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/2aa0e41ab8ac463f396a1af4d82b1d43.png"
+                        />
+                        <div
+                                class="absolute top-2 right-2 bg-primary px-2 py-1 rounded-full text-xs font-bold"
+                        >
+                            热门
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-bold text-lg">书法入门</h3>
+                        <p class="text-sm text-white/70 mt-1">每周一、三下午</p>
+                        <div class="flex justify-between items-center mt-2">
+                  <span class="text-xs bg-white/10 px-2 py-1 rounded-full">
+                    线上课程
+                  </span>
+                            <span class="text-primary font-bold"> 免费 </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 课程卡片 2 -->
+                <div class="bg-secondary rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img
+                                alt="智能手机课程"
+                                class="w-full h-36 object-cover"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c71819e2d362bcf5f290858f53ab315a.png"
+                        />
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-bold text-lg">智能手机使用</h3>
+                        <p class="text-sm text-white/70 mt-1">每周二上午</p>
+                        <div class="flex justify-between items-center mt-2">
+                  <span class="text-xs bg-white/10 px-2 py-1 rounded-full">
+                    线下课程
+                  </span>
+                            <span class="text-primary font-bold"> ¥39 </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 课程卡片 3 -->
+                <div class="bg-primary rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img
+                                alt="茶艺课程"
+                                class="w-full h-36 object-cover"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/e0f87ad944054f0053e68d6777bce154.png"
+                        />
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-bold text-lg">茶艺品鉴</h3>
+                        <p class="text-sm text-white/70 mt-1">每周四下午</p>
+                        <div class="flex justify-between items-center mt-2">
+                  <span class="text-xs bg-white/10 px-2 py-1 rounded-full">
+                    线下课程
+                  </span>
+                            <span class="text-primary font-bold"> ¥59 </span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 课程卡片 4 -->
+                <div class="bg-accent rounded-xl overflow-hidden shadow-lg">
+                    <div class="relative">
+                        <img
+                                alt="摄影课程"
+                                class="w-full h-36 object-cover"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/cb22b7e99c4c09bdbcb597d27107491f.png"
+                        />
+                        <div
+                                class="absolute top-2 right-2 bg-yellow-500 px-2 py-1 rounded-full text-xs font-bold"
+                        >
+                            新课
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-bold text-lg">手机摄影</h3>
+                        <p class="text-sm text-white/70 mt-1">每周六上午</p>
+                        <div class="flex justify-between items-center mt-2">
+                  <span class="text-xs bg-white/10 px-2 py-1 rounded-full">
+                    线上+线下
+                  </span>
+                            <span class="text-primary font-bold"> ¥49 </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button
+                        class="px-6 py-3 bg-white/10 hover:bg-white/20 rounded-full transition-all duration-300 font-medium"
+                >
+                    查看更多课程
+                    <i class="fas fa-chevron-down ml-1"> </i>
+                </button>
+            </div>
+        </div>
+    </section>
+    <!-- 附近内容区域 -->
+    <section class="content-section hidden" id="nearbySection">
+        <div class="nearby-container pt-4 px-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2">附近活动</h2>
+                <p class="text-white/70">发现身边的老年活动和朋友</p>
+            </div>
+            <div class="nearby-list overflow-y-auto h-[calc(100vh-160px)] pb-20" style="padding-bottom: 10rem">
+                <!-- 附近活动 1 -->
+                <div
+                        class="bg-gradient-to-r from-tertiary to-secondary rounded-xl p-4 mb-4 shadow-lg"
+                >
+                    <div class="flex items-start">
+                        <div class="relative w-28 h-28 flex-shrink-0">
+                            <img
+                                    alt="公园太极拳活动"
+                                    class="w-full h-full object-cover rounded-lg"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/7b217d6cf3e7927c27ec26b9ae4eb486.png"
+                            />
+                            <div
+                                    class="absolute top-2 left-2 bg-primary/90 px-2 py-1 rounded-full text-xs font-bold"
+                            >
+                                0.8km
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h3 class="font-bold text-lg">公园太极拳交流</h3>
+                            <p class="text-sm text-white/80 mt-1">
+                                每天早上7:00-8:30，在人民公园东门广场
+                            </p>
+                            <div class="flex items-center mt-2 text-sm">
+                    <span class="flex items-center text-white/70 mr-3">
+                      <i class="fas fa-user mr-1"> </i>
+                      23人参加
+                    </span>
+                                <span class="flex items-center text-white/70">
+                      <i class="fas fa-star mr-1 text-yellow-400"> </i>
+                      4.8
+                    </span>
+                            </div>
+                            <button
+                                    class="mt-2 px-3 py-1 bg-primary/90 rounded-full text-xs font-medium"
+                            >
+                                加入活动
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 附近活动 2 -->
+                <div
+                        class="bg-gradient-to-r from-secondary to-accent rounded-xl p-4 mb-4 shadow-lg"
+                >
+                    <div class="flex items-start">
+                        <div class="relative w-28 h-28 flex-shrink-0">
+                            <img
+                                    alt="社区书法班"
+                                    class="w-full h-full object-cover rounded-lg"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/7551c9342496c413e1bd952df4177d83.png"
+                            />
+                            <div
+                                    class="absolute top-2 left-2 bg-primary/90 px-2 py-1 rounded-full text-xs font-bold"
+                            >
+                                1.2km
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h3 class="font-bold text-lg">社区书法兴趣班</h3>
+                            <p class="text-sm text-white/80 mt-1">
+                                每周一、三下午2:00-4:00，在和平社区活动中心
+                            </p>
+                            <div class="flex items-center mt-2 text-sm">
+                    <span class="flex items-center text-white/70 mr-3">
+                      <i class="fas fa-user mr-1"> </i>
+                      15人参加
+                    </span>
+                                <span class="flex items-center text-white/70">
+                      <i class="fas fa-star mr-1 text-yellow-400"> </i>
+                      4.6
+                    </span>
+                            </div>
+                            <button
+                                    class="mt-2 px-3 py-1 bg-primary/90 rounded-full text-xs font-medium"
+                            >
+                                加入活动
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 附近活动 3 -->
+                <div
+                        class="bg-gradient-to-r from-accent to-tertiary rounded-xl p-4 mb-4 shadow-lg"
+                >
+                    <div class="flex items-start">
+                        <div class="relative w-28 h-28 flex-shrink-0">
+                            <img
+                                    alt="老年合唱团"
+                                    class="w-full h-full object-cover rounded-lg"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/6e1357a33fe277420850066e3f1e2d64.png"
+                            />
+                            <div
+                                    class="absolute top-2 left-2 bg-primary/90 px-2 py-1 rounded-full text-xs font-bold"
+                            >
+                                1.5km
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h3 class="font-bold text-lg">夕阳红合唱团</h3>
+                            <p class="text-sm text-white/80 mt-1">
+                                每周二、四上午9:00-11:00，在文化中心三楼
+                            </p>
+                            <div class="flex items-center mt-2 text-sm">
+                    <span class="flex items-center text-white/70 mr-3">
+                      <i class="fas fa-user mr-1"> </i>
+                      32人参加
+                    </span>
+                                <span class="flex items-center text-white/70">
+                      <i class="fas fa-star mr-1 text-yellow-400"> </i>
+                      4.9
+                    </span>
+                            </div>
+                            <button
+                                    class="mt-2 px-3 py-1 bg-primary/90 rounded-full text-xs font-medium"
+                            >
+                                加入活动
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- 附近活动 4 -->
+                <div
+                        class="bg-gradient-to-r from-tertiary to-primary rounded-xl p-4 mb-4 shadow-lg"
+                >
+                    <div class="flex items-start">
+                        <div class="relative w-28 h-28 flex-shrink-0">
+                            <img
+                                    alt="围棋交流会"
+                                    class="w-full h-full object-cover rounded-lg"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/7bf35a46f1e084f7e1d02d82f5d57e14.png"
+                            />
+                            <div
+                                    class="absolute top-2 left-2 bg-primary/90 px-2 py-1 rounded-full text-xs font-bold"
+                            >
+                                2.0km
+                            </div>
+                        </div>
+                        <div class="ml-3 flex-1">
+                            <h3 class="font-bold text-lg">围棋爱好者交流会</h3>
+                            <p class="text-sm text-white/80 mt-1">
+                                每周六上午9:00-12:00，在老年活动中心
+                            </p>
+                            <div class="flex items-center mt-2 text-sm">
+                    <span class="flex items-center text-white/70 mr-3">
+                      <i class="fas fa-user mr-1"> </i>
+                      18人参加
+                    </span>
+                                <span class="flex items-center text-white/70">
+                      <i class="fas fa-star mr-1 text-yellow-400"> </i>
+                      4.7
+                    </span>
+                            </div>
+                            <button
+                                    class="mt-2 px-3 py-1 bg-primary/90 rounded-full text-xs font-medium"
+                            >
+                                加入活动
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 关注的人内容区域 -->
+    <section class="content-section hidden" id="followingSection">
+        <div class="following-container pt-4 px-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2">关注的人</h2>
+                <p class="text-white/70">查看您关注用户的最新动态</p>
+            </div>
+            <div
+                    class="following-feed overflow-y-auto h-[calc(100vh-160px)] pb-20"
+            >
+                <!-- 动态 1 -->
+                <div class="bg-tertiary rounded-xl p-4 mb-4 shadow-lg">
+                    <div class="flex items-center mb-3">
+                        <img
+                                alt="太极张老师头像"
+                                class="w-10 h-10 rounded-full object-cover mr-3"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/6519f1e4a389382c92f0b6e3d85c0923.png"
+                        />
+                        <div>
+                            <h3 class="font-bold">太极张老师</h3>
+                            <p class="text-xs text-white/70">2小时前</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-white/90">
+                            今天教大家太极的基本呼吸法，配合缓慢的动作，能有效改善睡眠质量。大家可以跟着视频练习~
+                        </p>
+                    </div>
+                    <div class="relative rounded-lg overflow-hidden mb-3">
+                        <img
+                                alt="太极教学视频封面"
+                                class="w-full h-64 object-cover"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/f907a37b252d845d62c4fb884c85fd29.png"
+                        />
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <button
+                                    class="btn-large bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                            >
+                                <i class="fas fa-play text-2xl"> </i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex space-x-4">
+                            <button
+                                    class="flex items-center text-white/70 hover:text-white transition-colors"
+                            >
+                                <i class="fas fa-heart mr-1"> </i>
+                                128
+                            </button>
+                            <button
+                                    class="flex items-center text-white/70 hover:text-white transition-colors"
+                            >
+                                <i class="fas fa-comment mr-1"> </i>
+                                32
+                            </button>
+                            <button
+                                    class="flex items-center text-white/70 hover:text-white transition-colors"
+                            >
+                                <i class="fas fa-share mr-1"> </i>
+                                18
+                            </button>
+                        </div>
+                        <button
+                                class="text-white/70 hover:text-white transition-colors"
+                        >
+                            <i class="fas fa-ellipsis-h"> </i>
+                        </button>
+                    </div>
+                </div>
+                <!-- 动态 2 -->
+                <div class="bg-secondary rounded-xl p-4 mb-4 shadow-lg">
+                    <div class="flex items-center mb-3">
+                        <img
+                                alt="李阿姨头像"
+                                class="w-10 h-10 rounded-full object-cover mr-3"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/dfebe0e7632fad8309bcd419ade207cc.png"
+                        />
+                        <div>
+                            <h3 class="font-bold">美食家李阿姨</h3>
+                            <p class="text-xs text-white/70">昨天 15:30</p>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <p class="text-white/90">
+                            今天给大家分享一道适合老年人的健康菜：清蒸鲈鱼。刺少肉嫩，营养丰富，做法简单，一起来看看吧~
+                        </p>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 mb-3">
+                        <img
+                                alt="清蒸鲈鱼成品"
+                                class="w-full h-32 object-cover rounded"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/70dd8dbad8ec623bcf10fe53ad101ddc.png"
+                        />
+                        <img
+                                alt="烹饪步骤"
+                                class="w-full h-32 object-cover rounded"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/6508152644e3ce7b418caabcc52ee11a.png"
+                        />
+                        <img
+                                alt="配料展示"
+                                class="w-full h-32 object-cover rounded"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/b640ad6ce6b7b0fc801a8f3b9a4b319a.png"
+                        />
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="flex space-x-4">
+                            <button
+                                    class="flex items-center text-white/70 hover:text-white transition-colors"
+                            >
+                                <i class="fas fa-heart mr-1"> </i>
+                                256
+                            </button>
+                            <button
+                                    class="flex items-center text-white/70 hover:text-white transition-colors"
+                            >
+                                <i class="fas fa-comment mr-1"> </i>
+                                48
+                            </button>
+                            <button
+                                    class="flex items-center text-white/70 hover:text-white transition-colors"
+                            >
+                                <i class="fas fa-share mr-1"> </i>
+                                64
+                            </button>
+                        </div>
+                        <button
+                                class="text-white/70 hover:text-white transition-colors"
+                        >
+                            <i class="fas fa-ellipsis-h"> </i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 健康养生内容区域 -->
+    <section class="content-section hidden" id="healthSection">
+        <div class="health-container pt-4 px-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2">健康养生</h2>
+                <p class="text-white/70">科学养生，健康晚年</p>
+            </div>
+            <!-- 健康资讯 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-newspaper text-primary mr-2"> </i>
+                    健康资讯
+                </h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-tertiary rounded-xl overflow-hidden shadow-lg">
+                        <img
+                                alt="老年人饮食健康"
+                                class="w-full h-40 object-cover"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/d09555bf42a40b254bcde97b1f23f422.png"
+                        />
+                        <div class="p-4">
+                            <h4 class="font-bold text-lg mb-2">
+                                老年人夏季饮食"三宜三忌"
+                            </h4>
+                            <p class="text-sm text-white/70 mb-3 line-clamp-2">
+                                夏季炎热，老年人饮食需注意"三宜三忌"，才能防暑降温，保持身体健康...
+                            </p>
+                            <div class="flex justify-between items-center">
+                    <span class="text-xs text-white/50">
+                      健康养生报 · 3天前
+                    </span>
+                                <span
+                                        class="text-xs bg-primary/20 text-primary px-2 py-1 rounded-full"
+                                >
+                      饮食健康
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-primary rounded-xl overflow-hidden shadow-lg">
+                        <img
+                                alt="老年人运动健康"
+                                class="w-full h-40 object-cover"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/571c1ca3bc768c08834e3b8b493b01e2.png"
+                        />
+                        <div class="p-4">
+                            <h4 class="font-bold text-lg mb-2">
+                                适合老年人的5种温和运动
+                            </h4>
+                            <p class="text-sm text-white/70 mb-3 line-clamp-2">
+                                随着年龄增长，选择适合的运动尤为重要。这5种温和运动既能锻炼身体，又不会对关节造成负担...
+                            </p>
+                            <div class="flex justify-between items-center">
+                    <span class="text-xs text-white/50">
+                      老年运动协会 · 1周前
+                    </span>
+                                <span
+                                        class="text-xs bg-white/20 text-white px-2 py-1 rounded-full"
+                                >
+                      运动健康
+                    </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 养生知识 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-book-open text-primary mr-2"> </i>
+                    养生知识
+                </h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div
+                            class="bg-secondary rounded-xl p-4 shadow-lg flex items-start"
+                    >
+                        <div
+                                class="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mr-4"
+                        >
+                            <i class="fas fa-bed text-2xl text-primary"> </i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">
+                                改善老年人睡眠质量的7个小技巧
+                            </h4>
+                            <p class="text-sm text-white/70 line-clamp-2">
+                                睡眠质量直接影响老年人的健康状况。通过调整生活习惯和环境，大多数老年人都能改善睡眠质量...
+                            </p>
+                            <a
+                                    class="text-primary text-sm mt-1 inline-block"
+                                    href="javascript:void(0);"
+                            >
+                                阅读全文
+                                <i class="fas fa-chevron-right text-xs ml-1"> </i>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="bg-accent rounded-xl p-4 shadow-lg flex items-start">
+                        <div
+                                class="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mr-4"
+                        >
+                            <i class="fas fa-brain text-2xl text-primary"> </i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">
+                                预防老年痴呆的5种脑力锻炼方法
+                            </h4>
+                            <p class="text-sm text-white/70 line-clamp-2">
+                                科学研究表明，适当的脑力锻炼可以有效延缓大脑衰老，降低老年痴呆风险...
+                            </p>
+                            <a
+                                    class="text-primary text-sm mt-1 inline-block"
+                                    href="javascript:void(0);"
+                            >
+                                阅读全文
+                                <i class="fas fa-chevron-right text-xs ml-1"> </i>
+                            </a>
+                        </div>
+                    </div>
+                    <div
+                            class="bg-tertiary rounded-xl p-4 shadow-lg flex items-start"
+                    >
+                        <div
+                                class="w-16 h-16 rounded-lg bg-white/10 flex items-center justify-center flex-shrink-0 mr-4"
+                        >
+                            <i class="fas fa-heartbeat text-2xl text-primary"> </i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-lg mb-1">老年人血压管理指南</h4>
+                            <p class="text-sm text-white/70 line-clamp-2">
+                                高血压是老年人常见疾病，科学管理血压对预防心脑血管疾病至关重要...
+                            </p>
+                            <a
+                                    class="text-primary text-sm mt-1 inline-block"
+                                    href="javascript:void(0);"
+                            >
+                                阅读全文
+                                <i class="fas fa-chevron-right text-xs ml-1"> </i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 专家问答 -->
+            <div>
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-question-circle text-primary mr-2"> </i>
+                    专家问答
+                </h3>
+                <div
+                        class="bg-gradient-to-b from-secondary to-tertiary rounded-xl p-5 shadow-lg"
+                >
+                    <div class="flex items-start mb-4">
+                        <img
+                                alt="王医生头像"
+                                class="w-12 h-12 rounded-full object-cover mr-3 border-2 border-white"
+                                src="https://design.gemcoder.com/staticResource/echoAiSystemImages/f2e9e8269547973cda9e7d3995e7f955.png"
+                        />
+                        <div>
+                            <h4 class="font-bold">王医生 · 心血管专家</h4>
+                            <p class="text-sm text-white/70">主任医师 · 30年临床经验</p>
+                        </div>
+                    </div>
+                    <p class="text-white/90 mb-4">
+                        "老年人锻炼要量力而行，尤其是有慢性病的老人，最好在医生指导下制定运动计划。步行、太极、游泳等低强度运动是不错的选择..."
+                    </p>
+                    <button
+                            class="w-full py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 font-medium"
+                    >
+                        查看更多专家解答
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 广场舞内容区域 -->
+    <section class="content-section hidden" id="squareDanceSection">
+        <div class="square-dance-container pt-4 px-4">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl font-bold mb-2">广场舞</h2>
+                <p class="text-white/70">舞动健康，快乐生活</p>
+            </div>
+            <!-- 热门舞曲 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-music text-primary mr-2"> </i>
+                    热门舞曲
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- 舞曲 1 -->
+                    <div
+                            class="bg-tertiary rounded-xl overflow-hidden shadow-lg group"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="广场舞教学视频"
+                                    class="w-full h-40 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/2d01a9f4e664318d94b76fb545e669cb.png"
+                            />
+                            <div
+                                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                            >
+                                <button
+                                        class="btn-large bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                                >
+                                    <i class="fas fa-play text-2xl"> </i>
+                                </button>
+                            </div>
+                            <div
+                                    class="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                4.2万次播放
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h4 class="font-bold text-sm mb-1 truncate">
+                                《最炫民族风》广场舞教学
+                            </h4>
+                            <div class="flex items-center text-xs text-white/60">
+                                <i class="fas fa-user mr-1"> </i>
+                                张老师广场舞
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 舞曲 2 -->
+                    <div
+                            class="bg-secondary rounded-xl overflow-hidden shadow-lg group"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="广场舞教学视频"
+                                    class="w-full h-40 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/cd0dfc11135cb9743630beca778f9e4f.png"
+                            />
+                            <div
+                                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                            >
+                                <button
+                                        class="btn-large bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                                >
+                                    <i class="fas fa-play text-2xl"> </i>
+                                </button>
+                            </div>
+                            <div
+                                    class="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                3.8万次播放
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h4 class="font-bold text-sm mb-1 truncate">
+                                《小苹果》简单版教学
+                            </h4>
+                            <div class="flex items-center text-xs text-white/60">
+                                <i class="fas fa-user mr-1"> </i>
+                                快乐舞蹈队
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 舞曲 3 -->
+                    <div class="bg-accent rounded-xl overflow-hidden shadow-lg group">
+                        <div class="relative">
+                            <img
+                                    alt="广场舞教学视频"
+                                    class="w-full h-40 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/9b1c6bfaf53f48692929dddf87b175cb.png"
+                            />
+                            <div
+                                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                            >
+                                <button
+                                        class="btn-large bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                                >
+                                    <i class="fas fa-play text-2xl"> </i>
+                                </button>
+                            </div>
+                            <div
+                                    class="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                2.9万次播放
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h4 class="font-bold text-sm mb-1 truncate">
+                                《茉莉花》扇子舞教学
+                            </h4>
+                            <div class="flex items-center text-xs text-white/60">
+                                <i class="fas fa-user mr-1"> </i>
+                                夕阳红舞蹈队
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 舞曲 4 -->
+                    <div
+                            class="bg-primary rounded-xl overflow-hidden shadow-lg group"
+                    >
+                        <div class="relative">
+                            <img
+                                    alt="广场舞教学视频"
+                                    class="w-full h-40 object-cover"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/51deedd1d25ea5e1935f1a6465e1e91a.png"
+                            />
+                            <div
+                                    class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+                            >
+                                <button
+                                        class="btn-large bg-white/90 text-primary hover:bg-white transition-all duration-300"
+                                >
+                                    <i class="fas fa-play text-2xl"> </i>
+                                </button>
+                            </div>
+                            <div
+                                    class="absolute top-2 right-2 bg-primary text-white text-xs px-2 py-1 rounded-full"
+                            >
+                                5.1万次播放
+                            </div>
+                        </div>
+                        <div class="p-3">
+                            <h4 class="font-bold text-sm mb-1 truncate">
+                                《站在草原望北京》教学
+                            </h4>
+                            <div class="flex items-center text-xs text-white/60">
+                                <i class="fas fa-user mr-1"> </i>
+                                舞动青春队
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 附近舞队 -->
+            <div class="mb-8">
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-users text-primary mr-2"> </i>
+                    附近舞队
+                </h3>
+                <div class="grid grid-cols-1 gap-4">
+                    <div
+                            class="bg-gradient-to-r from-tertiary to-secondary rounded-xl p-4 shadow-lg"
+                    >
+                        <div class="flex items-center">
+                            <div class="relative w-20 h-20 flex-shrink-0">
+                                <img
+                                        alt="阳光舞蹈队"
+                                        class="w-full h-full object-cover rounded-lg"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/a6b2842b2f335a26a63985270c0b6ad7.png"
+                                />
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="font-bold text-lg">阳光舞蹈队</h4>
+                                <div class="flex items-center text-sm text-white/70 mt-1">
+                      <span class="flex items-center mr-3">
+                        <i class="fas fa-map-marker-alt mr-1"> </i>
+                        人民广场
+                      </span>
+                                    <span class="flex items-center mr-3">
+                        <i class="fas fa-user mr-1"> </i>
+                        32人
+                      </span>
+                                    <span class="flex items-center">
+                        <i class="fas fa-clock mr-1"> </i>
+                        每晚19:00
+                      </span>
+                                </div>
+                                <p class="text-sm text-white/80 mt-2 line-clamp-1">
+                                    我们是一群热爱生活、热爱舞蹈的中老年朋友，欢迎加入我们！
+                                </p>
+                            </div>
+                            <button
+                                    class="ml-4 px-4 py-2 bg-primary/90 rounded-xl text-sm font-medium whitespace-nowrap"
+                            >
+                                加入舞队
+                            </button>
+                        </div>
+                    </div>
+                    <div
+                            class="bg-gradient-to-r from-secondary to-accent rounded-xl p-4 shadow-lg"
+                    >
+                        <div class="flex items-center">
+                            <div class="relative w-20 h-20 flex-shrink-0">
+                                <img
+                                        alt="枫叶舞蹈队"
+                                        class="w-full h-full object-cover rounded-lg"
+                                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/c8e58bc787032d42aa8a592027be5af9.png"
+                                />
+                            </div>
+                            <div class="ml-4 flex-1">
+                                <h4 class="font-bold text-lg">枫叶舞蹈队</h4>
+                                <div class="flex items-center text-sm text-white/70 mt-1">
+                      <span class="flex items-center mr-3">
+                        <i class="fas fa-map-marker-alt mr-1"> </i>
+                        中山公园
+                      </span>
+                                    <span class="flex items-center mr-3">
+                        <i class="fas fa-user mr-1"> </i>
+                        28人
+                      </span>
+                                    <span class="flex items-center">
+                        <i class="fas fa-clock mr-1"> </i>
+                        每晚18:30
+                      </span>
+                                </div>
+                                <p class="text-sm text-white/80 mt-2 line-clamp-1">
+                                    成立5年的老牌舞队，曾多次参加市广场舞比赛并获奖。
+                                </p>
+                            </div>
+                            <button
+                                    class="ml-4 px-4 py-2 bg-primary/90 rounded-xl text-sm font-medium whitespace-nowrap"
+                            >
+                                加入舞队
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 教学课程 -->
+            <div>
+                <h3 class="text-xl font-bold mb-4 flex items-center">
+                    <i class="fas fa-graduation-cap text-primary mr-2"> </i>
+                    教学课程
+                </h3>
+                <div class="bg-tertiary rounded-xl p-5 shadow-lg">
+                    <div class="flex flex-col md:flex-row items-center">
+                        <div class="w-full md:w-1/3 mb-4 md:mb-0 md:mr-6">
+                            <img
+                                    alt="广场舞初级教程"
+                                    class="w-full h-48 object-cover rounded-lg"
+                                    src="https://design.gemcoder.com/staticResource/echoAiSystemImages/ba3952a18ad7ecb69f3a88c2e55ee0ef.png"
+                            />
+                        </div>
+                        <div class="w-full md:w-2/3">
+                            <h4 class="font-bold text-xl mb-2">广场舞零基础入门教程</h4>
+                            <p class="text-white/80 mb-4">
+                                专为广场舞初学者设计，从基础动作开始，循序渐进学习广场舞技巧，适合50岁以上中老年朋友。
+                            </p>
+                            <div class="grid grid-cols-2 gap-4 mb-4">
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"> </i>
+                                    <span class="text-sm"> 12节视频课程 </span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"> </i>
+                                    <span class="text-sm"> 动作分解教学 </span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"> </i>
+                                    <span class="text-sm"> 慢速跟练版 </span>
+                                </div>
+                                <div class="flex items-center">
+                                    <i class="fas fa-check-circle text-primary mr-2"> </i>
+                                    <span class="text-sm"> 终身学习权限 </span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <span class="text-2xl font-bold text-primary"> ¥99 </span>
+                                    <span class="text-white/50 line-through ml-2">
+                        ¥199
+                      </span>
+                                </div>
+                                <button
+                                        class="px-6 py-3 bg-primary hover:bg-primary/90 rounded-xl transition-all duration-300 font-medium"
+                                >
+                                    立即报名
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- 其他分类区域将通过JS动态加载 -->
+</main>
+<!-- 底部导航 -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 bg-black shadow-lg">
+    <div class="flex justify-around py-3" data-selectorname="#id-h31b6">
+        <a
+                class="flex flex-col items-center text-gray-500"
+                custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952582013240213504&appName=老友社区副本"
+                href="index.html"
+                is-add="false"
+                is-page="true"
+                onclick="ytCustomLinkNavigation()"
+                target="_top"
+        >
+            <i class="fas fa-home text-xl mb-1"> </i>
+            <span class="text-xs"> 首页 </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-gray-500"
+                custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952655355607515136&appName=老友社区副本"
+                href="apply.html"
+                is-add="false"
+                is-page="true"
+                onclick="ytCustomLinkNavigation()"
+                target="_top"
+        >
+            <i class="fas fa-check-square text-xl mb-1"> </i>
+            <span class="text-xs"> 报名 </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-primary"
+                href="explore.html"
+        >
+            <i class="fas fa-compass text-xl mb-1"> </i>
+            <span class="text-xs"> 发现 </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-gray-500"
+                custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952668560933257216&appName=老友社区副本"
+                href="message.html"
+                is-add="false"
+                is-page="true"
+                onclick="ytCustomLinkNavigation()"
+                target="_top"
+        >
+            <i class="fas fa-comment-alt text-xl mb-1"> </i>
+            <span
+                    class="text-xs"
+                    target="_top"
+                    href="javascript:void(0);"
+                    is-page="true"
+                    is-add="false"
+                    custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952668560933257216&appName=老友社区副本"
+                    onclick="ytCustomLinkNavigation()"
+            >
+            消息
+          </span>
+        </a>
+        <a
+                class="flex flex-col items-center text-gray-500"
+                custom-href="w=393&h=852&appuuid=1952765232510140416&version=1&pageType=app&uuid=1952669856096583680&appName=老友社区副本"
+                href="myself.html"
+                is-add="false"
+                is-page="true"
+                onclick="ytCustomLinkNavigation()"
+                target="_top"
+        >
+            <i class="fas fa-user text-xl mb-1"> </i>
+            <span class="text-xs"> 我的 </span>
+        </a>
+    </div>
+</nav>
+<script>
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function () {
+        // 分类切换功能
+        var categoryBtns = document.querySelectorAll('.category-btn');
+        var contentSections = document.querySelectorAll('.content-section');
+        categoryBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var category = btn.textContent.trim();
+
+                // 更新按钮样式
+                categoryBtns.forEach(function (b) {
+                    b.classList.remove('active', 'text-primary', 'border-primary');
+                    b.classList.add('text-white/80');
+                });
+                btn.classList.add('active', 'text-primary', 'border-primary');
+                btn.classList.remove('text-white/80');
+
+                // 显示对应内容区域
+                contentSections.forEach(function (section) {
+                    section.classList.add('hidden');
+                    section.classList.remove('active');
+                });
+                switch (category) {
+                    case '推荐':
+                        document.getElementById('recommendSection').classList.remove('hidden');
+                        document.getElementById('recommendSection').classList.add('active');
+                        break;
+                    case '相亲':
+                        document.getElementById('datingSection').classList.remove('hidden');
+                        document.getElementById('datingSection').classList.add('active');
+                        break;
+                    case '兴趣课堂':
+                        document.getElementById('interestSection').classList.remove('hidden');
+                        document.getElementById('interestSection').classList.add('active');
+                        break;
+                    case '附近':
+                        document.getElementById('nearbySection').classList.remove('hidden');
+                        document.getElementById('nearbySection').classList.add('active');
+                        break;
+                    case '关注的人':
+                        document.getElementById('followingSection').classList.remove('hidden');
+                        document.getElementById('followingSection').classList.add('active');
+                        break;
+                    case '健康养生':
+                        document.getElementById('healthSection').classList.remove('hidden');
+                        document.getElementById('healthSection').classList.add('active');
+                        break;
+                    case '广场舞':
+                        document.getElementById('squareDanceSection').classList.remove('hidden');
+                        document.getElementById('squareDanceSection').classList.add('active');
+                        break;
+                }
+            });
+        });
+
+        // 视频播放按钮功能
+        var playBtn = document.querySelector('.play-btn');
+        if (playBtn) {
+            playBtn.addEventListener('click', function () {
+                // 这里添加视频播放逻辑
+                var icon = playBtn.querySelector('i');
+                if (icon.classList.contains('fa-play')) {
+                    icon.classList.remove('fa-play');
+                    icon.classList.add('fa-pause');
+                    // 模拟视频播放，隐藏覆盖层
+                    playBtn.parentElement.classList.add('opacity-0');
+                    setTimeout(function () {
+                        playBtn.parentElement.classList.add('hidden');
+                    }, 300);
+                } else {
+                    icon.classList.remove('fa-pause');
+                    icon.classList.add('fa-play');
+                    // 显示覆盖层
+                    playBtn.parentElement.classList.remove('hidden');
+                    setTimeout(function () {
+                        playBtn.parentElement.classList.remove('opacity-0');
+                    }, 10);
+                }
+            });
+        }
+
+        // 视频卡片上下滑动切换功能
+        var videoFeed = document.querySelector('.video-feed');
+        if (videoFeed) {
+            // 打开模态框
+            var openProfileModal = function openProfileModal(id) {
+                var profile = datingProfiles.find(function (p) {
+                    return p.id === id;
+                });
+                if (!profile) return;
+                document.getElementById('modalHeaderImage').src = profile.image;
+                document.getElementById('modalName').textContent = profile.name;
+                document.getElementById('modalAge').textContent = profile.age;
+                document.getElementById('modalLocation').textContent = profile.location;
+                document.getElementById('modalOccupation').textContent = profile.occupation;
+                document.getElementById('modalIntroduction').textContent = profile.introduction;
+                document.getElementById('modalRequirements').textContent = profile.requirements;
+
+                // 更新兴趣爱好
+                var interestsContainer = document.getElementById('modalInterests');
+                interestsContainer.innerHTML = '';
+                profile.interests.forEach(function (interest) {
+                    var span = document.createElement('span');
+                    span.className = 'text-xs px-2 py-1 bg-white/10 rounded-full';
+                    span.textContent = interest;
+                    interestsContainer.appendChild(span);
+                });
+
+                // 显示模态框
+                profileModal.classList.remove('opacity-0', 'pointer-events-none');
+                profileModal.querySelector('div').classList.remove('scale-95');
+                profileModal.querySelector('div').classList.add('scale-100');
+                document.body.style.overflow = 'hidden';
+            }; // 关闭模态框
+            var closeProfileModal = function closeProfileModal() {
+                profileModal.classList.add('opacity-0', 'pointer-events-none');
+                profileModal.querySelector('div').classList.remove('scale-100');
+                profileModal.querySelector('div').classList.add('scale-95');
+                document.body.style.overflow = '';
+            }; // 绑定查看详情按钮事件
+            var startY;
+            var endY;
+            var isDragging = false;
+            videoFeed.addEventListener('touchstart', function (e) {
+                startY = e.touches[0].clientY;
+                isDragging = true;
+            });
+
+            // 相亲详情模态框
+            var profileModal = document.createElement('div');
+            profileModal.className = 'fixed inset-0 z-50 flex items-center justify-center bg-black/70 opacity-0 pointer-events-none transition-opacity duration-300';
+            profileModal.innerHTML = "\n  <div class=\"bg-tertiary rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto transform scale-95 transition-transform duration-300\" data-ytId=\"id-gm5p6\" data-ytId=\"id-ymr3m\" data-ytId=\"id-8xqiv\" data-ytId=\"id-awbjv\" data-ytId=\"id-1ymzg\" data-ytId=\"id-rm6bl\" data-ytId=\"id-hccdl\" data-ytId=\"id-4sgxb\" data-ytId=\"id-guvty\" data-ytId=\"id-4ucfu\" data-ytId=\"id-omxl8\" data-ytId=\"id-7nexp\" data-ytId=\"id-favzf\" data-ytId=\"id-kw5d6\" data-ytId=\"id-0qcs1\" data-ytId=\"id-cad0n\" data-ytId=\"id-eyp64\">\n    <div class=\"relative\" data-ytId=\"id-18m8s\" data-ytId=\"id-inwf3\" data-ytId=\"id-cw6o5\" data-ytId=\"id-x7zhk\" data-ytId=\"id-qlxsr\" data-ytId=\"id-8hqvm\" data-ytId=\"id-8tqrt\" data-ytId=\"id-hs9nj\" data-ytId=\"id-3gz8v\" data-ytId=\"id-s99xo\" data-ytId=\"id-wzt9q\" data-ytId=\"id-gqaw3\" data-ytId=\"id-p9phy\" data-ytId=\"id-lty12\" data-ytId=\"id-z86bs\" data-ytId=\"id-lz2ji\" data-ytId=\"id-2409j\">\n      <img id=\"modalHeaderImage\" alt=\"\u4E2A\u4EBA\u7167\u7247\" class=\"w-full h-48 object-cover rounded-t-2xl\"/>\n      <button id=\"closeModalBtn\" class=\"absolute top-3 right-3 btn-small bg-black/50 hover:bg-black/70 transition-all duration-300\" data-ytId=\"id-qowtq\" data-ytId=\"id-6i5h5\" data-ytId=\"id-ouacd\" data-ytId=\"id-1p03p\" data-ytId=\"id-uv0ev\" data-ytId=\"id-uka0c\" data-ytId=\"id-x5itx\" data-ytId=\"id-5clsm\" data-ytId=\"id-iq4i6\" data-ytId=\"id-udmbt\" data-ytId=\"id-dfxxe\" data-ytId=\"id-6mo3c\" data-ytId=\"id-8nq3f\" data-ytId=\"id-jlsks\" data-ytId=\"id-l2dce\" data-ytId=\"id-7632u\" data-ytId=\"id-8bh8f\">\n        <i class=\"fas fa-times text-xl\" data-ytId=\"id-rv597\" data-ytId=\"id-i3i1j\" data-ytId=\"id-slml2\" data-ytId=\"id-ulnpr\" data-ytId=\"id-odliy\" data-ytId=\"id-9mwh7\" data-ytId=\"id-vzdy9\" data-ytId=\"id-3n54c\" data-ytId=\"id-glgf3\" data-ytId=\"id-9rflr\" data-ytId=\"id-ve5po\" data-ytId=\"id-fegpp\" data-ytId=\"id-82nu0\" data-ytId=\"id-ufmau\" data-ytId=\"id-sau5s\" data-ytId=\"id-qzrc9\" data-ytId=\"id-op1jv\"></i>\n      </button>\n    </div>\n    <div class=\"p-5\" data-ytId=\"id-ycv6h\" data-ytId=\"id-ty9um\" data-ytId=\"id-x2ock\" data-ytId=\"id-kuyxd\" data-ytId=\"id-0ewzh\" data-ytId=\"id-p8o6v\" data-ytId=\"id-q8fsg\" data-ytId=\"id-4o4y7\" data-ytId=\"id-pfemb\" data-ytId=\"id-n6v4s\" data-ytId=\"id-fw91f\" data-ytId=\"id-9dbg2\" data-ytId=\"id-w0vy6\" data-ytId=\"id-esmdz\" data-ytId=\"id-yyttz\" data-ytId=\"id-8rdtc\" data-ytId=\"id-retu5\">\n      <div class=\"text-center mb-4\" data-ytId=\"id-yvv4o\" data-ytId=\"id-gb2zs\" data-ytId=\"id-gym47\" data-ytId=\"id-gqrhx\" data-ytId=\"id-vkfx8\" data-ytId=\"id-s1ghe\" data-ytId=\"id-25yzf\" data-ytId=\"id-imgk6\" data-ytId=\"id-qyb81\" data-ytId=\"id-zjlc8\" data-ytId=\"id-d2rty\" data-ytId=\"id-m9gz2\" data-ytId=\"id-vwhjf\" data-ytId=\"id-szmue\" data-ytId=\"id-mxzx3\" data-ytId=\"id-t6whe\" data-ytId=\"id-02plu\">\n        <h3 id=\"modalName\" class=\"text-2xl font-bold\" data-ytId=\"id-qjec2\" data-ytId=\"id-idbob\" data-ytId=\"id-4khzl\" data-ytId=\"id-uaywj\" data-ytId=\"id-eb2fl\" data-ytId=\"id-cxn0o\" data-ytId=\"id-qslss\" data-ytId=\"id-hs7rz\" data-ytId=\"id-tpopr\" data-ytId=\"id-5hwbr\" data-ytId=\"id-qqpxj\" data-ytId=\"id-4zgl6\" data-ytId=\"id-1igwt\" data-ytId=\"id-tkssq\" data-ytId=\"id-0oucd\" data-ytId=\"id-lnrda\" data-ytId=\"id-542a1\">\u674E\u963F\u59E8</h3>\n        <div class=\"flex justify-center space-x-3 mt-1\" data-ytId=\"id-3r7m4\" data-ytId=\"id-1ngxb\" data-ytId=\"id-fv9xa\" data-ytId=\"id-p2tra\" data-ytId=\"id-fljd7\" data-ytId=\"id-kmo1z\" data-ytId=\"id-o8s36\" data-ytId=\"id-esw7n\" data-ytId=\"id-plap9\" data-ytId=\"id-hk2qn\" data-ytId=\"id-06tnr\" data-ytId=\"id-9k04z\" data-ytId=\"id-3m21p\" data-ytId=\"id-7ffsj\" data-ytId=\"id-qamkx\" data-ytId=\"id-jnkw9\" data-ytId=\"id-uwvhx\">\n          <span class=\"px-2 py-1 bg-white/20 rounded-full text-sm\" id=\"modalAge\" data-ytId=\"id-cwff2\" data-ytId=\"id-13vym\" data-ytId=\"id-y5hz4\" data-ytId=\"id-4nqtu\" data-ytId=\"id-auw1m\" data-ytId=\"id-26noj\" data-ytId=\"id-n1wl8\" data-ytId=\"id-64eyu\" data-ytId=\"id-5of19\" data-ytId=\"id-093ss\" data-ytId=\"id-ut10k\" data-ytId=\"id-c3znx\" data-ytId=\"id-8x9sg\" data-ytId=\"id-hry9y\" data-ytId=\"id-ly4ps\" data-ytId=\"id-3974p\" data-ytId=\"id-ynml3\">65\u5C81</span>\n          <span class=\"px-2 py-1 bg-white/20 rounded-full text-sm\" id=\"modalLocation\" data-ytId=\"id-thfh3\" data-ytId=\"id-nzzp1\" data-ytId=\"id-2afj7\" data-ytId=\"id-m9rfy\" data-ytId=\"id-txne0\" data-ytId=\"id-ke7a0\" data-ytId=\"id-ueoma\" data-ytId=\"id-z57jc\" data-ytId=\"id-6u04b\" data-ytId=\"id-i8wj7\" data-ytId=\"id-tqu3o\" data-ytId=\"id-l6gum\" data-ytId=\"id-qqfyr\" data-ytId=\"id-r9hx6\" data-ytId=\"id-y9z1i\" data-ytId=\"id-zdaah\" data-ytId=\"id-a54vl\">\u5317\u4EAC</span>\n          <span class=\"px-2 py-1 bg-green-500/80 rounded-full text-sm\" id=\"modalOccupation\" data-ytId=\"id-ikp8j\" data-ytId=\"id-58zvd\" data-ytId=\"id-0hgao\" data-ytId=\"id-wiglr\" data-ytId=\"id-urjws\" data-ytId=\"id-2lvw5\" data-ytId=\"id-lar2k\" data-ytId=\"id-fbri2\" data-ytId=\"id-ldxcx\" data-ytId=\"id-jnkyp\" data-ytId=\"id-6qoj5\" data-ytId=\"id-o1380\" data-ytId=\"id-3il0c\" data-ytId=\"id-asps6\" data-ytId=\"id-fr5e6\" data-ytId=\"id-anuht\" data-ytId=\"id-5stpr\">\u9000\u4F11\u6559\u5E08</span>\n        </div>\n      </div>\n      \n      <div class=\"mb-4\" data-ytId=\"id-02b3u\" data-ytId=\"id-f9a82\" data-ytId=\"id-qjt7v\" data-ytId=\"id-ubc5k\" data-ytId=\"id-ew4tk\" data-ytId=\"id-3j650\" data-ytId=\"id-biot6\" data-ytId=\"id-1aq17\" data-ytId=\"id-469ek\" data-ytId=\"id-4yaju\" data-ytId=\"id-k8m64\" data-ytId=\"id-mvi4n\" data-ytId=\"id-ulzg3\" data-ytId=\"id-4kkb3\" data-ytId=\"id-bas6y\" data-ytId=\"id-4ot29\" data-ytId=\"id-k1vws\">\n        <h4 class=\"font-bold text-lg mb-2 flex items-center\" data-ytId=\"id-rc81i\" data-ytId=\"id-cjsz8\" data-ytId=\"id-r5vqa\" data-ytId=\"id-widyr\" data-ytId=\"id-9m2r2\" data-ytId=\"id-8f09y\" data-ytId=\"id-qo0w6\" data-ytId=\"id-vbhat\" data-ytId=\"id-d63tz\" data-ytId=\"id-btle3\" data-ytId=\"id-jyxgw\" data-ytId=\"id-frlik\" data-ytId=\"id-qryvy\" data-ytId=\"id-2nuzf\" data-ytId=\"id-xkzqk\" data-ytId=\"id-rlo1t\" data-ytId=\"id-bgeu0\">\n          <i class=\"fas fa-user text-primary mr-2\" data-ytId=\"id-hbbbv\" data-ytId=\"id-38w9w\" data-ytId=\"id-jg4v7\" data-ytId=\"id-drzdg\" data-ytId=\"id-jdyxy\" data-ytId=\"id-a0ori\" data-ytId=\"id-gsa2e\" data-ytId=\"id-xfco7\" data-ytId=\"id-wfc6b\" data-ytId=\"id-19n60\" data-ytId=\"id-ol3pp\" data-ytId=\"id-j1nlb\" data-ytId=\"id-hwjky\" data-ytId=\"id-xo0v8\" data-ytId=\"id-zfqzu\" data-ytId=\"id-k1x5j\" data-ytId=\"id-ta6db\"></i>\u4E2A\u4EBA\u7B80\u4ECB\n        </h4>\n        <p id=\"modalIntroduction\" class=\"text-white/80 text-sm\" data-ytId=\"id-eyldf\" data-ytId=\"id-kkaqa\" data-ytId=\"id-o9g1v\" data-ytId=\"id-b2shv\" data-ytId=\"id-lq258\" data-ytId=\"id-2177h\" data-ytId=\"id-geyod\" data-ytId=\"id-t9c7v\" data-ytId=\"id-au0em\" data-ytId=\"id-7qpuw\" data-ytId=\"id-t2fbd\" data-ytId=\"id-cgk2e\" data-ytId=\"id-l5zfo\" data-ytId=\"id-9h9ns\" data-ytId=\"id-rx6y3\" data-ytId=\"id-k31bf\" data-ytId=\"id-xyr9m\">\n          \u6027\u683C\u5F00\u6717\uFF0C\u559C\u6B22\u6587\u5B66\u548C\u65C5\u6E38\uFF0C\u64C5\u957F\u70F9\u996A\uFF0C\u5E0C\u671B\u627E\u5230\u4E00\u4F4D\u5174\u8DA3\u76F8\u6295\u7684\u4F34\u4FA3\u5171\u5EA6\u665A\u5E74\u3002\n        </p>\n      </div>\n      \n      <div class=\"mb-4\" data-ytId=\"id-oekyz\" data-ytId=\"id-3af67\" data-ytId=\"id-6hl5r\" data-ytId=\"id-jnkuf\" data-ytId=\"id-lygpk\" data-ytId=\"id-6cq30\" data-ytId=\"id-1xcqd\" data-ytId=\"id-nk73y\" data-ytId=\"id-c3x2e\" data-ytId=\"id-bkclv\" data-ytId=\"id-6hkpv\" data-ytId=\"id-v39uv\" data-ytId=\"id-6sl4h\" data-ytId=\"id-aathe\" data-ytId=\"id-frbwj\" data-ytId=\"id-1kdmm\" data-ytId=\"id-2bnw4\">\n        <h4 class=\"font-bold text-lg mb-2 flex items-center\" data-ytId=\"id-vou8t\" data-ytId=\"id-5fda3\" data-ytId=\"id-8i9n1\" data-ytId=\"id-6kr6g\" data-ytId=\"id-gukdq\" data-ytId=\"id-bfhj6\" data-ytId=\"id-hwqon\" data-ytId=\"id-qdsu3\" data-ytId=\"id-krtdl\" data-ytId=\"id-44qop\" data-ytId=\"id-lgptl\" data-ytId=\"id-4tyof\" data-ytId=\"id-ygb3g\" data-ytId=\"id-eq6y2\" data-ytId=\"id-9ep59\" data-ytId=\"id-lobvg\" data-ytId=\"id-63yz3\">\n          <i class=\"fas fa-heart text-primary mr-2\" data-ytId=\"id-dcpf2\" data-ytId=\"id-s0u38\" data-ytId=\"id-rajnk\" data-ytId=\"id-1p5oq\" data-ytId=\"id-bvcit\" data-ytId=\"id-2zdtg\" data-ytId=\"id-zj4xv\" data-ytId=\"id-1yvpf\" data-ytId=\"id-c9ijo\" data-ytId=\"id-yb0yt\" data-ytId=\"id-jhetp\" data-ytId=\"id-a1fhu\" data-ytId=\"id-utikf\" data-ytId=\"id-xh82v\" data-ytId=\"id-2rbqe\" data-ytId=\"id-fw94n\" data-ytId=\"id-vzwdx\"></i>\u5174\u8DA3\u7231\u597D\n        </h4>\n        <div id=\"modalInterests\" class=\"flex flex-wrap space-x-2\" data-ytId=\"id-mvz0g\" data-ytId=\"id-zqm94\" data-ytId=\"id-ui5ru\" data-ytId=\"id-eu8hr\" data-ytId=\"id-aidck\" data-ytId=\"id-suj4c\" data-ytId=\"id-d4341\" data-ytId=\"id-m0jap\" data-ytId=\"id-oyng9\" data-ytId=\"id-cd3py\" data-ytId=\"id-yhp77\" data-ytId=\"id-pmk9w\" data-ytId=\"id-ovf8z\" data-ytId=\"id-8wn38\" data-ytId=\"id-7uj4g\" data-ytId=\"id-mdllu\" data-ytId=\"id-jynci\">\n          <span class=\"text-xs px-2 py-1 bg-white/10 rounded-full\" data-ytId=\"id-6kyox\" data-ytId=\"id-veulr\" data-ytId=\"id-vijol\" data-ytId=\"id-4aac8\" data-ytId=\"id-o7nqg\" data-ytId=\"id-zmq3m\" data-ytId=\"id-v1u52\" data-ytId=\"id-2d8fo\" data-ytId=\"id-x5okg\" data-ytId=\"id-88cwp\" data-ytId=\"id-j516r\" data-ytId=\"id-6v5gm\" data-ytId=\"id-aw0cn\" data-ytId=\"id-zzfke\" data-ytId=\"id-sqynt\" data-ytId=\"id-cllzs\" data-ytId=\"id-xyl77\">\u9605\u8BFB</span>\n          <span class=\"text-xs px-2 py-1 bg-white/10 rounded-full\" data-ytId=\"id-0416l\" data-ytId=\"id-bzvbk\" data-ytId=\"id-vogvt\" data-ytId=\"id-f5b7p\" data-ytId=\"id-6xgne\" data-ytId=\"id-26zyi\" data-ytId=\"id-ps2zg\" data-ytId=\"id-o7afs\" data-ytId=\"id-7j0nf\" data-ytId=\"id-s3u0r\" data-ytId=\"id-aron4\" data-ytId=\"id-ol16i\" data-ytId=\"id-l7d8p\" data-ytId=\"id-gg1qy\" data-ytId=\"id-9icny\" data-ytId=\"id-qoqit\" data-ytId=\"id-t4zpv\">\u65C5\u6E38</span>\n          <span class=\"text-xs px-2 py-1 bg-white/10 rounded-full\" data-ytId=\"id-ct9vy\" data-ytId=\"id-yb6xt\" data-ytId=\"id-1gkdu\" data-ytId=\"id-74flo\" data-ytId=\"id-1xvm9\" data-ytId=\"id-ia7fe\" data-ytId=\"id-pyiq6\" data-ytId=\"id-89x9r\" data-ytId=\"id-rvr3f\" data-ytId=\"id-mm155\" data-ytId=\"id-rnu88\" data-ytId=\"id-okwp4\" data-ytId=\"id-qn961\" data-ytId=\"id-ps0l5\" data-ytId=\"id-i85fi\" data-ytId=\"id-mfsg2\" data-ytId=\"id-wnefa\">\u70F9\u996A</span>\n        </div>\n      </div>\n      \n      <div class=\"mb-4\" data-ytId=\"id-gjyxd\" data-ytId=\"id-seryp\" data-ytId=\"id-p6r9w\" data-ytId=\"id-cj4it\" data-ytId=\"id-uii4h\" data-ytId=\"id-0c9u1\" data-ytId=\"id-3wj78\" data-ytId=\"id-5kqrd\" data-ytId=\"id-o1yvo\" data-ytId=\"id-5zv1l\" data-ytId=\"id-06t82\" data-ytId=\"id-c4ko0\" data-ytId=\"id-zgfey\" data-ytId=\"id-rriam\" data-ytId=\"id-2w7ti\" data-ytId=\"id-p9t0e\" data-ytId=\"id-qg7dz\">\n        <h4 class=\"font-bold text-lg mb-2 flex items-center\" data-ytId=\"id-2h2t2\" data-ytId=\"id-m1idt\" data-ytId=\"id-h7zpm\" data-ytId=\"id-k8eup\" data-ytId=\"id-4fzof\" data-ytId=\"id-ab3qt\" data-ytId=\"id-cqs47\" data-ytId=\"id-x1cav\" data-ytId=\"id-86jt7\" data-ytId=\"id-v5cak\" data-ytId=\"id-mqxg4\" data-ytId=\"id-x16g2\" data-ytId=\"id-tfth2\" data-ytId=\"id-rtm21\" data-ytId=\"id-tei7a\" data-ytId=\"id-l8ubj\" data-ytId=\"id-3bra3\">\n          <i class=\"fas fa-star text-primary mr-2\" data-ytId=\"id-i8z33\" data-ytId=\"id-kf2vu\" data-ytId=\"id-63fzy\" data-ytId=\"id-xrisl\" data-ytId=\"id-yye8a\" data-ytId=\"id-iux1c\" data-ytId=\"id-2xtnd\" data-ytId=\"id-iuqpz\" data-ytId=\"id-v1uyg\" data-ytId=\"id-3n7br\" data-ytId=\"id-sp8ye\" data-ytId=\"id-mako6\" data-ytId=\"id-blcu5\" data-ytId=\"id-uug0c\" data-ytId=\"id-n09ys\" data-ytId=\"id-8wqfg\" data-ytId=\"id-bzuog\"></i>\u62E9\u5076\u8981\u6C42\n        </h4>\n        <p id=\"modalRequirements\" class=\"text-white/80 text-sm\" data-ytId=\"id-5xvod\" data-ytId=\"id-stv50\" data-ytId=\"id-c9ksg\" data-ytId=\"id-qlrl5\" data-ytId=\"id-htbs5\" data-ytId=\"id-5mytv\" data-ytId=\"id-ufg9k\" data-ytId=\"id-8n8q7\" data-ytId=\"id-3jmwk\" data-ytId=\"id-p9et0\" data-ytId=\"id-97qky\" data-ytId=\"id-mspam\" data-ytId=\"id-vxbrh\" data-ytId=\"id-yjcmm\" data-ytId=\"id-0ds3f\" data-ytId=\"id-v7cdw\" data-ytId=\"id-hjdhy\">\n          \u5E0C\u671B\u5BF9\u65B9\u8EAB\u4F53\u5065\u5EB7\uFF0C\u6027\u683C\u5F00\u6717\uFF0C\u6709\u7A33\u5B9A\u7684\u9000\u4F11\u6536\u5165\uFF0C\u80FD\u591F\u4E00\u8D77\u65C5\u6E38\u548C\u53C2\u52A0\u6587\u5316\u6D3B\u52A8\u3002\n        </p>\n      </div>\n      \n      <div class=\"mt-6 flex space-x-3\" data-ytId=\"id-vb9kg\" data-ytId=\"id-vm6ro\" data-ytId=\"id-1lf1f\" data-ytId=\"id-iubov\" data-ytId=\"id-9h2ji\" data-ytId=\"id-9le82\" data-ytId=\"id-sr3f1\" data-ytId=\"id-5oop3\" data-ytId=\"id-5fo3s\" data-ytId=\"id-akh14\" data-ytId=\"id-ixrmy\" data-ytId=\"id-avh5b\" data-ytId=\"id-ukmp3\" data-ytId=\"id-evhvl\" data-ytId=\"id-t5fpo\" data-ytId=\"id-h51il\" data-ytId=\"id-vq937\">\n        <button class=\"flex-1 py-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all duration-300 font-medium\" data-ytId=\"id-mxity\" data-ytId=\"id-851ur\" data-ytId=\"id-ss5lh\" data-ytId=\"id-taa1e\" data-ytId=\"id-xnc1t\" data-ytId=\"id-w5lm7\" data-ytId=\"id-2tpph\" data-ytId=\"id-35d9x\" data-ytId=\"id-6ky8y\" data-ytId=\"id-awns3\" data-ytId=\"id-frq0e\" data-ytId=\"id-ytg78\" data-ytId=\"id-uk7xs\" data-ytId=\"id-hwg1k\" data-ytId=\"id-geu76\" data-ytId=\"id-ikqlr\" data-ytId=\"id-espuh\">\n          <i class=\"fas fa-comment mr-2\" data-ytId=\"id-t1n6s\" data-ytId=\"id-em0ct\" data-ytId=\"id-rpgo0\" data-ytId=\"id-20r3n\" data-ytId=\"id-t9wrt\" data-ytId=\"id-fo2e2\" data-ytId=\"id-dug3x\" data-ytId=\"id-teh16\" data-ytId=\"id-hcda5\" data-ytId=\"id-dar3h\" data-ytId=\"id-ed0y2\" data-ytId=\"id-yqt3l\" data-ytId=\"id-1e26z\" data-ytId=\"id-zd9mk\" data-ytId=\"id-cggpi\" data-ytId=\"id-6rd1o\" data-ytId=\"id-i868c\"></i>\u53D1\u6D88\u606F\n        </button>\n        <button class=\"flex-1 py-3 bg-primary hover:bg-primary/90 rounded-xl transition-all duration-300 font-medium\" data-ytId=\"id-cg442\" data-ytId=\"id-ktjp6\" data-ytId=\"id-swxzb\" data-ytId=\"id-7klwg\" data-ytId=\"id-zpxp1\" data-ytId=\"id-uc89t\" data-ytId=\"id-tdz6e\" data-ytId=\"id-867j1\" data-ytId=\"id-oxo34\" data-ytId=\"id-hln13\" data-ytId=\"id-3q6iq\" data-ytId=\"id-vh4fa\" data-ytId=\"id-ovym4\" data-ytId=\"id-yt0mv\" data-ytId=\"id-19zn1\" data-ytId=\"id-yfe7p\" data-ytId=\"id-lv3hm\">\n          <i class=\"fas fa-heart mr-2\" data-ytId=\"id-79x9l\" data-ytId=\"id-ph3tt\" data-ytId=\"id-1xlqc\" data-ytId=\"id-sgc93\" data-ytId=\"id-yu97y\" data-ytId=\"id-4xa32\" data-ytId=\"id-j3oo1\" data-ytId=\"id-bts4b\" data-ytId=\"id-byr1y\" data-ytId=\"id-ptlt5\" data-ytId=\"id-1esqj\" data-ytId=\"id-qmfgh\" data-ytId=\"id-igbxx\" data-ytId=\"id-lr1ob\" data-ytId=\"id-fyedn\" data-ytId=\"id-6me9g\" data-ytId=\"id-5rup2\"></i>\u559C\u6B22\n        </button>\n      </div>\n    </div>\n  </div>\n";
+            document.body.appendChild(profileModal);
+
+            // 相亲用户数据
+            var datingProfiles = [{
+                id: 1,
+                name: "李阿姨",
+                age: "65岁",
+                location: "北京",
+                occupation: "退休教师",
+                introduction: "性格开朗，喜欢文学和旅游，擅长烹饪，希望找到一位兴趣相投的伴侣共度晚年。",
+                interests: ["阅读", "旅游", "烹饪"],
+                requirements: "希望对方身体健康，性格开朗，有稳定的退休收入，能够一起旅游和参加文化活动。",
+                image: "https://design.gemcoder.com/staticResource/echoAiSystemImages/0812de7a112b632939a6018369e1b7e0.png"
+            }, {
+                id: 2,
+                name: "王大爷",
+                age: "68岁",
+                location: "上海",
+                occupation: "退休医生",
+                introduction: "身体健康，喜欢书法和下棋，每天坚持散步，希望找到一位性格温和的伴侣。",
+                interests: ["书法", "下棋", "散步"],
+                requirements: "希望对方身体健康，有共同爱好，能够一起参加文化活动和户外运动。",
+                image: "https://design.gemcoder.com/staticResource/echoAiSystemImages/d8110b00d6c5740b6b9b356ac8574684.png"
+            }, {
+                id: 3,
+                name: "张阿姨",
+                age: "62岁",
+                location: "广州",
+                occupation: "退休会计",
+                introduction: "热爱生活，喜欢跳广场舞和烹饪，性格温和，希望找到一位身体健康、有共同爱好的伴侣。",
+                interests: ["广场舞", "烹饪", "旅游"],
+                requirements: "希望对方性格开朗，身体健康，能够一起参加户外活动和文化交流。",
+                image: "https://design.gemcoder.com/staticResource/echoAiSystemImages/b7ff7a207dc73da2df8f82e14e241da8.png"
+            }, {
+                id: 4,
+                name: "赵大爷",
+                age: "70岁",
+                location: "成都",
+                occupation: "退休工程师",
+                introduction: "身体健康，每天坚持晨练，喜欢钓鱼和下棋，性格开朗，希望找到一位能一起散步聊天的伴侣。",
+                interests: ["钓鱼", "下棋", "晨练"],
+                requirements: "希望对方身体健康，性格温和，能够一起参加户外活动和文化交流。",
+                image: "https://design.gemcoder.com/staticResource/echoAiSystemImages/ae732539104e0b57f14c6178c6ebb40e.png"
+            }];
+            document.addEventListener('click', function (e) {
+                if (e.target.closest('.view-profile-btn')) {
+                    var id = parseInt(e.target.closest('.view-profile-btn').dataset.id);
+                    openProfileModal(id);
+                }
+
+                // 关闭模态框
+                if (e.target.closest('#closeModalBtn') || e.target === profileModal) {
+                    closeProfileModal();
+                }
+
+                // 视频通话按钮
+                if (e.target.closest('.video-call-btn')) {
+                    var _id = parseInt(e.target.closest('.video-call-btn').dataset.id);
+                    var profile = datingProfiles.find(function (p) {
+                        return p.id === _id;
+                    });
+                    alert("\u6B63\u5728\u4E0E".concat(profile.name, "\u89C6\u9891\u901A\u8BDD..."));
+                }
+            });
+            videoFeed.addEventListener('touchmove', function (e) {
+                if (!isDragging) return;
+                // 防止页面滚动
+                e.preventDefault();
+            }, {
+                passive: false
+            });
+            videoFeed.addEventListener('touchend', function (e) {
+                if (!isDragging) return;
+                endY = e.changedTouches[0].clientY;
+                var diffY = endY - startY;
+
+                // 判断滑动方向
+                if (Math.abs(diffY) > 50) {
+                    if (diffY > 0) {
+                        // 向上滑动，显示下一个视频
+                        console.log('向上滑动，下一个视频');
+                        // 这里添加加载下一个视频的逻辑
+                    } else {
+                        // 向下滑动，显示上一个视频
+                        console.log('向下滑动，上一个视频');
+                        // 这里添加加载上一个视频的逻辑
+                    }
+                }
+                isDragging = false;
+            });
+        }
+
+        // 点赞、评论等交互功能
+        var actionBtns = document.querySelectorAll('.action-btn');
+        actionBtns.forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                var icon = btn.querySelector('i');
+                if (icon && icon.classList.contains('fa-heart')) {
+                    // 点赞功能
+                    var countElem = btn.querySelector('span');
+                    var count = parseInt(countElem.textContent);
+                    if (icon.parentElement.classList.contains('bg-primary')) {
+                        // 取消点赞
+                        icon.parentElement.classList.remove('bg-primary');
+                        icon.parentElement.classList.add('bg-black/50');
+                        countElem.textContent = (count - 1).toLocaleString();
+                    } else {
+                        // 点赞
+                        icon.parentElement.classList.remove('bg-black/50');
+                        icon.parentElement.classList.add('bg-primary');
+                        countElem.textContent = (count + 1).toLocaleString();
+                    }
+                }
+            });
+        });
+        // 底部导航链接跳转处理
+        window.ytCustomLinkNavigation = function (element) {
+            var customHref = element.getAttribute('custom-href');
+            if (customHref) {
+                // 构建完整的URL
+                var baseUrl = window.location.origin + window.location.pathname;
+                var separator = baseUrl.includes('?') ? '&' : '?';
+                window.location.href = baseUrl + separator + customHref;
+            }
+        };
+    });
+</script>
+</body>
+</html>
