@@ -9,6 +9,7 @@
           href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css"
           rel="stylesheet"
   />
+  <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
   <script>
     tailwind.config = {
       theme: {
@@ -51,6 +52,20 @@
         transition-property: transform, opacity;
         transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
         transition-duration: 300ms;
+      }
+      .transition-transform-opacity {
+        transition-property: transform, opacity;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-duration: 300ms;
+      }
+      .bg-gradient-primary {
+        background: linear-gradient(135deg, #6A5ACD 0%, #8A79D8 100%);
+      }
+      .rank-item-animate {
+        transition: all 0.3s ease;
+      }
+      .rank-item-animate:hover {
+        transform: translateX(4px);
       }
     }
   </style>
@@ -504,6 +519,355 @@
           </div>
         </a>
       </div>
+
+      <!-- 社区排行榜 -->
+      <div
+              class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
+      >
+        <div
+                class="p-5 border-b border-gray-100 flex justify-between items-center"
+        >
+          <h3 class="text-lg font-bold text-dark flex items-center">
+            <i class="fas fa-trophy text-yellow-500 mr-2"> </i>
+            社区排行榜
+          </h3>
+          <div class="flex space-x-2">
+            <button
+                    class="rank-tab-btn active px-3 py-1 text-sm rounded-full bg-primary/10 text-primary"
+                    data-tab="weekly"
+            >
+              周榜
+            </button>
+            <button
+                    class="rank-tab-btn px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-600"
+                    data-tab="monthly"
+            >
+              月榜
+            </button>
+            <button
+                    class="rank-tab-btn px-3 py-1 text-sm rounded-full bg-gray-100 text-gray-600"
+                    data-tab="yearly"
+            >
+              年榜
+            </button>
+          </div>
+        </div>
+        <div class="rank-tab-content active" id="weekly-tab">
+          <div class="p-4">
+            <div class="mb-4 flex justify-between items-center">
+              <div class="text-sm text-gray-500">
+                我的排名:
+                <span class="text-primary font-medium"> #12 </span>
+              </div>
+              <button
+                      class="text-xs text-primary hover:text-primary/80 flex items-center"
+              >
+                <i class="fas fa-info-circle mr-1"> </i>
+                排行榜规则
+              </button>
+            </div>
+            <div class="space-y-3">
+              <!-- 前三名特殊样式 -->
+              <div
+                      class="flex items-center p-3 bg-gradient-to-r from-yellow-50 to-transparent rounded-xl border border-yellow-100 rank-item-animate"
+              >
+                <div
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-yellow-400 text-white font-bold text-lg mr-3 shadow-md z-10"
+                >
+                  1
+                </div>
+                <img
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/7cc798b90b6a7392f713529791110dd4.png"
+                        alt="用户头像"
+                        class="w-12 h-12 rounded-full object-cover border-2 border-yellow-300 mr-3"
+                />
+                <div class="flex-1">
+                  <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-bold text-dark">李奶奶</h4>
+                    <span
+                            class="text-xs bg-yellow-100 text-yellow-700 px-2 py-0.5 rounded-full"
+                    >
+                          活动达人
+                        </span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500"> 参与活动: 28次 </span>
+                    <span class="font-bold text-yellow-600"> 580积分 </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                      class="flex items-center p-3 bg-gradient-to-r from-gray-50 to-transparent rounded-xl border border-gray-100 rank-item-animate"
+              >
+                <div
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-300 text-white font-bold text-lg mr-3 shadow-md z-10"
+                >
+                  2
+                </div>
+                <img
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/1b91ec8bdc88f3c80e8022f812fb860d.png"
+                        alt="用户头像"
+                        class="w-12 h-12 rounded-full object-cover border-2 border-gray-300 mr-3"
+                />
+                <div class="flex-1">
+                  <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-bold text-dark">王爷爷</h4>
+                    <span
+                            class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded-full"
+                    >
+                          知识分享
+                        </span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500"> 参与活动: 24次 </span>
+                    <span class="font-bold text-gray-600"> 520积分 </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                      class="flex items-center p-3 bg-gradient-to-r from-orange-50 to-transparent rounded-xl border border-orange-100 rank-item-animate"
+              >
+                <div
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-orange-500 text-white font-bold text-lg mr-3 shadow-md z-10"
+                >
+                  3
+                </div>
+                <img
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/65650fe1d65c60ec33f06d96047a3e77.png"
+                        alt="用户头像"
+                        class="w-12 h-12 rounded-full object-cover border-2 border-orange-300 mr-3"
+                />
+                <div class="flex-1">
+                  <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-bold text-dark">赵奶奶</h4>
+                    <span
+                            class="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full"
+                    >
+                          热心助人
+                        </span>
+                  </div>
+                  <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500"> 参与活动: 20次 </span>
+                    <span class="font-bold text-orange-600"> 480积分 </span>
+                  </div>
+                </div>
+              </div>
+              <!-- 其他排名 -->
+              <div
+                      class="flex items-center p-3 hover:bg-gray-50 rounded-xl transition-colors rank-item-animate"
+              >
+                <div
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 font-bold mr-3"
+                >
+                  4
+                </div>
+                <img
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/5efa91bcb248ff5be62c1cf8440dfa47.png"
+                        alt="用户头像"
+                        class="w-10 h-10 rounded-full object-cover mr-3"
+                />
+                <div class="flex-1">
+                  <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-bold text-dark text-sm">陈爷爷</h4>
+                  </div>
+                  <div class="flex justify-between items-center text-xs">
+                    <span class="text-gray-500"> 参与活动: 18次 </span>
+                    <span class="font-bold text-gray-700"> 420积分 </span>
+                  </div>
+                </div>
+              </div>
+              <div
+                      class="flex items-center p-3 hover:bg-gray-50 rounded-xl transition-colors rank-item-animate"
+              >
+                <div
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 font-bold mr-3"
+                >
+                  5
+                </div>
+                <img
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/081e60fc49701988c146e4523dfbe74b.png"
+                        alt="用户头像"
+                        class="w-10 h-10 rounded-full object-cover mr-3"
+                />
+                <div class="flex-1">
+                  <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-bold text-dark text-sm">刘奶奶</h4>
+                  </div>
+                  <div class="flex justify-between items-center text-xs">
+                    <span class="text-gray-500"> 参与活动: 15次 </span>
+                    <span class="font-bold text-gray-700"> 380积分 </span>
+                  </div>
+                </div>
+              </div>
+              <!-- 我的排名 -->
+              <div
+                      class="flex items-center p-3 bg-primary/5 rounded-xl border border-primary/10 rank-item-animate"
+              >
+                <div
+                        class="w-8 h-8 flex items-center justify-center rounded-full bg-primary/10 text-primary font-bold mr-3"
+                >
+                  12
+                </div>
+                <img
+                        src="https://design.gemcoder.com/staticResource/echoAiSystemImages/093de3ed95061371f4c64031453e6a7c.png"
+                        alt="用户头像"
+                        class="w-10 h-10 rounded-full object-cover border-2 border-primary mr-3"
+                />
+                <div class="flex-1">
+                  <div class="flex justify-between items-center mb-1">
+                    <h4 class="font-bold text-primary text-sm">
+                      张大爷 (我)
+                    </h4>
+                  </div>
+                  <div class="flex justify-between items-center text-xs">
+                    <span class="text-gray-500"> 参与活动: 12次 </span>
+                    <span class="font-bold text-primary"> 280积分 </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <button
+                      class="w-full py-2 border border-gray-200 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors"
+              >
+                查看完整排行榜
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="rank-tab-content hidden" id="monthly-tab">
+          <div class="p-4 text-center py-10 text-gray-500">
+            <i class="fas fa-chart-line text-4xl mb-3 opacity-20"> </i>
+            <p>月榜数据加载中...</p>
+          </div>
+        </div>
+        <div class="rank-tab-content hidden" id="yearly-tab">
+          <div class="p-4 text-center py-10 text-gray-500">
+            <i class="fas fa-calendar-alt text-4xl mb-3 opacity-20"> </i>
+            <p>年榜数据加载中...</p>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- 活动参与统计 -->
+      <div
+              class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
+      >
+        <div class="p-5 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-dark flex items-center">
+            <i class="fas fa-chart-pie text-primary mr-2"> </i>
+            活动参与统计
+          </h3>
+        </div>
+        <div class="p-4">
+          <div id="activity-chart" class="w-full h-60"></div>
+        </div>
+      </div>
+      <!-- 增加用户粘性的功能设置 -->
+      <div
+              class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
+      >
+        <div class="p-5 border-b border-gray-100">
+          <h3 class="text-lg font-bold text-dark flex items-center">
+            <i class="fas fa-heart text-accent mr-2"> </i>
+            用户粘性设置
+          </h3>
+        </div>
+        <div class="divide-y divide-gray-100">
+          <div class="p-5 hover:bg-gray-50 transition-colors">
+            <div class="flex justify-between items-center mb-2">
+              <div>
+                <h4 class="font-medium text-dark">每日签到提醒</h4>
+                <p class="text-xs text-gray-500">
+                  开启后每天将收到签到提醒，连续签到可获得积分奖励
+                </p>
+              </div>
+              <label
+                      class="relative inline-flex items-center cursor-pointer"
+              >
+                <input type="checkbox" value class="sr-only peer" checked />
+                <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[&quot;&quot;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+                ></div>
+              </label>
+            </div>
+          </div>
+          <div class="p-5 hover:bg-gray-50 transition-colors">
+            <div class="flex justify-between items-center mb-2">
+              <div>
+                <h4 class="font-medium text-dark">兴趣活动推荐</h4>
+                <p class="text-xs text-gray-500">
+                  根据您的兴趣爱好，为您推荐相关活动
+                </p>
+              </div>
+              <label
+                      class="relative inline-flex items-center cursor-pointer"
+              >
+                <input type="checkbox" value class="sr-only peer" checked />
+                <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[&quot;&quot;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+                ></div>
+              </label>
+            </div>
+          </div>
+          <div class="p-5 hover:bg-gray-50 transition-colors">
+            <div class="flex justify-between items-center mb-2">
+              <div>
+                <h4 class="font-medium text-dark">好友动态通知</h4>
+                <p class="text-xs text-gray-500">
+                  收到好友参与活动、发表评论的通知
+                </p>
+              </div>
+              <label
+                      class="relative inline-flex items-center cursor-pointer"
+              >
+                <input type="checkbox" value class="sr-only peer" checked />
+                <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[&quot;&quot;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+                ></div>
+              </label>
+            </div>
+          </div>
+          <div class="p-5 hover:bg-gray-50 transition-colors">
+            <div class="flex justify-between items-center mb-2">
+              <div>
+                <h4 class="font-medium text-dark">积分兑换提醒</h4>
+                <p class="text-xs text-gray-500">
+                  当有新的积分兑换礼品时，及时通知您
+                </p>
+              </div>
+              <label
+                      class="relative inline-flex items-center cursor-pointer"
+              >
+                <input type="checkbox" value class="sr-only peer" />
+                <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[&quot;&quot;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+                ></div>
+              </label>
+            </div>
+          </div>
+          <div class="p-5 hover:bg-gray-50 transition-colors">
+            <div class="flex justify-between items-center mb-2">
+              <div>
+                <h4 class="font-medium text-dark">社区荣誉体系</h4>
+                <p class="text-xs text-gray-500">
+                  参与活动可获得社区荣誉徽章，展示您的活跃度
+                </p>
+              </div>
+              <label
+                      class="relative inline-flex items-center cursor-pointer"
+              >
+                <input type="checkbox" value class="sr-only peer" checked />
+                <div
+                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[&quot;&quot;] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"
+                ></div>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div
               class="bg-white rounded-2xl shadow-sm overflow-hidden mb-6 transform transition-all duration-300 hover:shadow-md"
       >
@@ -965,6 +1329,93 @@
     menuToggle.addEventListener('click', openMenu);
     closeMenu.addEventListener('click', closeMenuFunc);
     menuOverlay.addEventListener('click', closeMenuFunc);
+
+
+
+    // 排行榜标签切换
+    const rankTabBtns = document.querySelectorAll('.rank-tab-btn');
+    const rankTabContents = document.querySelectorAll('.rank-tab-content');
+
+    rankTabBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+
+        // 更新按钮状态
+        rankTabBtns.forEach(b => {
+          b.classList.remove('active', 'bg-primary/10', 'text-primary');
+          b.classList.add('bg-gray-100', 'text-gray-600');
+        });
+        btn.classList.add('active', 'bg-primary/10', 'text-primary');
+        btn.classList.remove('bg-gray-100', 'text-gray-600');
+
+        // 更新内容显示
+        rankTabContents.forEach(content => {
+          content.classList.add('hidden');
+          content.classList.remove('active');
+        });
+        document.getElementById(`${tabId}-tab`).classList.remove('hidden');
+        document.getElementById(`${tabId}-tab`).classList.add('active');
+      });
+    });
+
+
+    // 活动参与统计图表
+    const activityChart = echarts.init(document.getElementById('activity-chart'));
+
+    const option = {
+      tooltip: {
+        trigger: 'item'
+      },
+      legend: {
+        bottom: 0,
+        left: 'center',
+        textStyle: {
+          fontSize: 12
+        }
+      },
+      series: [
+        {
+          name: '活动类型',
+          type: 'pie',
+          radius: ['40%', '70%'],
+          avoidLabelOverlap: false,
+          itemStyle: {
+            borderRadius: 10,
+            borderColor: '#fff',
+            borderWidth: 2
+          },
+          label: {
+            show: false,
+            position: 'center'
+          },
+          emphasis: {
+            label: {
+              show: true,
+              fontSize: 14,
+              fontWeight: 'bold'
+            }
+          },
+          labelLine: {
+            show: false
+          },
+          data: [
+            { value: 5, name: '书法绘画', itemStyle: { color: '#6A5ACD' } },
+            { value: 3, name: '棋类活动', itemStyle: { color: '#3498db' } },
+            { value: 2, name: '太极养生', itemStyle: { color: '#2ecc71' } },
+            { value: 1, name: '园艺种植', itemStyle: { color: '#e74c3c' } },
+            { value: 1, name: '其他活动', itemStyle: { color: '#f39c12' } }
+          ]
+        }
+      ]
+    };
+
+    activityChart.setOption(option);
+
+    // 响应窗口大小变化
+    window.addEventListener('resize', () => {
+      activityChart.resize();
+    });
+
 
     // 退出登录功能
     var logoutBtn = document.getElementById('logout-btn');
